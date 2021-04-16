@@ -223,7 +223,7 @@ class _AuthCardState extends State<AuthCard> with CanShowMessages {
         }
         showMessageDialog(
             context: this.context,
-            msgTitle: 'Warning',
+            msgTitle: 'gg',
             msgText: msgTxt,
             buttonText: 'OK');
       }
