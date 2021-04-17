@@ -98,7 +98,7 @@ class MessageDialog {
                 width: 40, height: 40, fit: BoxFit.contain),
             Text(msgTitle)
           ]),
-          content:Center(
+          content: Center(
             heightFactor: 1.0,
             child: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
@@ -106,7 +106,7 @@ class MessageDialog {
                   value: _pickeduserType,
                   iconSize: 24,
                   elevation: 16,
-                  style: const TextStyle(color: Colors.blue ,fontSize: 16.0),
+                  style: const TextStyle(color: Colors.blue, fontSize: 16.0),
                   underline: Container(
                     height: 2,
                     color: Colors.lightBlue,
@@ -117,10 +117,8 @@ class MessageDialog {
                     });
                     print('Selected User Type = $_pickeduserType');
                   },
-                  items: <UserType>[
-                    UserType.NormalUser,
-                    UserType.PharmacyUser
-                  ].map<DropdownMenuItem<UserType>>((UserType value) {
+                  items: <UserType>[UserType.NormalUser, UserType.PharmacyUser]
+                      .map<DropdownMenuItem<UserType>>((UserType value) {
                     return DropdownMenuItem<UserType>(
                       value: value,
                       child: Text(value == UserType.NormalUser
@@ -193,6 +191,7 @@ class MessageDialog {
 
 mixin CanShowMessages {
   MessageDialog _messageDialog = new MessageDialog();
+
   void showMessageDialog(
       {@required BuildContext context,
       @required String msgTitle,
