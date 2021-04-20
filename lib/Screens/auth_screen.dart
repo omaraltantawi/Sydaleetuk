@@ -165,7 +165,7 @@ class _AuthCardState extends State<AuthCard> with CanShowMessages {
         }
         showMessageDialog(
             context: this.context,
-            msgTitle: 'Warnin',
+            msgTitle: 'Warning',
             msgText: msgTxt,
             buttonText: 'OK');
       }
@@ -809,3 +809,4 @@ class _AuthCardEmployeeState extends State<AuthCardEmployee>
   }
 
 }
+ 

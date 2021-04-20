@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:graduationproject/Screens/auth_screen.dart';
+import 'package:graduationproject/Screens/splash/splash_screen.dart';
 import 'package:graduationproject/data_models/Patient.dart';
 import 'package:graduationproject/data_models/Pharmacist.dart';
 import 'package:graduationproject/data_models/User.dart';
@@ -17,8 +18,66 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: LetsChat(),
+    // return Consumer<FireBaseAuth>(
+    //   builder: (ctx, value, _) => MaterialApp(
+    //     debugShowCheckedModeBanner: false,
+    //     title: 'Graduation Project 2',
+    //     theme: theme(),
+    //     // We use routeName so that we dont need to remember the name
+    //     //If the user is already login we will open the User home screen .
+    //     initialRoute: value.isAuth ? UserScreen.routeName : SplashScreen.routeName ,
+    //     routes: routes,
+    //   ),
+    // );
+    return Scaffold(
+      appBar: AppBar(
+      title: Text('User Screen'),
+    ),
+      body: LetsChat(),
+      endDrawer: Drawer(
+        child: Scaffold(
+          appBar: AppBar(),
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                if (Provider.of<FireBaseAuth>(context, listen: false)
+                    .loggedUserType ==
+                    UserType.PharmacyUser)
+                  ElevatedButton(
+                    onPressed: () => {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => AuthScreen(isEmployee: true)))
+                    },
+                    child: Text('Add Employee'),
+                  ),
+                if (Provider.of<FireBaseAuth>(context, listen: false)
+                    .loggedUserType ==
+                    UserType.PharmacyUser)
+                  ElevatedButton(
+                    onPressed: () => {
+                      Provider.of<FireBaseAuth>(context, listen: false).getPharmacyEmployees()
+                    },
+                    child: Text('get Employees in console'),
+                  ),
+                ElevatedButton(
+                  onPressed: () => {
+                    Provider.of<FireBaseAuth>(context, listen: false).logout(),
+                    Navigator.pushNamedAndRemoveUntil(context, SplashScreen.routeName, (route) => false),
+                  },
+                  child: Text('Log Out'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      // enable opening the end drawer with a swipe gesture.
+      endDrawerEnableOpenDragGesture: true,
     );
   }
 }
@@ -29,9 +88,7 @@ class LetsChat extends StatefulWidget {
 }
 
 class _LetsChatState extends State<LetsChat> with CanShowMessages {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<Widget> data = [];
-
   String userName = '';
 
   @override
@@ -292,101 +349,59 @@ class _LetsChatState extends State<LetsChat> with CanShowMessages {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text('User Screen'),
-      ),
-      body: Center(
+    return SafeArea(
+      child: Center(
         child: ListView(
           padding: EdgeInsets.all(20.0),
           children: data,
         ),
       ),
-      floatingActionButton: Container(
-        width: 180,
-        height: 130,
-        margin: EdgeInsets.only(bottom: 10.0),
-        // decoration: BoxDecoration(
-        //   borderRadius: BorderRadius.circular(20.0),
-        //   color: Theme.of(context).primaryColor,
-        // ),
-        child: Column(
-          children: [
-            FlatButton.icon(
-              padding: EdgeInsets.all(10.0),
-              color: Colors.lightBlue,
-              label: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Get User Current \n         Data",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                ],
-              ),
-              icon: Icon(Icons.data_usage),
-              onPressed: getUserData,
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            FlatButton.icon(
-              padding: EdgeInsets.all(10.0),
-              color: Colors.lightBlue,
-              label: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Change User \n     Image",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                ],
-              ),
-              icon: Icon(Icons.image),
-              onPressed: changeUserImage,
-            ),
-          ],
-        ),
-      ),
-      endDrawer: Drawer(
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(userName),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                if (Provider.of<FireBaseAuth>(context, listen: false)
-                        .loggedUserType ==
-                    UserType.PharmacyUser)
-                  ElevatedButton(
-                    onPressed: () => {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => AuthScreen(isEmployee: true)))
-                    },
-                    child: Text('Add Employee'),
-                  ),
-                ElevatedButton(
-                  onPressed: () => {
-                    Provider.of<FireBaseAuth>(context, listen: false).logout(),
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (_) => AuthScreen()))
-                  },
-                  child: Text('Log Out'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      // Disable opening the end drawer with a swipe gesture.
-      endDrawerEnableOpenDragGesture: false,
+      // floatingActionButton: Container(
+      //   width: 180,
+      //   height: 140,
+      //   margin: EdgeInsets.only(bottom: 10.0),
+      //   // decoration: BoxDecoration(
+      //   //   borderRadius: BorderRadius.circular(20.0),
+      //   //   color: Theme.of(context).primaryColor,
+      //   // ),
+      //   child: Column(
+      //     children: [
+      //       FlatButton.icon(
+      //         padding: EdgeInsets.all(10.0),
+      //         color: Colors.lightBlue,
+      //         label: Column(
+      //           crossAxisAlignment: CrossAxisAlignment.center,
+      //           mainAxisAlignment: MainAxisAlignment.center,
+      //           children: [
+      //             Text("Get User Current \n         Data",
+      //                 style:
+      //                     TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+      //           ],
+      //         ),
+      //         icon: Icon(Icons.data_usage),
+      //         onPressed: getUserData,
+      //       ),
+      //       SizedBox(
+      //         height: 10.0,
+      //       ),
+      //       FlatButton.icon(
+      //         padding: EdgeInsets.all(10.0),
+      //         color: Colors.lightBlue,
+      //         label: Column(
+      //           crossAxisAlignment: CrossAxisAlignment.center,
+      //           mainAxisAlignment: MainAxisAlignment.center,
+      //           children: [
+      //             Text("Change User \n     Image",
+      //                 style:
+      //                     TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+      //           ],
+      //         ),
+      //         icon: Icon(Icons.image),
+      //         onPressed: changeUserImage,
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 }

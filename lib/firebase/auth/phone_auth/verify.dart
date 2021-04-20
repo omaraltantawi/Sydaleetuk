@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:graduationproject/data_models/User.dart';
-import 'package:graduationproject/Screens/lets_text.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:graduationproject/providers/phone_auth.dart';
 import 'package:graduationproject/utils/constants.dart';
@@ -59,7 +57,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
       onStarted: onStarted,
       onError: onError,
       onFailed: onFailed,
-      onVerified: onVerified,
+      // onVerified: onVerified,
       onCodeResent: onCodeResent,
       onCodeSent: onCodeSent,
       onAutoRetrievalTimeout: onAutoRetrievalTimeOut,
@@ -274,46 +272,87 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
     _showSnackBar("OPT resent");
   }
 
-  onVerified( UserCredential user ) async {
-    print ('User get to Verify Method $user');
-
-    if ( widget.usertype == UserType.NormalUser ) {
-      Provider
-          .of<FireBaseAuth>(context, listen: false)
-          .loggedUser = user.user;
-      String userId = await Provider.of<FireBaseAuth>(context, listen: false)
-          .addNormalUser(
-          user.user.email,
-          widget.authData['fName'].toString(),
-          widget.authData['lName'].toString(),
-          user.user.phoneNumber,
-          widget.authData['healthStatus'].toString(),
-          widget.authData['address'].toString(),
-          widget.authData['birthDate']);
-      Provider.of<FireBaseAuth>(context, listen: false).setNormalUserData(
-          userId,
-          user.user.email,
-          widget.authData['fName'].toString(),
-          widget.authData['lName'].toString(),
-          user.user.phoneNumber,
-          widget.authData['healthStatus'].toString(),
-          widget.authData['address'].toString(),
-          widget.authData['birthDate']);
-      print('Is Auth from Verify Method = ${Provider
-          .of<FireBaseAuth>(context, listen: false)
-          .isAuth}');
-      print('User from Verify Method = ${Provider
-          .of<FireBaseAuth>(context, listen: false)
-          .loggedUserType}');
-      print('User from Verify Method = ${Provider
-          .of<FireBaseAuth>(context, listen: false)
-          .currentUser}');
-    }
-    _showSnackBar("${Provider.of<PhoneAuthDataProvider>(context, listen: false).message}");
-    await Future.delayed(Duration(seconds: 1));
-    Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (BuildContext context) => UserScreen()));
-  }
+  // onVerified( AuthCredential user ) async {
+  //   print ('User get to Verify Method $user');
+  //
+  //   if ( widget.usertype == UserType.NormalUser ) {
+  //     Provider
+  //         .of<FireBaseAuth>(context, listen: false)
+  //         .loggedUser = user.user;
+  //     String userId = await Provider.of<FireBaseAuth>(context, listen: false)
+  //         .addNormalUser(
+  //         user.user.email,
+  //         widget.authData['fName'].toString(),
+  //         widget.authData['lName'].toString(),
+  //         user.user.phoneNumber,
+  //         widget.authData['healthStatus'].toString(),
+  //         widget.authData['address'].toString(),
+  //         widget.authData['birthDate']);
+  //     Provider.of<FireBaseAuth>(context, listen: false).setNormalUserData(
+  //         userId,
+  //         user.user.email,
+  //         widget.authData['fName'].toString(),
+  //         widget.authData['lName'].toString(),
+  //         user.user.phoneNumber,
+  //         widget.authData['healthStatus'].toString(),
+  //         widget.authData['address'].toString(),
+  //         widget.authData['birthDate']);
+  //     print('Is Auth from Verify Method = ${Provider
+  //         .of<FireBaseAuth>(context, listen: false)
+  //         .isAuth}');
+  //     print('User from Verify Method = ${Provider
+  //         .of<FireBaseAuth>(context, listen: false)
+  //         .loggedUserType}');
+  //     print('User from Verify Method = ${Provider
+  //         .of<FireBaseAuth>(context, listen: false)
+  //         .currentUser}');
+  //   }
+  //   _showSnackBar("${Provider.of<PhoneAuthDataProvider>(context, listen: false).message}");
+  //   await Future.delayed(Duration(seconds: 1));
+  //   Navigator.of(context)
+  //       .pushReplacement(MaterialPageRoute(builder: (BuildContext context) => UserScreen()));
+  // }
+  //
+  // onVerified( UserCredential user ) async {
+  //   print ('User get to Verify Method $user');
+  //
+  //   if ( widget.usertype == UserType.NormalUser ) {
+  //     Provider
+  //         .of<FireBaseAuth>(context, listen: false)
+  //         .loggedUser = user.user;
+  //     String userId = await Provider.of<FireBaseAuth>(context, listen: false)
+  //         .addNormalUser(
+  //         user.user.email,
+  //         widget.authData['fName'].toString(),
+  //         widget.authData['lName'].toString(),
+  //         user.user.phoneNumber,
+  //         widget.authData['healthStatus'].toString(),
+  //         widget.authData['address'].toString(),
+  //         widget.authData['birthDate']);
+  //     Provider.of<FireBaseAuth>(context, listen: false).setNormalUserData(
+  //         userId,
+  //         user.user.email,
+  //         widget.authData['fName'].toString(),
+  //         widget.authData['lName'].toString(),
+  //         user.user.phoneNumber,
+  //         widget.authData['healthStatus'].toString(),
+  //         widget.authData['address'].toString(),
+  //         widget.authData['birthDate']);
+  //     print('Is Auth from Verify Method = ${Provider
+  //         .of<FireBaseAuth>(context, listen: false)
+  //         .isAuth}');
+  //     print('User from Verify Method = ${Provider
+  //         .of<FireBaseAuth>(context, listen: false)
+  //         .loggedUserType}');
+  //     print('User from Verify Method = ${Provider
+  //         .of<FireBaseAuth>(context, listen: false)
+  //         .currentUser}');
+  //   }
+  //   _showSnackBar("${Provider.of<PhoneAuthDataProvider>(context, listen: false).message}");
+  //   await Future.delayed(Duration(seconds: 1));
+  //   Navigator.of(context)
+  //       .pushReplacement(MaterialPageRoute(builder: (BuildContext context) => UserScreen()));
+  // }
 
   onFailed() {
     print ("PhoneAuth failed ${Provider.of<PhoneAuthDataProvider>(context, listen: false).message}");

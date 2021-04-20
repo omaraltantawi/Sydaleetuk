@@ -21,7 +21,7 @@ class PhoneAuthDataProvider with ChangeNotifier {
       onError,
       onAutoRetrievalTimeout;
 
-  Function(UserCredential)  onVerified;
+  Function(AuthCredential)  onVerified;
 
   bool _loading = false;
 
@@ -36,7 +36,7 @@ class PhoneAuthDataProvider with ChangeNotifier {
       {VoidCallback onStarted,
       VoidCallback onCodeSent,
       VoidCallback onCodeResent,
-      Function(UserCredential) onVerified,
+      Function(AuthCredential) onVerified,
       VoidCallback onFailed,
       VoidCallback onError,
       VoidCallback onAutoRetrievalTimeout}) {
@@ -54,7 +54,7 @@ class PhoneAuthDataProvider with ChangeNotifier {
       VoidCallback onStarted,
       VoidCallback onCodeSent,
       VoidCallback onCodeResent,
-      Function(UserCredential) onVerified,
+      Function(AuthCredential) onVerified,
       VoidCallback onFailed,
       VoidCallback onError,
       VoidCallback onAutoRetrievalTimeout}) async {
@@ -71,11 +71,34 @@ class PhoneAuthDataProvider with ChangeNotifier {
     }
     phone = dialCode + phoneNumberController.text;
     print(phone);
-    _startAuth();
+    startAuth();
     return true;
   }
 
-  _startAuth() {
+  Future<bool> instantiateNew(
+      {String phoneNo,
+      VoidCallback onStarted,
+      VoidCallback onCodeSent,
+      VoidCallback onCodeResent,
+      Function(AuthCredential) onVerified,
+      VoidCallback onFailed,
+      VoidCallback onError,
+      VoidCallback onAutoRetrievalTimeout}) async {
+    this.onStarted = onStarted;
+    this.onCodeSent = onCodeSent;
+    this.onCodeResent = onCodeResent;
+    this.onVerified = onVerified;
+    this.onFailed = onFailed;
+    this.onError = onError;
+    this.onAutoRetrievalTimeout = onAutoRetrievalTimeout;
+
+    phone = phoneNo;
+    print(phone);
+    startAuth();
+    return true;
+  }
+
+  startAuth() {
     print('_startAuth invoked');
     final PhoneCodeSent codeSent =
         (String verificationId, [int forceResendingToken]) async {
@@ -116,26 +139,28 @@ class PhoneAuthDataProvider with ChangeNotifier {
     final PhoneVerificationCompleted verificationCompleted =
         (AuthCredential auth) {
           print('_startAuth Auto retrieving verification code');
-      _addStatusMessage('Auto retrieving verification code');
+          _addStatusMessage('Auto retrieving verification code');
 
-        FireBaseAuth.auth.currentUser.linkWithCredential(auth).then((UserCredential value) {
-        print('Authentication with credinatal $value');
-        if (value.user != null) {
-          print('Authentication successful');
-          _addStatusMessage('Authentication successful');
-          _addStatus(PhoneAuthState.Verified);
-          if (onVerified != null) onVerified(value);
-        } else {
-          if (onFailed != null) onFailed();
-          _addStatus(PhoneAuthState.Failed);
-          _addStatusMessage('Invalid code/invalid authentication');
-        }
-      }).catchError((error) {
-        if (onError != null) onError();
-        print('Something has gone wrong, please try later $error');
-        _addStatus(PhoneAuthState.Error);
-        _addStatusMessage('Something has gone wrong, please try later $error');
-      });
+          if (onVerified != null) onVerified(auth);
+
+      //   FireBaseAuth.auth.currentUser.linkWithCredential(auth).then((UserCredential value) {
+      //   print('Auto retrieving verification code Credential $value');
+      //   if (value.user != null) {
+      //     print('Auto retrieving verification code -- Authentication successful');
+      //     _addStatusMessage('Authentication successful');
+      //     _addStatus(PhoneAuthState.Verified);
+      //     if (onVerified != null) onVerified(value);
+      //   } else {
+      //     if (onFailed != null) onFailed();
+      //     _addStatus(PhoneAuthState.Failed);
+      //     _addStatusMessage('Invalid code/invalid authentication');
+      //   }
+      // }).catchError((error) {
+      //   if (onError != null) onError();
+      //   print('Auto retrieving verification code -- Something has gone wrong, please try later $error');
+      //   _addStatus(PhoneAuthState.Error);
+      //   _addStatusMessage('Something has gone wrong, please try later $error');
+      // });
     };
 
     _addStatusMessage('Phone auth started');
@@ -148,9 +173,9 @@ class PhoneAuthDataProvider with ChangeNotifier {
             codeSent: codeSent,
             codeAutoRetrievalTimeout: codeAutoRetrievalTimeout)
         .then((value) {
-      if (onCodeSent != null) onCodeSent();
-      _addStatus(PhoneAuthState.CodeSent);
-      _addStatusMessage('Code sent');
+      // if (onCodeSent != null) onCodeSent();
+      // _addStatus(PhoneAuthState.CodeSent);
+      // _addStatusMessage('Code sent');
     }).catchError((error) {
       if (onError != null) onError();
       _addStatus(PhoneAuthState.Error);
@@ -159,23 +184,27 @@ class PhoneAuthDataProvider with ChangeNotifier {
   }
 
   void verifyOTPAndLogin({String smsCode}) async {
-    _authCredential = PhoneAuthProvider.credential(
+    AuthCredential authCredential = PhoneAuthProvider.credential(
         verificationId: actualCode, smsCode: smsCode);
+
+    if (onVerified != null) onVerified(authCredential);
 
     // UserCredential user = await FireBaseAuth.auth
     //     .signInWithCredential(_authCredential)
-    UserCredential user = await FireBaseAuth.auth
-        .currentUser.linkWithCredential(_authCredential)
-        .then((UserCredential result) async {
-      _addStatusMessage('Authentication successful');
-      _addStatus(PhoneAuthState.Verified);
-      if (onVerified != null) onVerified(result);
-    }).catchError((error) {
-      if (onError != null) onError();
-      _addStatus(PhoneAuthState.Error);
-      _addStatusMessage(
-          'Something has gone wrong, please try later $error');
-    });
+
+
+    // UserCredential user = await FireBaseAuth.auth
+    //     .currentUser.linkWithCredential(authCredential)
+    //     .then((UserCredential result) async {
+    //   _addStatusMessage('Authentication successful');
+    //   _addStatus(PhoneAuthState.Verified);
+    //   if (onVerified != null) onVerified(result);
+    // }).catchError((error) {
+    //   if (onError != null) onError();
+    //   _addStatus(PhoneAuthState.Error);
+    //   _addStatusMessage(
+    //       'Something has gone wrong, please try later $error');
+    // });
   }
 
   _addStatus(PhoneAuthState state) {

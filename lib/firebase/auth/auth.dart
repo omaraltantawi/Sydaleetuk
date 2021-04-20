@@ -71,25 +71,30 @@ class FireBaseAuth with ChangeNotifier {
   }
 
   get currentUser async {
-    if (loggedUser != null) {
-      if (loggedUserType == UserType.NormalUser && _patient != null)
-        return _patient;
-      else if ((loggedUserType == UserType.EmployeeUser ||
-              loggedUserType == UserType.PharmacyUser) &&
-          _pharmacist != null)
-        return _pharmacist;
-      else {
-        await getCurrentUserData();
-        if (loggedUserType == UserType.NormalUser)
+    try {
+      if (loggedUser != null) {
+        if (loggedUserType == UserType.NormalUser && _patient != null)
           return _patient;
-        else if (loggedUserType == UserType.EmployeeUser ||
-            loggedUserType == UserType.PharmacyUser)
+        else if ((loggedUserType == UserType.EmployeeUser ||
+            loggedUserType == UserType.PharmacyUser) &&
+            _pharmacist != null)
           return _pharmacist;
+        else {
+          await getCurrentUserData().catchError((e){
+            print (" error from get currentUser from getCurrentUserData => e");
+          });
+          if (loggedUserType == UserType.NormalUser)
+            return _patient;
+          else if (loggedUserType == UserType.EmployeeUser ||
+              loggedUserType == UserType.PharmacyUser)
+            return _pharmacist;
+        }
       }
+      return null;
+    }catch(e){
+      return null ;
     }
-    return null;
   }
-
   Future<void> _signUpNew(String email, String pass) async {
     try {
       final newUser = await auth.createUserWithEmailAndPassword(
@@ -180,10 +185,12 @@ class FireBaseAuth with ChangeNotifier {
 
   Future<void> getCurrentUserData() async {
     try {
+      print ('Start getCurrentUserData ');
       var querySnapshot = await _fireStore.collection('USER').get();
       var user = querySnapshot.docs
-          .where((element) => element['email'] == this.loggedUser.email);
-      if (user != null) {
+          .where((element) => element['email'].toString().toLowerCase() == this.loggedUser.email.toString().toLowerCase());
+      print ('after');
+      if (user != null && user.length > 0) {
         switch (user.first.data()['type']) {
           case 'NormalUser':
             loggedUserType = UserType.NormalUser;
@@ -202,7 +209,8 @@ class FireBaseAuth with ChangeNotifier {
               _patient.healthState = userData.first.data()['healthStatus'];
               _patient.address = userData.first.data()['address'];
               Timestamp stamp = userData.first.data()['birthDate'];
-              _patient.birthDate = stamp.toDate();
+              if ( stamp != null )
+                _patient.birthDate = stamp.toDate();
             }
 
             break;
@@ -286,7 +294,7 @@ class FireBaseAuth with ChangeNotifier {
       }
     } catch (e) {
       print('Error from Get Method $e');
-      throw e;
+      // throw e;
     }
   }
 
@@ -370,6 +378,7 @@ class FireBaseAuth with ChangeNotifier {
       String phoneNo,
       String healthStatus,
       String address,
+      String gender,
       DateTime birthDate) async {
     try {
       await _signUpNew(email, pass);
@@ -378,23 +387,39 @@ class FireBaseAuth with ChangeNotifier {
         'lName': lName,
         'email': email,
         'phoneNo': phoneNo,
+        'password':pass,
         'type': 'NormalUser'
       });
       var ret2 = await _fireStore.collection('PATIENT').add({
         'id': ret.id,
         'healthStatus': healthStatus,
+        'gender': gender,
         'address': address,
         'birthDate': birthDate
       });
+      loggedUser.updateProfile(displayName: '$fName $lName');
     } catch (error) {
       throw error;
+    }
+  }
+
+  Future<void> linkLoggedUserWithCredintal({AuthCredential credential}) async{
+    try{
+      print('credential from linkLoggedUserWithCredintal is $credential');
+      UserCredential user = await FireBaseAuth.auth
+          .currentUser.linkWithCredential(credential);
+      // loggedUser = user.user;
+      print('loggedUser from linkLoggedUserWithCredintal $loggedUser');
+      notifyListeners();
+    }catch(e){
+      throw e;
     }
   }
 
   Future<void> signUpNormalUser(String email, String pass) async {
     try {
       await _signUpNew(email, pass);
-      print(loggedUser);
+      print('loggedUser from signUpNormalUser $loggedUser');
     } catch (error) {
       throw error;
     }
@@ -409,7 +434,7 @@ class FireBaseAuth with ChangeNotifier {
       String address,
       DateTime birthDate) async {
     try {
-      print(loggedUser);
+      print('loggedUser from addNormalUser Method $loggedUser');
       // print ('loggedUser Data From Add Method\n \'fName\':$fName,\'lName\':$lName,\'email\':$email,\'phoneNo\':$phoneNo,\'type\':NormalUser,\'healthStatus\':$healthStatus,\'address\':$address,\'birthDate\':${birthDate.toString()}');
       var ret = await _fireStore.collection('USER').add({
         'fName': fName,
@@ -475,6 +500,7 @@ class FireBaseAuth with ChangeNotifier {
         'lName': lName,
         'email': email,
         'phoneNo': phoneNo,
+        'password':pass,
         'type': 'EmployeeUser'
       });
       var ret2 = await _fireStore.collection('PHARMACIST').add(
@@ -531,6 +557,52 @@ class FireBaseAuth with ChangeNotifier {
 
     } catch (e) {
       print('error From change User profile Image\n$e');
+    }
+  }
+
+  Future<List<Pharmacist>> getPharmacyEmployees() async {
+    List<Pharmacist> employees = [];
+    try {
+      print('Start get Pharmacy employees from firebase.');
+      var querySnapshot = await _fireStore.collection('USER').get();
+      if ( loggedUserType == UserType.PharmacyUser ){
+        var querySnapshotData = await _fireStore.collection('PHARMACIST').get();
+        var userData = querySnapshotData.docs
+            .where((element) => element['pharmacyId'] == pharmacyId );
+        userData.forEach((element){
+          if ( _pharmacist.userId != element['id'] ){
+          Pharmacist pharmacist = Pharmacist();
+          var user = querySnapshot.docs.where((ele) => ele.id == element['id']);
+          pharmacist.userType = UserType.EmployeeUser;
+          pharmacist.userId = user.first.id;
+          pharmacist.email = user.first.data()['email'] ;
+          pharmacist.fName = user.first.data()['fName'];
+          pharmacist.lName = user.first.data()['lName'];
+          pharmacist.phoneNo = user.first.data()['phoneNo'];
+          pharmacist.pharmacy = Pharmacy();
+          pharmacist.pharmacy.name = _pharmacist.pharmacy.name ;
+          pharmacist.pharmacy.phoneNo = _pharmacist.pharmacy.phoneNo;
+          pharmacist.pharmacy.pharmacyId = pharmacyId;
+          employees.add(pharmacist);
+          }
+        });
+      }
+      else
+        throw new Exception('Logged User does not have permission for this functionality.');
+      return employees;
+    } catch (e) {
+      print('error From get Pharmacy employees from firebas\n$e');
+      throw e;
+    }
+  }
+
+  Future<void> updateCollectionField () async{
+    try {
+      print('Start updateCollectionField.');
+
+    } catch (e) {
+      print('error Method updateCollectionField \n$e');
+      throw e;
     }
   }
 

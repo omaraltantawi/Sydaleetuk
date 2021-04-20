@@ -1,13 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:graduationproject/Screens/auth_screen.dart';
 import 'package:graduationproject/Screens/lets_text.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:graduationproject/providers/countries.dart';
 import 'package:graduationproject/providers/phone_auth.dart';
 import 'package:provider/provider.dart';
-import 'routes.dart';
-import 'screens/splash/splash_screen.dart';
-import 'theme.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -26,34 +25,37 @@ void main() async {
           create: (context) => PhoneAuthDataProvider(),
         ),
       ],
-      child: MyApp(),
+      child: FireApp(),
     ),
   );
 }
 
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class FireApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // return MultiProvider(
+    //   providers: [
+    //     ChangeNotifierProvider(
+    //       create: (context) => CountryProvider(),
+    //     ),
+    //     ChangeNotifierProvider(
+    //       create: (context) => PhoneAuthDataProvider(),
+    //     ),
+    //   ],
+    //   child: MaterialApp(
+    //     home: PhoneAuthGetPhone(),
+    //     debugShowCheckedModeBanner: false,
+    //   ),
+    // );
+    // var provider = Provider.of<FireBaseAuth>(context,listen: true);
     // return MaterialApp(
+    //   home: provider.isAuth ? UserScreen() : AuthScreen(),
     //   debugShowCheckedModeBanner: false,
-    //   title: 'Graduation Project 2',
-    //   theme: theme(),
-    //   // home: SplashScreen(),
-    //   // We use routeName so that we dont need to remember the name
-    //   initialRoute: SplashScreen.routeName,
-    //   routes: routes,
     // );
     return Consumer<FireBaseAuth>(
       builder: (ctx, value, _) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Graduation Project 2',
-        theme: theme(),
-        // We use routeName so that we dont need to remember the name
-        //If the user is already login we will open the User home screen .
-        initialRoute: value.isAuth ? UserScreen.routeName : SplashScreen.routeName ,
-        routes: routes,
+        home: value.isAuth ? UserScreen() : AuthScreen(),
       ),
     );
   }

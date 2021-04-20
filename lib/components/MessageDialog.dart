@@ -21,7 +21,7 @@ class MessageDialog {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Row(children: <Widget>[
-            Image.asset('images/firebase.png',
+            Image.asset('assets/images/splash_2.png',
                 width: 50, height: 50, fit: BoxFit.contain),
             Text(msgTitle)
           ]),
@@ -54,7 +54,7 @@ class MessageDialog {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Row(children: <Widget>[
-            Image.asset('images/firebase.png',
+            Image.asset('assets/images/splash_2.png',
                 width: 50, height: 50, fit: BoxFit.contain),
             Text(msgTitle)
           ]),
@@ -94,7 +94,7 @@ class MessageDialog {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Row(children: <Widget>[
-            Image.asset('images/firebase.png',
+            Image.asset('assets/images/splash_2.png',
                 width: 40, height: 40, fit: BoxFit.contain),
             Text(msgTitle)
           ]),
