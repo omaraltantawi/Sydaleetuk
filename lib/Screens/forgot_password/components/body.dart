@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:graduationproject/Screens/sign_in/sign_in_screen.dart';
 import 'package:graduationproject/components/custom_surfix_icon.dart';
 import 'package:graduationproject/components/default_button.dart';
 import 'package:graduationproject/components/form_error.dart';
 import 'package:graduationproject/components/no_account_text.dart';
+import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:graduationproject/size_config.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constants.dart';
 
@@ -101,6 +104,9 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
             press: () {
               if (_formKey.currentState.validate()) {
                 // Do what you want to do
+                _formKey.currentState.save();
+                Provider.of<FireBaseAuth>(context,listen: false).forgetPasswordEmail(email: email);
+                Navigator.pushNamedAndRemoveUntil(context, SignInScreen.routeName, (route) => false);
               }
             },
           ),

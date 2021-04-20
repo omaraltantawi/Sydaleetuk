@@ -64,6 +64,21 @@ class UserScreen extends StatelessWidget {
                     },
                     child: Text('get Employees in console'),
                   ),
+                if (Provider.of<FireBaseAuth>(context, listen: false)
+                    .loggedUser!= null &&!Provider.of<FireBaseAuth>(context, listen: false)
+                    .loggedUser.emailVerified)
+                  ElevatedButton(
+                    onPressed: () => {
+                      Provider.of<FireBaseAuth>(context, listen: false).verifyEmail()
+                    },
+                    child: Text('Verify Email'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => {
+                      Provider.of<FireBaseAuth>(context, listen: false).resetPasswordEmail(newPass: 'omar@12345'),
+                    },
+                    child: Text('Reset Password'),
+                  ),
                 ElevatedButton(
                   onPressed: () => {
                     Provider.of<FireBaseAuth>(context, listen: false).logout(),
@@ -276,6 +291,11 @@ class _LetsChatState extends State<LetsChat> with CanShowMessages {
       ));
       widgets.add(Text(
         'Phone No. : ${userData.phoneNo}',
+        style: normalTextStyle,
+      ));
+
+      widgets.add(Text(
+        'Phone No. From Credential : ${userCredential.phoneNumber}',
         style: normalTextStyle,
       ));
 

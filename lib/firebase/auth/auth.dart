@@ -606,4 +606,37 @@ class FireBaseAuth with ChangeNotifier {
     }
   }
 
+  Future<void> forgetPasswordEmail ( {String email}) async{
+    try {
+      print('Start forgetPasswordEmail.');
+      await auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      print('error Method forgetPasswordEmail \n$e');
+      throw e;
+    }
+  }
+
+  Future<void> resetPasswordEmail ( {String newPass}) async{
+    try {
+      print('Start resetPasswordEmail.');
+      await loggedUser.updatePassword(newPass);
+    } catch (e) {
+      print('error Method resetPasswordEmail \n$e');
+      throw e;
+    }
+  }
+
+  Future<void> verifyEmail ( ) async{
+    try {
+      print('Start forgetPasswordEmail.');
+      print('Email verified ${loggedUser.emailVerified}');
+      auth.currentUser.sendEmailVerification();
+    } catch (e) {
+      print('error Method forgetPasswordEmail \n$e');
+      throw e;
+    }
+  }
+
+
+
 }
