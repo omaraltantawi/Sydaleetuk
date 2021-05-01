@@ -23,6 +23,9 @@ class MessageDialog {
           title: Row(children: <Widget>[
             Image.asset('assets/images/splash_2.png',
                 width: 50, height: 50, fit: BoxFit.contain),
+            SizedBox(
+              width: 10.0,
+            ),
             Text(msgTitle)
           ]),
           content: SingleChildScrollView(
@@ -192,7 +195,7 @@ class MessageDialog {
 mixin CanShowMessages {
   MessageDialog _messageDialog = new MessageDialog();
 
-  void showMessageDialog(
+  Future<void> showMessageDialog(
       {@required BuildContext context,
       @required String msgTitle,
       @required List<String> msgText,
