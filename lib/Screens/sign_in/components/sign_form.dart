@@ -5,6 +5,7 @@ import 'package:graduationproject/ServiceClasses/SignInMethods.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/components/custom_surfix_icon.dart';
 import 'package:graduationproject/components/form_error.dart';
+import 'package:graduationproject/data_models/User.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:graduationproject/helper/keyboard.dart';
 import 'package:graduationproject/screens/forgot_password/forgot_password_screen.dart';
@@ -86,9 +87,18 @@ class _SignFormState extends State<SignForm> with CanShowMessages{
                 KeyboardUtil.hideKeyboard(context);
                 try {
                   await Provider.of<FireBaseAuth>(context, listen: false).logInNew(email, password);
-
+                  UserType type = Provider.of<FireBaseAuth>(context, listen: false).loggedUserType;
                   //use pushNamedAndRemoveUntil to disable back to home screen and user is logged in already.
-                  Navigator.pushNamedAndRemoveUntil(context, UserScreen.routeName, (route) => false);
+
+                  if ( type == UserType.NormalUser )
+                    Navigator.pushNamedAndRemoveUntil(context, UserScreen.routeName, (route) => false);
+                  else if ( type == UserType.PharmacyUser )
+                    {
+
+                    }else if ( type == UserType.EmployeeUser )
+                    {
+
+                    }
                 } on FirebaseAuthException catch (e) {
                   print(e);
                   var msgTxt = ['Something went wrong.', 'Please try again'];
@@ -112,6 +122,7 @@ class _SignFormState extends State<SignForm> with CanShowMessages{
                       buttonText: 'OK');
                 }catch (e){
                   print(e);
+                  print(e.runtimeType);
                   var msgTxt = ['Something went wrong.', 'Please try again'];
                   showMessageDialog(
                       context: this.context,

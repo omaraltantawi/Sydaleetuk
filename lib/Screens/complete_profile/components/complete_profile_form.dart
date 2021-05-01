@@ -80,11 +80,11 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         },
         onFailed: () {
           print('onFailed Get Phone');
-          debugPrint('Oops! Number seems inValid.\n ${phoneAuthDataProvider.message}');
+          debugPrint('Fail to send.\n ${phoneAuthDataProvider.message}');
         },
         onError: () {
           print('onError Get Phone');
-          debugPrint('Oops! Number seems inValid.\n ${phoneAuthDataProvider.message}');
+          debugPrint('Error while sending.\n ${phoneAuthDataProvider.message}');
         });
     if (!validPhone) {
       phoneAuthDataProvider.loading = false;

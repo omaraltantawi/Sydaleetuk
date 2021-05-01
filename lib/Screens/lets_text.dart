@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:graduationproject/Screens/auth_screen.dart';
@@ -13,11 +14,64 @@ import 'package:graduationproject/utils/StyleConstants.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
 
-class UserScreen extends StatelessWidget {
+class UserScreen extends StatelessWidget with CanShowMessages {
   static const routeName = '/userScreen';
 
   @override
   Widget build(BuildContext context) {
+
+    Future<List<Asset>> pickImage() async {
+      List<Asset> resultList = List<Asset>();
+      try {
+        resultList = await MultiImagePicker.pickImages(
+          maxImages: 1,
+          enableCamera: true,
+          selectedAssets: [],
+          materialOptions: MaterialOptions(
+            actionBarTitle: "FlutterCorner.com",
+          ),
+        );
+        return resultList;
+      } catch (e) {
+        print('From Pick Image $e');
+        return [];
+      }
+    }
+
+    Future<File> getImageFileFromAssets(Asset asset) async {
+      final byteData = await asset.getByteData();
+      final tempDirectory = Directory.systemTemp;
+      print(tempDirectory.path);
+      final tempFile = File('${tempDirectory.path}/${asset.name}');
+      print(tempFile.path);
+      final file = await tempFile.writeAsBytes(
+        byteData.buffer
+            .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes),
+      );
+      return file;
+    }
+
+    Future<void> changeUserImage() async {
+      try {
+        List<Asset> image = await pickImage();
+        print(image);
+        if (image != null && image.length > 0) {
+          File file = await getImageFileFromAssets(image[0]);
+          await Provider.of<FireBaseAuth>(context, listen: false)
+              .changeUserProfileImage(file: file);
+        }
+      } catch (e) {
+        print(e);
+        showMessageDialog(
+            context: context,
+            msgTitle: 'Warning',
+            msgText: ['Something went wrong.', 'Please try again'],
+            buttonText: 'OK');
+      }
+    }
+
+    var user = Provider.of<FireBaseAuth>(context, listen: true).loggedUser;
+    Provider.of<FireBaseAuth>(context, listen: true).context = context;
     // return Consumer<FireBaseAuth>(
     //   builder: (ctx, value, _) => MaterialApp(
     //     debugShowCheckedModeBanner: false,
@@ -33,7 +87,7 @@ class UserScreen extends StatelessWidget {
       appBar: AppBar(
       title: Text('User Screen'),
     ),
-      body: LetsChat(),
+      body: LetsChat(user),
       endDrawer: Drawer(
         child: Scaffold(
           appBar: AppBar(),
@@ -64,9 +118,10 @@ class UserScreen extends StatelessWidget {
                     },
                     child: Text('get Employees in console'),
                   ),
-                if (Provider.of<FireBaseAuth>(context, listen: false)
-                    .loggedUser!= null &&!Provider.of<FireBaseAuth>(context, listen: false)
-                    .loggedUser.emailVerified)
+                // if (Provider.of<FireBaseAuth>(context, listen: false)
+                //     .loggedUser!= null &&!Provider.of<FireBaseAuth>(context, listen: false)
+                //     .loggedUser.emailVerified)
+                  if (user!= null &&!user.emailVerified)
                   ElevatedButton(
                     onPressed: () => {
                       Provider.of<FireBaseAuth>(context, listen: false).verifyEmail()
@@ -75,10 +130,40 @@ class UserScreen extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () => {
-                      Provider.of<FireBaseAuth>(context, listen: false).resetPasswordEmail(newPass: 'omar@12345'),
+                      Provider.of<FireBaseAuth>(context, listen: false).resetPasswordEmail(oldPass: 'omar@123456',newPass: 'omar@12345').catchError((e) async {
+                        var msgTxt = ['Something went wrong.', 'Please try again'];
+                        if ( e.runtimeType == FirebaseAuthException ){
+                          switch (e.code) {
+                            case 'wrong-password':
+                              msgTxt = ['Password is incorrect.'];
+                              break;
+                            case 'network-request-failed':
+                              msgTxt = ['No Internet Connection.'];
+                              break;
+                            default:
+                              msgTxt = ['Something went wrong.', 'Please try again'];
+                              break;
+                          }
+                        }
+                        await showMessageDialog(
+                            context: context,
+                            msgTitle: 'Warning',
+                            msgText: msgTxt,
+                            buttonText: 'OK');
+                      }),
                     },
                     child: Text('Reset Password'),
                   ),
+                ElevatedButton(
+                  onPressed: () => {
+                  Provider.of<FireBaseAuth>(context, listen: false).changeUserName(fNameNew: 'Omar', lNameNew: 'Altantawi'),
+                  },
+                  child: Text('Change User Name'),
+                ),
+                ElevatedButton(
+                  onPressed: changeUserImage,
+                  child: Text('Change User Image'),
+                ),
                 ElevatedButton(
                   onPressed: () => {
                     Provider.of<FireBaseAuth>(context, listen: false).logout(),
@@ -98,6 +183,10 @@ class UserScreen extends StatelessWidget {
 }
 
 class LetsChat extends StatefulWidget {
+
+  final loggedInUser ;
+  LetsChat(this.loggedInUser);
+
   @override
   _LetsChatState createState() => _LetsChatState();
 }
@@ -105,7 +194,6 @@ class LetsChat extends StatefulWidget {
 class _LetsChatState extends State<LetsChat> with CanShowMessages {
   List<Widget> data = [];
   String userName = '';
-
   @override
   void initState() {
     super.initState();
@@ -134,7 +222,7 @@ class _LetsChatState extends State<LetsChat> with CanShowMessages {
         width: 10.0,
       ));
 
-      String fileUrl = userCredential.photoURL;
+      String fileUrl = widget.loggedInUser.photoURL;
       print(fileUrl);
       if (fileUrl != null && fileUrl != '') {
         widgets.add(Container(
@@ -232,7 +320,7 @@ class _LetsChatState extends State<LetsChat> with CanShowMessages {
         width: 10.0,
       ));
 
-      String fileUrl = userCredential.photoURL;
+      String fileUrl = widget.loggedInUser.photoURL;
       print(fileUrl);
       if (fileUrl != null && fileUrl != '') {
         widgets.add(Container(
@@ -369,6 +457,7 @@ class _LetsChatState extends State<LetsChat> with CanShowMessages {
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Center(
         child: ListView(

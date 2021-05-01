@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graduationproject/Screens/sign_in/sign_in_screen.dart';
+import 'package:graduationproject/ServiceClasses/SignInMethods.dart';
+import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/components/custom_surfix_icon.dart';
 import 'package:graduationproject/components/default_button.dart';
 import 'package:graduationproject/components/form_error.dart';
@@ -49,7 +51,7 @@ class ForgotPassForm extends StatefulWidget {
   _ForgotPassFormState createState() => _ForgotPassFormState();
 }
 
-class _ForgotPassFormState extends State<ForgotPassForm> {
+class _ForgotPassFormState extends State<ForgotPassForm> with CanShowMessages{
   final _formKey = GlobalKey<FormState>();
   List<String> errors = [];
   String email;
@@ -80,12 +82,18 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
                 setState(() {
                   errors.add(kEmailNullError);
                 });
-              } else if (!emailValidatorRegExp.hasMatch(value) &&
+              } else if (!isEmailChecker(value) &&
                   !errors.contains(kInvalidEmailError)) {
                 setState(() {
                   errors.add(kInvalidEmailError);
                 });
               }
+              // else if (!emailValidatorRegExp.hasMatch(value) &&
+              //     !errors.contains(kInvalidEmailError)) {
+              //   setState(() {
+              //     errors.add(kInvalidEmailError);
+              //   });
+              // }
               return null;
             },
             decoration: InputDecoration(
@@ -101,11 +109,21 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
           SizedBox(height: SizeConfig.screenHeight * 0.1),
           DefaultButton(
             text: "Continue",
-            press: () {
+            press: () async {
               if (_formKey.currentState.validate()) {
                 // Do what you want to do
                 _formKey.currentState.save();
-                Provider.of<FireBaseAuth>(context,listen: false).forgetPasswordEmail(email: email);
+                bool result = await Provider.of<FireBaseAuth>(context,listen: false).forgetPasswordEmail(email: email);
+                var msgTxt = ['Something went wrong.', 'Please try again'];
+                if ( result )
+                  msgTxt = ['The reset password link sent to your email.'];
+                else
+                  msgTxt = ['The email you entered isn’t connected to an account.'];
+                await showMessageDialog(
+                    context: this.context,
+                    msgTitle: 'Warning',
+                    msgText: msgTxt,
+                    buttonText: 'OK');
                 Navigator.pushNamedAndRemoveUntil(context, SignInScreen.routeName, (route) => false);
               }
             },
