@@ -13,7 +13,7 @@ import 'screens/splash/splash_screen.dart';
 import 'theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  FirebaseApp app = await Firebase.initializeApp();
 
   // runApp(FireApp());
   runApp(

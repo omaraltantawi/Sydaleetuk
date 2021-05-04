@@ -211,6 +211,8 @@ class _OtpFormState extends State<OtpForm> {
       //     widget.arguments.email, widget.arguments.password);
       await Provider.of<FireBaseAuth>(context,listen: false).signUpNormalUserWithAllData(widget.arguments.email,widget.arguments.password,
         widget.arguments.fName,widget.arguments.lName,widget.arguments.phoneNo,'',widget.arguments.address,widget.arguments.gender,widget.arguments.birthDate,);
+      // await Provider.of<FireBaseAuth>(context,listen: false).addNormalUser(widget.arguments.email,widget.arguments.password,
+      //   widget.arguments.fName,widget.arguments.lName,widget.arguments.phoneNo,'',widget.arguments.address,widget.arguments.gender,widget.arguments.birthDate,);
       await Provider.of<FireBaseAuth>(context, listen: false)
           .linkLoggedUserWithCredintal(credential: user);
       print('Logged User After Verify is ${Provider

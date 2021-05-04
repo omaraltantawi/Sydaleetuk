@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:graduationproject/Screens/sign_up/components/ScreenArguments.dart';
 import 'package:graduationproject/ServiceClasses/SignInMethods.dart';
+import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/components/custom_surfix_icon.dart';
 import 'package:graduationproject/components/default_button.dart';
 import 'package:graduationproject/components/form_error.dart';
+import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:graduationproject/screens/complete_profile/complete_profile_screen.dart';
+import 'package:provider/provider.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
 
@@ -14,7 +17,7 @@ class SignUpForm extends StatefulWidget {
   _SignUpFormState createState() => _SignUpFormState();
 }
 
-class _SignUpFormState extends State<SignUpForm> {
+class _SignUpFormState extends State<SignUpForm> with CanShowMessages {
   final _formKey = GlobalKey<FormState>();
   String email;
   String password;
@@ -50,11 +53,53 @@ class _SignUpFormState extends State<SignUpForm> {
           SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
             text: "Continue",
-            press: () {
+            press: () async {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
                 // if all are valid then go to success screen
-                Navigator.pushNamed(context, CompleteProfileScreen.routeName,arguments: ScreenArguments(email: email,password: password),);
+                // Provider.of<FireBaseAuth>(context,listen: false).signUpNormalUser(email, password).then((value) {
+                //   Navigator.pushNamed(context, CompleteProfileScreen.routeName,arguments: ScreenArguments(email: email,password: password),);
+                // }).catchError((e){
+                //   var msgTxt = ['Something went wrong.', 'Please try again'];
+                //   switch (e.code) {
+                //     case 'invalid-email':
+                //       msgTxt = ['This is not a valid email address.'];
+                //       break;
+                //     case 'email-already-in-use':
+                //       msgTxt = ['This email address is already in use.'];
+                //       break;
+                //     case 'weak-password':
+                //       msgTxt = ['This password is too weak.'];
+                //       break;
+                //   }
+                //   showMessageDialog(
+                //       context: this.context,
+                //       msgTitle: 'Warning',
+                //       msgText: msgTxt,
+                //       buttonText: 'OK');
+                // });
+                try {
+                  if (!(await Provider.of<FireBaseAuth>(context, listen: false)
+                      .checkUserExistence(email: email))) {
+                    Navigator.pushNamed(
+                      context, CompleteProfileScreen.routeName,
+                      arguments: ScreenArguments(
+                          email: email, password: password),);
+                  } else {
+                      showMessageDialog(
+                          context: this.context,
+                          msgTitle: 'Warning',
+                          msgText: ['This email address is already in use.'],
+                          buttonText: 'OK');
+                  }
+                } catch (e) {
+                  var msgTxt = ['Something went wrong.', 'Please try again'];
+                  showMessageDialog(
+                      context: this.context,
+                      msgTitle: 'Warning',
+                      msgText: msgTxt,
+                      buttonText: 'OK');
+                }
               }
             },
           ),

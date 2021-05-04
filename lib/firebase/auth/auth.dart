@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:graduationproject/Screens/splash/splash_screen.dart';
+import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/data_models/Patient.dart';
 import 'package:graduationproject/data_models/Pharmacist.dart';
 import 'package:graduationproject/data_models/Pharmacy.dart';
@@ -12,62 +15,58 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FireBaseAuth with ChangeNotifier {
-
-  FireBaseAuth() {
-    loggedUser = auth.currentUser;
-    checkUser();
-  }
+class FireBaseAuth with ChangeNotifier,CanShowMessages {
 
   final _fireStore = FirebaseFirestore.instance;
   static FirebaseAuth auth = FirebaseAuth.instance;
+  BuildContext context ;
 
-  User _loggedUser ;
-
-  set loggedUser(User value){
-    _loggedUser = value;
-  }
-
-  User get loggedUser{
-    return auth.currentUser;
-  }
-
+  Timer timer ;
   UserType loggedUserType;
-
   String pharmacyId;
-
-  bool get isAuth {
-    print('isAuth = ${loggedUser != null}');
-    return loggedUser != null;
-  }
-
   Patient _patient;
   Pharmacist _pharmacist;
+  User _loggedUser ;
 
-  reset() {
-    loggedUser = null;
-    loggedUserType = null;
-    _patient = null;
-    _pharmacist = null;
-    notifyListeners();
+  FireBaseAuth() {
+    loggedUser = auth.currentUser;
+    timer = Timer.periodic(Duration(seconds: 5), timerMethod);
+    // checkUser();
   }
 
-  void checkUser() {
-    auth.authStateChanges().listen((User user) async {
-      if (user == null && loggedUser != null) {
+  Future<void> timerMethod(Timer timer) async {
+    // print('Time from timerMethod : ${DateTime.now()}');
+    if ( isAuth ){
+      await auth.currentUser.reload().catchError((e) async {
+        print ('Error from timerMethod $e');
+        print ('Error from timerMethod ${e.runtimeType}');
+        print ('Error from timerMethod ${e.message}');
         reset();
-      } else if (user != null && loggedUser != null) {
-        print(user);
-        if (loggedUser.uid != user.uid) {
-          loggedUser = user;
-          await getCurrentUserData();
-          notifyListeners();
-        }else if ( loggedUser.uid == user.uid ){
-          loggedUser = user;
-          notifyListeners();
+        var msgTxt = ['Something went wrong.', 'Please try again'];
+        switch (e.code) {
+          case 'user-not-found':
+            msgTxt = ['Maybe your account is deleted.','Please contact App administrator to get more info.'];
+            break;
+          case 'network-request-failed':
+            msgTxt = ['No Internet Connection.'];
+            break;
+          case 'user-disabled':
+            msgTxt = ['Your account is disabled.','Please contact App administrator to get more info.'];
+            break;
+          default:
+            msgTxt = ['Something went wrong.', 'Please try again'];
+            break;
         }
-      }
-    });
+        print (msgTxt);
+        await showMessageDialog(
+            context: this.context,
+            msgTitle: 'Warning',
+            msgText: msgTxt,
+            buttonText: 'OK');
+        Navigator.pushNamedAndRemoveUntil(context, SplashScreen.routeName, (route) => false);
+      });
+      notifyListeners();
+    }
   }
 
   get currentUser async {
@@ -81,7 +80,7 @@ class FireBaseAuth with ChangeNotifier {
           return _pharmacist;
         else {
           await getCurrentUserData().catchError((e){
-            print (" error from get currentUser from getCurrentUserData => e");
+            print (" error from get currentUser from getCurrentUserData => $e");
           });
           if (loggedUserType == UserType.NormalUser)
             return _patient;
@@ -95,6 +94,63 @@ class FireBaseAuth with ChangeNotifier {
       return null ;
     }
   }
+
+  bool get isAuth {
+    // print('isAuth = ${loggedUser != null}');
+    return loggedUser != null;
+  }
+
+  set loggedUser(User value){
+    _loggedUser = value;
+  }
+
+  User get loggedUser{
+    return auth.currentUser;
+  }
+
+  reset() {
+    loggedUser = null;
+    loggedUserType = null;
+    _patient = null;
+    _pharmacist = null;
+    notifyListeners();
+  }
+
+  void checkUser() {
+    // auth.userChanges().listen((user) async {
+    //   if (user == null ) {
+    //     logout();
+    //   } else if (user != null && loggedUser != null) {
+    //     print('User From Stream $user');
+    //     if (loggedUser.uid != user.uid) {
+    //       logout();
+    //       // loggedUser = user;
+    //       // await getCurrentUserData();
+    //       notifyListeners();
+    //     }else if ( loggedUser.uid == user.uid ){
+    //       loggedUser = user;
+    //       notifyListeners();
+    //     }
+    //   }
+    // });
+    auth.authStateChanges().listen((User user) async {
+      if (user == null && loggedUser != null) {
+        reset();
+      } else if (user != null && isAuth) {
+        print('user from CheckUser method $user');
+        // if (loggedUser.uid != user.uid) {
+        //   loggedUser = user;
+        //   await getCurrentUserData();
+        //   notifyListeners();
+        // }else if ( loggedUser.uid == user.uid ){
+        //   loggedUser = user;
+        //   notifyListeners();
+        // }
+
+      }
+    });
+  }
+
   Future<void> _signUpNew(String email, String pass) async {
     try {
       final newUser = await auth.createUserWithEmailAndPassword(
@@ -208,6 +264,7 @@ class FireBaseAuth with ChangeNotifier {
             if (userData != null) {
               _patient.healthState = userData.first.data()['healthStatus'];
               _patient.address = userData.first.data()['address'];
+              _patient.gender = userData.first.data()['gender'];
               Timestamp stamp = userData.first.data()['birthDate'];
               if ( stamp != null )
                 _patient.birthDate = stamp.toDate();
@@ -397,6 +454,7 @@ class FireBaseAuth with ChangeNotifier {
         'address': address,
         'birthDate': birthDate
       });
+
       loggedUser.updateProfile(displayName: '$fName $lName');
     } catch (error) {
       throw error;
@@ -408,7 +466,7 @@ class FireBaseAuth with ChangeNotifier {
       print('credential from linkLoggedUserWithCredintal is $credential');
       UserCredential user = await FireBaseAuth.auth
           .currentUser.linkWithCredential(credential);
-      // loggedUser = user.user;
+      this.loggedUser = user.user;
       print('loggedUser from linkLoggedUserWithCredintal $loggedUser');
       notifyListeners();
     }catch(e){
@@ -427,11 +485,13 @@ class FireBaseAuth with ChangeNotifier {
 
   Future<String> addNormalUser(
       String email,
+      String pass,
       String fName,
       String lName,
       String phoneNo,
       String healthStatus,
       String address,
+      String gender,
       DateTime birthDate) async {
     try {
       print('loggedUser from addNormalUser Method $loggedUser');
@@ -441,11 +501,13 @@ class FireBaseAuth with ChangeNotifier {
         'lName': lName,
         'email': email,
         'phoneNo': phoneNo,
+        'password':pass,
         'type': 'NormalUser'
       });
       var ret2 = await _fireStore.collection('PATIENT').add({
         'id': ret.id,
         'healthStatus': healthStatus,
+        'gender': gender,
         'address': address,
         'birthDate': birthDate
       });
@@ -470,7 +532,8 @@ class FireBaseAuth with ChangeNotifier {
       var ret2 = await _fireStore.collection('TempPHARMACY').add({
         'pharmacyName': pharmacyName,
         'phoneNo': pharmacyPhoneNo,
-        'pharmacistId': ret.id
+        'pharmacistId': ret.id,
+        'NoOfPharmacyDoc': files.length
       });
       var ret3 = await _fireStore
           .collection('TempPHARMACIST')
@@ -560,6 +623,23 @@ class FireBaseAuth with ChangeNotifier {
     }
   }
 
+  Future<void> changeUserName({@required String fNameNew ,@required String lNameNew }) async {
+    String fileURL = '';
+    try {
+      print('Start changeUserName');
+      String userId = '';
+      if (loggedUserType == UserType.NormalUser)
+        userId = _patient.userId;
+      else
+        userId = _pharmacist.userId;
+      updateCollectionField(collectionName: 'USER', fieldName: 'fName', fieldValue: fNameNew);
+      updateCollectionField(collectionName: 'USER', fieldName: 'lName', fieldValue: lNameNew);
+      loggedUser.updateProfile(displayName: '$fNameNew $lNameNew');
+    } catch (e) {
+      print('error From changeUserName Method\n$e');
+    }
+  }
+
   Future<List<Pharmacist>> getPharmacyEmployees() async {
     List<Pharmacist> employees = [];
     try {
@@ -596,47 +676,75 @@ class FireBaseAuth with ChangeNotifier {
     }
   }
 
-  Future<void> updateCollectionField () async{
+  Future<void> updateCollectionField ({@required String collectionName , @required String fieldName ,@required String fieldValue }) async{
     try {
       print('Start updateCollectionField.');
-
+      if ( loggedUserType == UserType.EmployeeUser || loggedUserType == UserType.PharmacyUser)
+        _fireStore.collection(collectionName).doc(_pharmacist.userId).update({fieldName:fieldValue});
+      else if ( loggedUserType == UserType.NormalUser)
+        _fireStore.collection(collectionName).doc(_patient.userId).update({fieldName:fieldValue});
     } catch (e) {
       print('error Method updateCollectionField \n$e');
       throw e;
     }
   }
 
-  Future<void> forgetPasswordEmail ( {String email}) async{
+  Future<bool> checkUserExistence({@required String email}) async {
+    try {
+      print ('Start checkUserExistence ');
+      var querySnapshot = await _fireStore.collection('USER').get();
+      var user = querySnapshot.docs
+          .where((element) => element['email'].toString().toLowerCase() == email);
+      if (user != null && user.length > 0) {
+        return true ;
+      }
+      return false ;
+    } catch (e) {
+      print('Error from checkUserExistence Method $e');
+      // return false ;
+      throw e ;
+    }
+  }
+
+  ///If user account exist, this method will send forget email
+  // ignore: missing_return
+  Future<bool> forgetPasswordEmail ( {String email}) async{
     try {
       print('Start forgetPasswordEmail.');
-      await auth.sendPasswordResetEmail(email: email);
+      if ( await checkUserExistence(email: email) ){
+        await auth.sendPasswordResetEmail(email: email);
+        return true;
+      }
+      return false;
     } catch (e) {
       print('error Method forgetPasswordEmail \n$e');
       throw e;
     }
   }
 
-  Future<void> resetPasswordEmail ( {String newPass}) async{
+  Future<void> resetPasswordEmail ({ String oldPass ,String newPass}) async{
     try {
       print('Start resetPasswordEmail.');
+      print('Old Pass is $oldPass');
+      print('New Pass is $newPass');
+      AuthCredential authCredential = EmailAuthProvider.credential(email: loggedUser.email, password: oldPass);
+      print('AuthCredential in reset func. is $authCredential');
+      await auth.currentUser.reauthenticateWithCredential(authCredential);
       await loggedUser.updatePassword(newPass);
     } catch (e) {
       print('error Method resetPasswordEmail \n$e');
-      throw e;
+      // throw e;
     }
   }
 
-  Future<void> verifyEmail ( ) async{
+  Future<void> verifyEmail () async{
     try {
-      print('Start forgetPasswordEmail.');
+      print('Start verifyEmail.');
       print('Email verified ${loggedUser.emailVerified}');
       auth.currentUser.sendEmailVerification();
     } catch (e) {
-      print('error Method forgetPasswordEmail \n$e');
-      throw e;
+      print('error Method verifyEmail \n$e');
+      // throw e;
     }
   }
-
-
-
 }

@@ -163,6 +163,7 @@ class PhoneAuthDataProvider with ChangeNotifier {
       // });
     };
 
+    // FireBaseAuth.auth.
     _addStatusMessage('Phone auth started');
     FireBaseAuth.auth
         .verifyPhoneNumber(
