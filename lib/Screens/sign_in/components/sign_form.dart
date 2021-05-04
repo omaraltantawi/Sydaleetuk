@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:graduationproject/Screens/home/home_screen.dart';
 import 'package:graduationproject/Screens/lets_text.dart';
 import 'package:graduationproject/ServiceClasses/SignInMethods.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
@@ -91,7 +92,7 @@ class _SignFormState extends State<SignForm> with CanShowMessages{
                   //use pushNamedAndRemoveUntil to disable back to home screen and user is logged in already.
 
                   if ( type == UserType.NormalUser )
-                    Navigator.pushNamedAndRemoveUntil(context, UserScreen.routeName, (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
                   else if ( type == UserType.PharmacyUser )
                     {
 

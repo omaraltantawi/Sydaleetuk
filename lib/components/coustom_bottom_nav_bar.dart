@@ -40,15 +40,15 @@ class CustomBottomNavBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               IconButton(
-                onPressed: (){},
+                onPressed: () =>
+                    Navigator.pushNamed(context, HomeScreen.routeName),
                 icon: SvgPicture.asset(
                   "assets/icons/Home Icon.svg",
                   color: MenuState.home == selectedMenu
                       ? kPrimaryColor
                       : inActiveIconColor,
                 ),
-                onPressed: () =>
-                    Navigator.pushNamed(context, HomeScreen.routeName),
+
               ),
               IconButton(
                 icon: SvgPicture.asset("assets/icons/Heart Icon.svg"),
@@ -59,15 +59,15 @@ class CustomBottomNavBar extends StatelessWidget {
                 onPressed: () {},
               ),
               IconButton(
-                onPressed: (){},
+                onPressed: () =>
+                    Navigator.pushNamed(context, ProfileScreen.routeName),
                 icon: SvgPicture.asset(
                   "assets/icons/User Icon.svg",
                   color: MenuState.profile == selectedMenu
                       ? kPrimaryColor
                       : inActiveIconColor,
                 ),
-                onPressed: () =>
-                    Navigator.pushNamed(context, ProfileScreen.routeName),
+
               ),
             ],
           )),
