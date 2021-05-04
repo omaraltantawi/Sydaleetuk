@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:graduationproject/Screens/home/home_screen.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:graduationproject/ServiceClasses/SignInMethods.dart';
@@ -146,7 +147,7 @@ class _AuthCardState extends State<AuthCard> with CanShowMessages {
         await Provider.of<FireBaseAuth>(context, listen: false)
             .logInNew(_authData['email'], _authData['password']);
         Navigator.push(
-            context, MaterialPageRoute(builder: (_) => UserScreen()));
+            context, MaterialPageRoute(builder: (_) => HomeScreen()));
       } catch (e) {
         print(e);
         var msgTxt = ['Something went wrong.', 'Please try again'];
@@ -658,7 +659,7 @@ class _AuthCardEmployeeState extends State<AuthCardEmployee>
       });
 
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => UserScreen()));
+          context, MaterialPageRoute(builder: (_) => HomeScreen()));
     } catch (e) {
       showMessageDialog(
           context: this.context,
