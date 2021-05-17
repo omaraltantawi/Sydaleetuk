@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '/Screens/profile/profile_screen.dart';
-import '/screens/home/home_screen.dart';
+import 'package:graduationproject/Screens/home/home_screen.dart';
+import 'package:graduationproject/Screens/profile/profile_screen.dart';
+import 'package:graduationproject/Screens/reminder/reminder_screen.dart';
 
 
 import '../constants.dart';
@@ -55,8 +56,12 @@ class CustomBottomNavBar extends StatelessWidget {
                 onPressed: () {},
               ),
               IconButton(
+                onPressed: () =>
+                    Navigator.pushNamed(context, ReminderScreen.routeName),
                 icon: SvgPicture.asset("assets/icons/alarm clock.svg"),
-                onPressed: () {},
+                color: MenuState.reminder == selectedMenu
+                    ? kPrimaryColor
+                    : inActiveIconColor,
               ),
               IconButton(
                 onPressed: () =>

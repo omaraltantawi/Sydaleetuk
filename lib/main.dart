@@ -1,9 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:graduationproject/Screens/home/home_screen.dart';
-import 'package:graduationproject/Screens/lets_text.dart';
-import 'package:graduationproject/Screens/profile/profile_screen.dart';
-import 'package:graduationproject/enums.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:graduationproject/providers/countries.dart';
 import 'package:graduationproject/providers/phone_auth.dart';

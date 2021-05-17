@@ -193,7 +193,7 @@ class _SignFormState extends State<SignForm> with CanShowMessages{
           return "";
         } else if (!isEmailChecker(value)) {
           addError(error: kInvalidEmailError);
-          return "";
+          return " ";
         }
         // else if (!emailValidatorRegExp.hasMatch(value)) {
         //   addError(error: kInvalidEmailError);
