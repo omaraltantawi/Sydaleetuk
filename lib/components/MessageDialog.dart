@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graduationproject/data_models/User.dart';
+import 'package:graduationproject/providers/ProductProvider.dart';
 
 class MessageDialog {
   List<Text> getTextWidget(List<String> _textList) {
@@ -86,9 +87,10 @@ class MessageDialog {
   }
 
   UserType _pickeduserType = UserType.NormalUser;
+  ProductSearchFilter _productSearchFilter = ProductSearchFilter.Name;
 
   Future<UserType> _showUserPickerDialog(
-      {@required BuildContext context}) async {
+      {@required BuildContext context , }) async {
     _pickeduserType = UserType.NormalUser;
     String msgTitle = 'User Type';
     return await showDialog<UserType>(
@@ -138,6 +140,65 @@ class MessageDialog {
               child: Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop(_pickeduserType);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<ProductSearchFilter> _showFilterByPickerDialog(
+      {@required BuildContext context , @required ProductSearchFilter filter}) async {
+    _productSearchFilter = filter;
+    String msgTitle = 'Filter By';
+    return await showDialog<ProductSearchFilter>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(children: <Widget>[
+            Image.asset('assets/images/splash_2.png',
+                width: 40, height: 40, fit: BoxFit.contain),
+            Text(msgTitle)
+          ]),
+          content: Center(
+            heightFactor: 1.0,
+            child: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return DropdownButton<ProductSearchFilter>(
+                  value: _productSearchFilter,
+                  iconSize: 24,
+                  elevation: 16,
+                  style: const TextStyle(color: Colors.blue, fontSize: 16.0),
+                  underline: Container(
+                    height: 2,
+                    color: Colors.lightBlue,
+                  ),
+                  onChanged: (ProductSearchFilter newValue) {
+                    setState(() {
+                      _productSearchFilter = newValue;
+                    });
+                    print('Selected Product Search Filter = $_productSearchFilter');
+                  },
+                  items: <ProductSearchFilter>[ProductSearchFilter.Name, ProductSearchFilter.Distance,ProductSearchFilter.Price]
+                      .map<DropdownMenuItem<ProductSearchFilter>>((ProductSearchFilter value) {
+                    return DropdownMenuItem<ProductSearchFilter>(
+                      value: value,
+                      child: Text(value == ProductSearchFilter.Name
+                          ? "Name"
+                          : ( value == ProductSearchFilter.Distance ? "Distance" : "Price" )),
+                    );
+                  }).toList(),
+                );
+              },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(_productSearchFilter);
               },
             ),
           ],
@@ -231,6 +292,13 @@ mixin CanShowMessages {
       {@required BuildContext context}) async {
     UserType selectedUser =
         await _messageDialog._showUserPickerDialog(context: context);
+    return selectedUser;
+  }
+
+  Future<ProductSearchFilter> showFilterByPickerDialog(
+      {@required BuildContext context , @required ProductSearchFilter filter}) async {
+    ProductSearchFilter selectedUser =
+        await _messageDialog._showFilterByPickerDialog(context: context,filter: filter);
     return selectedUser;
   }
 }

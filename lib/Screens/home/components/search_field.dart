@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:graduationproject/Screens/SelectProduct.dart';
+import 'package:graduationproject/providers/ProductProvider.dart';
+import 'package:provider/provider.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
 
@@ -16,7 +19,13 @@ class SearchField extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       child: TextField(
+        // read only to keep keyboard hidden.
+        readOnly: true,
         onChanged: (value) => print(value),
+        onTap: () {
+          Provider.of<ProductProvider>(context,listen: false).initiate();
+          Navigator.pushNamed(context, SelectProduct.routeName );
+        },
         decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(
                 horizontal: getProportionateScreenWidth(20),

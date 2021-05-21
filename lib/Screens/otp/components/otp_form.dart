@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:graduationproject/Screens/home/home_screen.dart';
 import 'package:graduationproject/Screens/lets_text.dart';
 import 'package:graduationproject/Screens/sign_up/components/ScreenArguments.dart';
 import 'package:graduationproject/components/default_button.dart';
@@ -210,7 +211,7 @@ class _OtpFormState extends State<OtpForm> {
       // await Provider.of<FireBaseAuth>(context, listen: false).signUpNormalUser(
       //     widget.arguments.email, widget.arguments.password);
       await Provider.of<FireBaseAuth>(context,listen: false).signUpNormalUserWithAllData(widget.arguments.email,widget.arguments.password,
-        widget.arguments.fName,widget.arguments.lName,widget.arguments.phoneNo,'',widget.arguments.address,widget.arguments.gender,widget.arguments.birthDate,);
+        widget.arguments.fName,widget.arguments.lName,widget.arguments.phoneNo,'',widget.arguments.address,widget.arguments.gender,widget.arguments.birthDate,widget.arguments.addressGeoPoint);
       // await Provider.of<FireBaseAuth>(context,listen: false).addNormalUser(widget.arguments.email,widget.arguments.password,
       //   widget.arguments.fName,widget.arguments.lName,widget.arguments.phoneNo,'',widget.arguments.address,widget.arguments.gender,widget.arguments.birthDate,);
       await Provider.of<FireBaseAuth>(context, listen: false)
@@ -219,7 +220,7 @@ class _OtpFormState extends State<OtpForm> {
           .of<FireBaseAuth>(context, listen: false)
           .loggedUser}');
       await Future.delayed(Duration(seconds: 1));
-      Navigator.pushNamedAndRemoveUntil(context, UserScreen.routeName, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
     }catch(e){
       print(e);
     }

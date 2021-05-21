@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:graduationproject/Screens/sign_up/components/ScreenArguments.dart';
+import 'package:graduationproject/ServiceClasses/Location.dart';
 import 'package:graduationproject/ServiceClasses/SignInMethods.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/components/custom_surfix_icon.dart';
@@ -81,10 +83,23 @@ class _SignUpFormState extends State<SignUpForm> with CanShowMessages {
                 try {
                   if (!(await Provider.of<FireBaseAuth>(context, listen: false)
                       .checkUserExistence(email: email))) {
-                    Navigator.pushNamed(
-                      context, CompleteProfileScreen.routeName,
-                      arguments: ScreenArguments(
-                          email: email, password: password),);
+                    print('before condition');
+                    Location location = Location();
+                    bool condition = await location.getCurrentLocation();
+                    print('condition $condition , Location ${location.latitude} ${location.longitude} ');
+                    if ( condition ) {
+                      Navigator.pushNamed(
+                        context, CompleteProfileScreen.routeName,
+                        arguments: ScreenArguments(
+                            email: email, password: password,addressGeoPoint: GeoPoint(location.latitude,location.longitude)),);
+                    }
+                    else {
+                      showMessageDialog(
+                          context: this.context,
+                          msgTitle: 'Warning',
+                          msgText: ['Address permission denied.'],
+                          buttonText: 'OK');
+                    }
                   } else {
                       showMessageDialog(
                           context: this.context,

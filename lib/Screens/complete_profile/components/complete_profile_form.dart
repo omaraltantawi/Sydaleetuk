@@ -76,7 +76,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         phoneNo: '+962${phoneNumber.substring(1)}',
         onCodeSent: () {
           print('onCodeSent Get Phone');
-          Navigator.pushNamed(context, OtpScreen.routeName,arguments: ScreenArguments(email: widget.arguments.email,password: widget.arguments.password,address: address,fName: firstName,lName: lastName,phoneNo: '+962${phoneNumber.substring(1)}'));
+          Navigator.pushNamed(context, OtpScreen.routeName,arguments: ScreenArguments(email: widget.arguments.email,password: widget.arguments.password, addressGeoPoint: widget.arguments.addressGeoPoint,address: address,fName: firstName,lName: lastName,phoneNo: '+962${phoneNumber.substring(1)}'));
         },
         onFailed: () {
           print('onFailed Get Phone');

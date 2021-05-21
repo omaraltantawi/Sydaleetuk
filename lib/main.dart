@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:graduationproject/Screens/home/home_screen.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
+import 'package:graduationproject/providers/ProductProvider.dart';
 import 'package:graduationproject/providers/countries.dart';
 import 'package:graduationproject/providers/phone_auth.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +25,9 @@ void main() async {
         ),
         ChangeNotifierProvider<PhoneAuthDataProvider>(
           create: (context) => PhoneAuthDataProvider(),
+        ),
+        ChangeNotifierProvider<ProductProvider>(
+          create: (context) => ProductProvider(),
         ),
       ],
       child: MyApp(),

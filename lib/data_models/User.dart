@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum UserType {
   NormalUser,
@@ -8,5 +9,6 @@ enum UserType {
 
 class SUser {
   String userId , fName , lName , email , phoneNo ;
+  GeoPoint addressGeo;
   UserType userType ;
 }

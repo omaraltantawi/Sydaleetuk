@@ -14,7 +14,7 @@ class SelectCountry extends StatelessWidget {
       appBar: AppBar(
         title: Text('Search your country'),
         bottom: PreferredSize(
-          preferredSize: Size(double.infinity, 50.0),
+          preferredSize: Size(double.infinity, 75.0),
           child:
               SearchCountryTF(controller: countriesProvider.searchController),
         ),

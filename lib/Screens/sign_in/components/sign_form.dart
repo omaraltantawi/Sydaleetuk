@@ -6,6 +6,7 @@ import 'package:graduationproject/ServiceClasses/SignInMethods.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/components/custom_surfix_icon.dart';
 import 'package:graduationproject/components/form_error.dart';
+import 'package:graduationproject/data_models/Pharmacist.dart';
 import 'package:graduationproject/data_models/User.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:graduationproject/helper/keyboard.dart';
@@ -94,12 +95,18 @@ class _SignFormState extends State<SignForm> with CanShowMessages{
                   if ( type == UserType.NormalUser )
                     Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
                   else if ( type == UserType.PharmacyUser )
-                    {
-
-                    }else if ( type == UserType.EmployeeUser )
-                    {
-
-                    }
+                  {
+                    print('Logged Successfully');
+                    // print(Provider.of<FireBaseAuth>(context,listen:false).loggedUserType);
+                    // Pharmacist phar = await Provider.of<FireBaseAuth>(context,listen:false).currentUser;
+                    // print('${phar.userId} ${phar.pharmacy.name} ${phar.pharmacy.pharmacyId}');
+                    // Provider.of<FireBaseAuth>(context,listen: false).addEmployeeUser('Emp@Sydaleetuk.com','emp@12345','Employee','1','','Good','JnLHedMrmjqmyso4Zfzc');
+                  }else if ( type == UserType.EmployeeUser ){
+                    print('Logged Successfully');
+                    print(Provider.of<FireBaseAuth>(context,listen:false).loggedUserType);
+                    Pharmacist phar = await Provider.of<FireBaseAuth>(context,listen:false).currentUser;
+                    print('${phar.userId} ${phar.pharmacy.name} ${phar.pharmacy.pharmacyId}');
+                  }
                 } on FirebaseAuthException catch (e) {
                   print(e);
                   var msgTxt = ['Something went wrong.', 'Please try again'];

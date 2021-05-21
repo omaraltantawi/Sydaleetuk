@@ -71,7 +71,7 @@ class UserScreen extends StatelessWidget with CanShowMessages {
     }
 
     var user = Provider.of<FireBaseAuth>(context, listen: true).loggedUser;
-    Provider.of<FireBaseAuth>(context, listen: true).context = context;
+    // Provider.of<FireBaseAuth>(context, listen: true).context = context;
     // return Consumer<FireBaseAuth>(
     //   builder: (ctx, value, _) => MaterialApp(
     //     debugShowCheckedModeBanner: false,

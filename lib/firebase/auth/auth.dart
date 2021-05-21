@@ -10,60 +10,71 @@ import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/data_models/Patient.dart';
 import 'package:graduationproject/data_models/Pharmacist.dart';
 import 'package:graduationproject/data_models/Pharmacy.dart';
+import 'package:graduationproject/data_models/Product.dart';
 import 'package:graduationproject/data_models/User.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FireBaseAuth with ChangeNotifier,CanShowMessages {
-
+class FireBaseAuth with ChangeNotifier, CanShowMessages {
   final _fireStore = FirebaseFirestore.instance;
   static FirebaseAuth auth = FirebaseAuth.instance;
-  BuildContext context ;
+  // BuildContext context ;
 
-  Timer timer ;
+  Timer timer;
   UserType loggedUserType;
   String pharmacyId;
   Patient _patient;
   Pharmacist _pharmacist;
-  User _loggedUser ;
+  User _loggedUser;
+
+  Patient get patient {
+    return _patient;
+  }
 
   FireBaseAuth() {
     loggedUser = auth.currentUser;
-    timer = Timer.periodic(Duration(seconds: 5), timerMethod);
+    if (isAuth) getCurrentUserData();
+    // timer = Timer.periodic(Duration(seconds: 5), timerMethod);
     // checkUser();
   }
 
   Future<void> timerMethod(Timer timer) async {
     // print('Time from timerMethod : ${DateTime.now()}');
-    if ( isAuth ){
+    if (isAuth) {
       await auth.currentUser.reload().catchError((e) async {
-        print ('Error from timerMethod $e');
-        print ('Error from timerMethod ${e.runtimeType}');
-        print ('Error from timerMethod ${e.message}');
+        print('Error from timerMethod $e');
+        print('Error from timerMethod ${e.runtimeType}');
+        print('Error from timerMethod ${e.message}');
         reset();
         var msgTxt = ['Something went wrong.', 'Please try again'];
         switch (e.code) {
           case 'user-not-found':
-            msgTxt = ['Maybe your account is deleted.','Please contact App administrator to get more info.'];
+            msgTxt = [
+              'Maybe your account is deleted.',
+              'Please contact App administrator to get more info.'
+            ];
             break;
           case 'network-request-failed':
             msgTxt = ['No Internet Connection.'];
             break;
           case 'user-disabled':
-            msgTxt = ['Your account is disabled.','Please contact App administrator to get more info.'];
+            msgTxt = [
+              'Your account is disabled.',
+              'Please contact App administrator to get more info.'
+            ];
             break;
           default:
             msgTxt = ['Something went wrong.', 'Please try again'];
             break;
         }
-        print (msgTxt);
-        await showMessageDialog(
-            context: this.context,
-            msgTitle: 'Warning',
-            msgText: msgTxt,
-            buttonText: 'OK');
-        Navigator.pushNamedAndRemoveUntil(context, SplashScreen.routeName, (route) => false);
+        print(msgTxt);
+        // await showMessageDialog(
+        //     context: this.context,
+        //     msgTitle: 'Warning',
+        //     msgText: msgTxt,
+        //     buttonText: 'OK');
+        // Navigator.pushNamedAndRemoveUntil(context, SplashScreen.routeName, (route) => false);
       });
       notifyListeners();
     }
@@ -75,23 +86,22 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
         if (loggedUserType == UserType.NormalUser && _patient != null)
           return _patient;
         else if ((loggedUserType == UserType.EmployeeUser ||
-            loggedUserType == UserType.PharmacyUser) &&
+                loggedUserType == UserType.PharmacyUser) &&
             _pharmacist != null)
           return _pharmacist;
         else {
-          await getCurrentUserData().catchError((e){
-            print (" error from get currentUser from getCurrentUserData => $e");
+          await getCurrentUserData().catchError((e) {
+            print(" error from get currentUser from getCurrentUserData => $e");
           });
           if (loggedUserType == UserType.NormalUser)
             return _patient;
           else if (loggedUserType == UserType.EmployeeUser ||
-              loggedUserType == UserType.PharmacyUser)
-            return _pharmacist;
+              loggedUserType == UserType.PharmacyUser) return _pharmacist;
         }
       }
       return null;
-    }catch(e){
-      return null ;
+    } catch (e) {
+      return null;
     }
   }
 
@@ -100,11 +110,11 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
     return loggedUser != null;
   }
 
-  set loggedUser(User value){
+  set loggedUser(User value) {
     _loggedUser = value;
   }
 
-  User get loggedUser{
+  User get loggedUser {
     return auth.currentUser;
   }
 
@@ -172,13 +182,14 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
           body: json.encode(
               {'email': email, 'password': pass, 'returnSecureToken': true}));
       final resdata = json.decode(res.body);
-      print(resdata);
+      print('Response from Create Emp User $resdata');
       if (resdata['error'] != null) {
         print('ERROR in create emp user $resdata');
         String errMsg = getErrorMessage(resdata['error']['message'].toString());
         throw '$errMsg';
       }
     } catch (e) {
+      print('Error from Create Emp User $e');
       throw e;
     }
   }
@@ -241,11 +252,12 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
 
   Future<void> getCurrentUserData() async {
     try {
-      print ('Start getCurrentUserData ');
+      print('Start getCurrentUserData ');
       var querySnapshot = await _fireStore.collection('USER').get();
-      var user = querySnapshot.docs
-          .where((element) => element['email'].toString().toLowerCase() == this.loggedUser.email.toString().toLowerCase());
-      print ('after');
+      var user = querySnapshot.docs.where((element) =>
+          element['email'].toString().toLowerCase() ==
+          this.loggedUser.email.toString().toLowerCase());
+      print('after');
       if (user != null && user.length > 0) {
         switch (user.first.data()['type']) {
           case 'NormalUser':
@@ -265,9 +277,10 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
               _patient.healthState = userData.first.data()['healthStatus'];
               _patient.address = userData.first.data()['address'];
               _patient.gender = userData.first.data()['gender'];
+              _patient.addressGeoPoint =
+                  userData.first.data()['addressGeoPoint'];
               Timestamp stamp = userData.first.data()['birthDate'];
-              if ( stamp != null )
-                _patient.birthDate = stamp.toDate();
+              if (stamp != null) _patient.birthDate = stamp.toDate();
             }
 
             break;
@@ -436,7 +449,8 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
       String healthStatus,
       String address,
       String gender,
-      DateTime birthDate) async {
+      DateTime birthDate,
+      GeoPoint addressGeoPoint) async {
     try {
       await _signUpNew(email, pass);
       var ret = await _fireStore.collection('USER').add({
@@ -444,7 +458,7 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
         'lName': lName,
         'email': email,
         'phoneNo': phoneNo,
-        'password':pass,
+        'password': pass,
         'type': 'NormalUser'
       });
       var ret2 = await _fireStore.collection('PATIENT').add({
@@ -452,7 +466,8 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
         'healthStatus': healthStatus,
         'gender': gender,
         'address': address,
-        'birthDate': birthDate
+        'birthDate': birthDate,
+        'addressGeoPoint': addressGeoPoint
       });
 
       loggedUser.updateProfile(displayName: '$fName $lName');
@@ -461,15 +476,15 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
     }
   }
 
-  Future<void> linkLoggedUserWithCredintal({AuthCredential credential}) async{
-    try{
+  Future<void> linkLoggedUserWithCredintal({AuthCredential credential}) async {
+    try {
       print('credential from linkLoggedUserWithCredintal is $credential');
-      UserCredential user = await FireBaseAuth.auth
-          .currentUser.linkWithCredential(credential);
+      UserCredential user =
+          await FireBaseAuth.auth.currentUser.linkWithCredential(credential);
       this.loggedUser = user.user;
       print('loggedUser from linkLoggedUserWithCredintal $loggedUser');
       notifyListeners();
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
@@ -501,7 +516,7 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
         'lName': lName,
         'email': email,
         'phoneNo': phoneNo,
-        'password':pass,
+        'password': pass,
         'type': 'NormalUser'
       });
       var ret2 = await _fireStore.collection('PATIENT').add({
@@ -540,7 +555,7 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
           .add({'id': ret.id, 'experience': experience, 'pharmacyId': ret2.id});
 
       for (int i = 0; i < files.length; i++) {
-        uploadImageToFirebase(
+        uploadFileToFirebase(
             file: files[i], filePathInStorage: '${ret2.id}/$i');
       }
     } catch (error) {
@@ -558,38 +573,40 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
       String pharmacyId) async {
     try {
       await _createUser(email, pass);
+      print('Emp User Created Successfully');
       var ret = await _fireStore.collection('USER').add({
         'fName': fName,
         'lName': lName,
         'email': email,
         'phoneNo': phoneNo,
-        'password':pass,
+        'password': pass,
         'type': 'EmployeeUser'
       });
       var ret2 = await _fireStore.collection('PHARMACIST').add(
           {'id': ret.id, 'experience': experience, 'pharmacyId': pharmacyId});
     } catch (error) {
+      print('Error from addEmployeeUser $error');
       throw error;
     }
   }
 
-  Future<String> uploadImageToFirebase(
+  Future<String> uploadFileToFirebase(
       {@required File file, @required String filePathInStorage}) async {
     String fileURL = '';
     try {
-      print('Start upload File To Firebase');
+      print('Start uploadFileToFirebase');
       Reference firebaseStorageRef = FirebaseStorage.instance.ref();
-      firebaseStorageRef
-          .child(filePathInStorage)
-          .putFile(file)
-          .then((TaskSnapshot taskSnapshot) {
-        taskSnapshot.ref.getDownloadURL().then((value) {
-          print("Done: $value");
-          fileURL = value;
-        });
-      });
+      await firebaseStorageRef.child(filePathInStorage).putFile(file);
+      //     .then((TaskSnapshot taskSnapshot) {
+      //   taskSnapshot.ref.getDownloadURL().then((value) {
+      //     print("Done: $value");
+      //     fileURL = value;
+      //   });
+      // });
+      fileURL =
+          await firebaseStorageRef.child(filePathInStorage).getDownloadURL();
     } catch (e) {
-      print('error From uploadImageToFirebase\n$e');
+      print('error From uploadFileToFirebase\n$e');
     }
     return fileURL;
   }
@@ -614,16 +631,17 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
           await auth.currentUser.updateProfile(photoURL: fileURL);
           print(auth.currentUser.photoURL);
           loggedUser = auth.currentUser;
+          auth.currentUser.reload();
           print(loggedUser.photoURL);
         });
       });
-
     } catch (e) {
       print('error From change User profile Image\n$e');
     }
   }
 
-  Future<void> changeUserName({@required String fNameNew ,@required String lNameNew }) async {
+  Future<void> changeUserName(
+      {@required String fNameNew, @required String lNameNew}) async {
     String fileURL = '';
     try {
       print('Start changeUserName');
@@ -632,8 +650,10 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
         userId = _patient.userId;
       else
         userId = _pharmacist.userId;
-      updateCollectionField(collectionName: 'USER', fieldName: 'fName', fieldValue: fNameNew);
-      updateCollectionField(collectionName: 'USER', fieldName: 'lName', fieldValue: lNameNew);
+      updateCollectionField(
+          collectionName: 'USER', fieldName: 'fName', fieldValue: fNameNew , docId: userId);
+      updateCollectionField(
+          collectionName: 'USER', fieldName: 'lName', fieldValue: lNameNew , docId: userId );
       loggedUser.updateProfile(displayName: '$fNameNew $lNameNew');
     } catch (e) {
       print('error From changeUserName Method\n$e');
@@ -645,30 +665,31 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
     try {
       print('Start get Pharmacy employees from firebase.');
       var querySnapshot = await _fireStore.collection('USER').get();
-      if ( loggedUserType == UserType.PharmacyUser ){
+      if (loggedUserType == UserType.PharmacyUser) {
         var querySnapshotData = await _fireStore.collection('PHARMACIST').get();
         var userData = querySnapshotData.docs
-            .where((element) => element['pharmacyId'] == pharmacyId );
-        userData.forEach((element){
-          if ( _pharmacist.userId != element['id'] ){
-          Pharmacist pharmacist = Pharmacist();
-          var user = querySnapshot.docs.where((ele) => ele.id == element['id']);
-          pharmacist.userType = UserType.EmployeeUser;
-          pharmacist.userId = user.first.id;
-          pharmacist.email = user.first.data()['email'] ;
-          pharmacist.fName = user.first.data()['fName'];
-          pharmacist.lName = user.first.data()['lName'];
-          pharmacist.phoneNo = user.first.data()['phoneNo'];
-          pharmacist.pharmacy = Pharmacy();
-          pharmacist.pharmacy.name = _pharmacist.pharmacy.name ;
-          pharmacist.pharmacy.phoneNo = _pharmacist.pharmacy.phoneNo;
-          pharmacist.pharmacy.pharmacyId = pharmacyId;
-          employees.add(pharmacist);
+            .where((element) => element['pharmacyId'] == pharmacyId);
+        userData.forEach((element) {
+          if (_pharmacist.userId != element['id']) {
+            Pharmacist pharmacist = Pharmacist();
+            var user =
+                querySnapshot.docs.where((ele) => ele.id == element['id']);
+            pharmacist.userType = UserType.EmployeeUser;
+            pharmacist.userId = user.first.id;
+            pharmacist.email = user.first.data()['email'];
+            pharmacist.fName = user.first.data()['fName'];
+            pharmacist.lName = user.first.data()['lName'];
+            pharmacist.phoneNo = user.first.data()['phoneNo'];
+            pharmacist.pharmacy = Pharmacy();
+            pharmacist.pharmacy.name = _pharmacist.pharmacy.name;
+            pharmacist.pharmacy.phoneNo = _pharmacist.pharmacy.phoneNo;
+            pharmacist.pharmacy.pharmacyId = pharmacyId;
+            employees.add(pharmacist);
           }
         });
-      }
-      else
-        throw new Exception('Logged User does not have permission for this functionality.');
+      } else
+        throw new Exception(
+            'Logged User does not have permission for this functionality.');
       return employees;
     } catch (e) {
       print('error From get Pharmacy employees from firebas\n$e');
@@ -676,13 +697,29 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
     }
   }
 
-  Future<void> updateCollectionField ({@required String collectionName , @required String fieldName ,@required String fieldValue }) async{
+  Future<void> updateCollectionField(
+      {@required String collectionName,
+      @required String fieldName,
+      @required String fieldValue,
+      @required String docId }) async {
     try {
       print('Start updateCollectionField.');
-      if ( loggedUserType == UserType.EmployeeUser || loggedUserType == UserType.PharmacyUser)
-        _fireStore.collection(collectionName).doc(_pharmacist.userId).update({fieldName:fieldValue});
-      else if ( loggedUserType == UserType.NormalUser)
-        _fireStore.collection(collectionName).doc(_patient.userId).update({fieldName:fieldValue});
+      // if (loggedUserType == UserType.EmployeeUser ||
+      //     loggedUserType == UserType.PharmacyUser)
+      //   _fireStore
+      //       .collection(collectionName)
+      //       .doc(docId)
+      //       .update({fieldName: fieldValue});
+      // else if (loggedUserType == UserType.NormalUser)
+      //   _fireStore
+      //       .collection(collectionName)
+      //       .doc(_patient.userId)
+      //       .update({fieldName: fieldValue});
+
+        _fireStore
+            .collection(collectionName)
+            .doc(docId)
+            .update({fieldName: fieldValue});
     } catch (e) {
       print('error Method updateCollectionField \n$e');
       throw e;
@@ -691,27 +728,27 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
 
   Future<bool> checkUserExistence({@required String email}) async {
     try {
-      print ('Start checkUserExistence ');
+      print('Start checkUserExistence ');
       var querySnapshot = await _fireStore.collection('USER').get();
-      var user = querySnapshot.docs
-          .where((element) => element['email'].toString().toLowerCase() == email);
+      var user = querySnapshot.docs.where(
+          (element) => element['email'].toString().toLowerCase() == email);
       if (user != null && user.length > 0) {
-        return true ;
+        return true;
       }
-      return false ;
+      return false;
     } catch (e) {
       print('Error from checkUserExistence Method $e');
       // return false ;
-      throw e ;
+      throw e;
     }
   }
 
   ///If user account exist, this method will send forget email
   // ignore: missing_return
-  Future<bool> forgetPasswordEmail ( {String email}) async{
+  Future<bool> forgetPasswordEmail({String email}) async {
     try {
       print('Start forgetPasswordEmail.');
-      if ( await checkUserExistence(email: email) ){
+      if (await checkUserExistence(email: email)) {
         await auth.sendPasswordResetEmail(email: email);
         return true;
       }
@@ -722,12 +759,13 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
     }
   }
 
-  Future<void> resetPasswordEmail ({ String oldPass ,String newPass}) async{
+  Future<void> resetPasswordEmail({String oldPass, String newPass}) async {
     try {
       print('Start resetPasswordEmail.');
       print('Old Pass is $oldPass');
       print('New Pass is $newPass');
-      AuthCredential authCredential = EmailAuthProvider.credential(email: loggedUser.email, password: oldPass);
+      AuthCredential authCredential = EmailAuthProvider.credential(
+          email: loggedUser.email, password: oldPass);
       print('AuthCredential in reset func. is $authCredential');
       await auth.currentUser.reauthenticateWithCredential(authCredential);
       await loggedUser.updatePassword(newPass);
@@ -737,7 +775,7 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
     }
   }
 
-  Future<void> verifyEmail () async{
+  Future<void> verifyEmail() async {
     try {
       print('Start verifyEmail.');
       print('Email verified ${loggedUser.emailVerified}');
@@ -746,5 +784,52 @@ class FireBaseAuth with ChangeNotifier,CanShowMessages {
       print('error Method verifyEmail \n$e');
       // throw e;
     }
+  }
+
+  Future<int> getOrderNo() async {
+    var doc = await _fireStore.collection('Order').get();
+    if (doc != null) {
+      return doc.docs.length;
+    }
+    return 0;
+  }
+
+  setOrderStatus ( String orderId , String newStatus){
+    try {
+      updateCollectionField(collectionName: 'Order', fieldName: 'Status', fieldValue:'' , docId: orderId );
+    }catch(e){
+
+    }
+  }
+
+  Future<bool> orderProduct(
+      {Product product,
+      int quantity,
+      int dosage,
+      File prescription}) async {
+    try {
+      int ordersNo = await getOrderNo();
+      String prescriptionUrl = '';
+      if (prescription != null) {
+        prescriptionUrl = await uploadFileToFirebase(
+            file: prescription,
+            filePathInStorage:
+                'Orders/${product.pharmacy.pharmacyId}-${product.id}-${patient.userId}-$ordersNo');
+        print(prescriptionUrl);
+      }
+      var ret = await _fireStore.collection('Order').add({
+        'productId': product.id,
+        'pharmacyId': product.pharmacy.pharmacyId,
+        'userId': _patient.userId,
+        'quantity': quantity,
+        'dosage': dosage,
+        'prescriptionUrl': prescriptionUrl,
+        'OrderNo': ordersNo,
+        'Status': 'Pending',
+      });
+    } catch (e) {
+      return false ;
+    }
+    return true;
   }
 }

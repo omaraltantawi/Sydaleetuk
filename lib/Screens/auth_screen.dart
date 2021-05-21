@@ -10,7 +10,6 @@ import 'package:graduationproject/data_models/User.dart';
 import 'package:graduationproject/firebase/auth/phone_auth/get_phone.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
-import 'lets_text.dart';
 
 enum AuthMode { SignUp, Login }
 

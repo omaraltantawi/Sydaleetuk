@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:graduationproject/Screens/reminder/reminder_screen.dart';
 import 'package:graduationproject/Screens/sign_in/sign_in_screen.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:provider/provider.dart';
@@ -34,8 +33,7 @@ class Body extends StatelessWidget {
           ProfileMenu(
             text: "Medicines Reminder",
             icon: "assets/icons/alarm clock 1.svg",
-            press: () =>
-                Navigator.pushNamed(context, ReminderScreen.routeName),
+            press: () {},
           ),
           ProfileMenu(
             text: "Log Out",
