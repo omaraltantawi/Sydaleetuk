@@ -25,8 +25,8 @@ class _BodyState extends State<Body> {
 
     },
     {
-      "text": "We show the easy way to get your treatments. \nJust stay at home with us",
-      "image": "assets/images/splash_3.png"
+      "text": "Don't forget to buy back your treatments \nbefore they expire , use our reminder to remember",
+      "image": "assets/images/splash.png"
     },
   ];
   @override
