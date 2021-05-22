@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:graduationproject/Screens/home/home_screen.dart';
 import 'package:graduationproject/Screens/lets_text.dart';
+import 'package:graduationproject/Screens/pharmacist_screen/manager_screen.dart';
 import 'package:graduationproject/ServiceClasses/SignInMethods.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/components/custom_surfix_icon.dart';
@@ -21,7 +22,7 @@ class SignForm extends StatefulWidget {
   _SignFormState createState() => _SignFormState();
 }
 
-class _SignFormState extends State<SignForm> with CanShowMessages{
+class _SignFormState extends State<SignForm> with CanShowMessages {
   final _formKey = GlobalKey<FormState>();
   String email;
   String password;
@@ -44,7 +45,6 @@ class _SignFormState extends State<SignForm> with CanShowMessages{
 
   @override
   Widget build(BuildContext context) {
-
     return Form(
       key: _formKey,
       child: Column(
@@ -71,8 +71,8 @@ class _SignFormState extends State<SignForm> with CanShowMessages{
                     context, ForgotPasswordScreen.routeName),
                 child: Text(
                   "Forgot Password",
-                  style: TextStyle(color: Color.fromRGBO(0, 159, 157, 2),
-
+                  style: TextStyle(
+                    color: Color.fromRGBO(0, 159, 157, 2),
                   ),
                 ),
               )
@@ -88,24 +88,32 @@ class _SignFormState extends State<SignForm> with CanShowMessages{
                 // if all are valid then go to success screen
                 KeyboardUtil.hideKeyboard(context);
                 try {
-                  await Provider.of<FireBaseAuth>(context, listen: false).logInNew(email, password);
-                  UserType type = Provider.of<FireBaseAuth>(context, listen: false).loggedUserType;
+                  await Provider.of<FireBaseAuth>(context, listen: false)
+                      .logInNew(email, password);
+                  UserType type =
+                      Provider.of<FireBaseAuth>(context, listen: false)
+                          .loggedUserType;
                   //use pushNamedAndRemoveUntil to disable back to home screen and user is logged in already.
 
-                  if ( type == UserType.NormalUser )
-                    Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
-                  else if ( type == UserType.PharmacyUser )
-                  {
-                    print('Logged Successfully');
+                  if (type == UserType.NormalUser)
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, HomeScreen.routeName, (route) => false);
+                  else if (type == UserType.PharmacyUser) {
+                    // print('Logged Successfully');
                     // print(Provider.of<FireBaseAuth>(context,listen:false).loggedUserType);
                     // Pharmacist phar = await Provider.of<FireBaseAuth>(context,listen:false).currentUser;
                     // print('${phar.userId} ${phar.pharmacy.name} ${phar.pharmacy.pharmacyId}');
                     // Provider.of<FireBaseAuth>(context,listen: false).addEmployeeUser('Emp@Sydaleetuk.com','emp@12345','Employee','1','','Good','JnLHedMrmjqmyso4Zfzc');
-                  }else if ( type == UserType.EmployeeUser ){
-                    print('Logged Successfully');
-                    print(Provider.of<FireBaseAuth>(context,listen:false).loggedUserType);
-                    Pharmacist phar = await Provider.of<FireBaseAuth>(context,listen:false).currentUser;
-                    print('${phar.userId} ${phar.pharmacy.name} ${phar.pharmacy.pharmacyId}');
+                    Navigator.pushNamed(context, ManagerScreen.routeName);
+                  } else if (type == UserType.EmployeeUser) {
+                    // print('Logged Successfully');
+                    // print(Provider.of<FireBaseAuth>(context, listen: false)
+                    //     .loggedUserType);
+                    // Pharmacist phar =
+                    //     await Provider.of<FireBaseAuth>(context, listen: false)
+                    //         .currentUser;
+                    // print(
+                    //     '${phar.userId} ${phar.pharmacy.name} ${phar.pharmacy.pharmacyId}');
                   }
                 } on FirebaseAuthException catch (e) {
                   print(e);
@@ -128,7 +136,7 @@ class _SignFormState extends State<SignForm> with CanShowMessages{
                       msgTitle: 'Warning',
                       msgText: msgTxt,
                       buttonText: 'OK');
-                }catch (e){
+                } catch (e) {
                   print(e);
                   print(e.runtimeType);
                   var msgTxt = ['Something went wrong.', 'Please try again'];
@@ -147,7 +155,7 @@ class _SignFormState extends State<SignForm> with CanShowMessages{
     );
   }
 
-  TextFormField buildPasswordFormField( ) {
+  TextFormField buildPasswordFormField() {
     return TextFormField(
       obscureText: true,
       onSaved: (newValue) => password = newValue,
@@ -172,7 +180,6 @@ class _SignFormState extends State<SignForm> with CanShowMessages{
       decoration: InputDecoration(
         labelText: "Password",
         hintText: "Enter your password",
-
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
       ),
@@ -211,7 +218,6 @@ class _SignFormState extends State<SignForm> with CanShowMessages{
       decoration: InputDecoration(
         labelText: "Email",
         hintText: "Enter your email",
-
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
       ),
