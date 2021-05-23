@@ -48,7 +48,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Color(0xFF099F9D),
               ),
               child: Column(
                 children: [
@@ -114,7 +114,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
           style: TextStyle(color: Colors.white, fontSize: 25),
         ),
         centerTitle: true,
-        backgroundColor: Colors.lightBlueAccent,
+        backgroundColor: Color(0xFF42adac),
         leading: Builder(
           builder: (context) => IconButton(
             icon: Icon(Icons.menu_rounded),
@@ -147,7 +147,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
                     ),
                   ),
                 ),
-                color: Colors.blue,
+                color: Color(0xFF099F9D),
                 width: double.infinity,
                 height: 50,
               ),
@@ -211,12 +211,12 @@ class MainButtons extends StatelessWidget {
           Navigator.pushNamed(context, page);
         },
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.lightBlue),
+            backgroundColor: MaterialStateProperty.all(Color(0xFF099F9D)),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25.0),
                     side: BorderSide(
-                      color: Colors.blue,
+                      color: Colors.white,
                       width: 2,
                     )))),
       ),

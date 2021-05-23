@@ -16,6 +16,8 @@ class _MedicineListState extends State<MedicineList> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xFF099F9D),
+        tooltip: "Click here to add new Medicine",
         child: Icon(Icons.add),
         onPressed: () {},
       ),
@@ -27,7 +29,7 @@ class _MedicineListState extends State<MedicineList> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Color(0xFF099F9D),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
