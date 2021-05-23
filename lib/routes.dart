@@ -3,6 +3,7 @@ import 'package:graduationproject/Screens/SelectProduct.dart';
 import 'package:graduationproject/Screens/order_success/order_success_screen.dart';
 import 'package:graduationproject/Screens/pharmacist_screen/manager_screen.dart';
 import 'package:graduationproject/Screens/pharmacist_screen/medicine_list.dart';
+import 'package:graduationproject/Screens/pharmacist_screen/medicine_screen_manager.dart';
 import 'package:graduationproject/Screens/profile/profile_screen.dart';
 import 'package:graduationproject/Screens/reminder/reminder_screen.dart';
 import 'Screens/home/home_screen.dart';
@@ -35,5 +36,6 @@ final Map<String, WidgetBuilder> routes = {
   OrderSuccessScreen.routeName : (context) => OrderSuccessScreen(),
   ManagerScreen.routeName : (context) => ManagerScreen(),
   MedicineList.routeName : (context) => MedicineList(),
+  MedicineScreenManager.routeName : (context) => MedicineScreenManager(),
 
 };

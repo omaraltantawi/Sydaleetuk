@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:graduationproject/Screens/pharmacist_screen/medicine_screen_manager.dart';
 
 class MedicineList extends StatefulWidget {
   static const String routeName = 'MedicineList';
@@ -84,10 +85,12 @@ class _MedicineListState extends State<MedicineList> {
                 SizedBox(width: 10,),
                 Icon(Icons.medical_services_outlined),
                 SizedBox(width: 10,),
-                Text('Medicine Name'),
+                Text('ASPIRIN'),
               ],
             ),
-            onTap: (){},
+            onTap: (){
+              Navigator.pushNamed(context, MedicineScreenManager.routeName);
+            },
           ),
         ],
       ),
