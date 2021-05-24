@@ -85,7 +85,7 @@ class ProductProvider with ChangeNotifier {
       List<Product> _results = [];
       for ( var element in pharmacyDocs ){
         try {
-          var querySnapshot = await element.reference.collection('Medicine').get();
+          var querySnapshot = await element.reference.collection('MEDICINE').get();
           var medicineDocs = querySnapshot.docs;
           GeoPoint pharmacylocation = element.data()['addressGeoPoint'];
           for ( var medicine in medicineDocs ){
@@ -94,19 +94,18 @@ class ProductProvider with ChangeNotifier {
               Product prod = Product();
               prod.id = medicine.id;
               prod.name = medicine.data()['name'];
-              // prod.imageUrls = medicine.data()['imageUrls'];
-              // prod.prescriptionRequired = medicine.data()['PrescriptionRequired'];
-              // Map<String,dynamic> dosagePills = medicine.data()['DosagePills'];
-              // dosagePills.forEach((key, value) {
-              //   var d = int.parse(key);
-              //   prod.dosagePills.addAll({d:value});
-              // });
               var price = medicine.data()['price'];
               if ( price.runtimeType == int ) {
                 double p = double.parse(price.toString());
                 prod.price = p;
               }else
                 prod.price = price;
+              List<dynamic> list = medicine.data()['imageURLs'];
+              list.forEach((element) {
+                prod.imageUrls.add(element.toString());
+              });
+              if  ( prod.imageUrls == null )
+                prod.imageUrls = [];
               prod.pharmacy = Pharmacy();
               prod.pharmacy.pharmacyId = element.id;
               prod.pharmacy.name = element.data()['pharmacyName'];
@@ -156,10 +155,7 @@ class ProductProvider with ChangeNotifier {
   Future<void> completeProductInfo () async {
     print( 'completeProductInfo Invoked ');
     Product prod = selectedProduct;
-    var medicine = await _fireStore.collection('PHARMACY').doc(selectedProduct.pharmacy.pharmacyId).collection('Medicine').doc(selectedProduct.id).get();
-    prod.imageUrls = medicine.data()['imageUrls'];
-    if  ( prod.imageUrls == null )
-      prod.imageUrls = [];
+    var medicine = await _fireStore.collection('PHARMACY').doc(selectedProduct.pharmacy.pharmacyId).collection('MEDICINE').doc(selectedProduct.id).get();
     prod.prescriptionRequired = medicine.data()['PrescriptionRequired'];
     Map<String,dynamic> dosagePills = medicine.data()['DosagePills'];
     dosagePills.forEach((key, value) {
@@ -187,7 +183,7 @@ class ProductProvider with ChangeNotifier {
   Future<Product> getProductData(String productId,String pharmacyId , GeoPoint userLocation) async {
     try {
       var phar = await _fireStore.collection('PHARMACY').doc(pharmacyId).get();
-      var medicine = await _fireStore.collection('PHARMACY').doc(pharmacyId).collection('Medicine').doc(productId).get();
+      var medicine = await _fireStore.collection('PHARMACY').doc(pharmacyId).collection('MEDICINE').doc(productId).get();
       GeoPoint pharmacylocation = phar.data()['addressGeoPoint'];
       Product prod = Product();
       prod.id = medicine.id;
@@ -204,7 +200,10 @@ class ProductProvider with ChangeNotifier {
       prod.company = phar.data()['pharmacyName'];
       prod.pharmacy.phoneNo = phar.data()['phoneNo'];
       prod.pharmacy.distance = await Location.getDistance(startLatitude: userLocation.latitude, startLongitude: userLocation.longitude, endLatitude: pharmacylocation.latitude, endLongitude: pharmacylocation.longitude);
-      prod.imageUrls = medicine.data()['imageUrls'];
+      List<dynamic> list = medicine.data()['imageURLs'];
+      list.forEach((element) {
+        prod.imageUrls.add(element.toString());
+      });
       if  ( prod.imageUrls == null )
         prod.imageUrls = [];
       prod.prescriptionRequired = medicine.data()['PrescriptionRequired'];

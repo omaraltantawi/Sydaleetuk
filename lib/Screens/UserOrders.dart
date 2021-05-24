@@ -45,7 +45,7 @@ class Body extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           String userId = auth.userId;
           List<Widget> widgets = [];
-          if (snapshot.connectionState == ConnectionState.waiting || widgets.length == 0) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             widgets.add(
               Center(
                 child: Text(

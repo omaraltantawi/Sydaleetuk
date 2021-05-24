@@ -105,11 +105,12 @@ class Body extends StatelessWidget {
         return SelectableWidget(
           product: productProvider.searchResults[i],
           selectThisProduct: (Product c) {
-            // productProvider.reset();
+            // // productProvider.reset();
             print(i);
             print('${c.name} ${c.pharmacy.distance} ${c.pharmacy.name}');
             productProvider.isCompleted = false ;
             productProvider.selectedProduct = c;
+
             Navigator.pushNamed(context, order.OrderProduct.routeName,arguments: c);
           },
         );

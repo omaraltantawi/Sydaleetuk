@@ -976,44 +976,115 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     }
   }
 
-  Future<bool> addMedicine({
+  Future<bool> checkMedicineExistence({@required String medicineName}) async {
+    try {
+      print('Start checkPharmacyUserExistence ');
+      var querySnapshot = await _fireStore.collection('OFFICIAL_MEDICINE').get();
+      var medicine = querySnapshot.docs.where((element) =>
+      element['name'].toString().toLowerCase() == medicineName.toLowerCase());
+
+      if (medicine != null && medicine.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('Error from checkPharmacyUserExistence Method $e');
+      throw e;
+    }
+  }
+
+  Future<bool> checkPharmacyMedicineExistence({@required String medicineName}) async {
+    try {
+      print('Start checkPharmacyUserExistence ');
+      var querySnapshot = await _fireStore.collection('MEDICINE').get();
+      var medicine = querySnapshot.docs.where((element) =>
+      element['name'].toString().toLowerCase() == medicineName.toLowerCase());
+
+      if (medicine != null && medicine.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('Error from checkPharmacyUserExistence Method $e');
+      throw e;
+    }
+  }
+
+  Future<bool> checkMedicineExistenceByBarcode({@required String barcode}) async {
+    try {
+      print('Start checkPharmacyUserExistence ');
+      var querySnapshot = await _fireStore.collection('OFFICIAL_MEDICINE').get();
+      var medicine = querySnapshot.docs.where((element) =>
+      element['barCode'].toString().toLowerCase() == barcode.toLowerCase());
+
+      if (medicine != null && medicine.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('Error from checkPharmacyUserExistence Method $e');
+      throw e;
+    }
+  }
+
+  Future<bool> checkPharmacyMedicineExistenceByBarcode({@required String barcode}) async {
+    try {
+      print('Start checkPharmacyUserExistence ');
+      var querySnapshot = await _fireStore.collection('MEDICINE').get();
+      var medicine = querySnapshot.docs.where((element) =>
+      element['barCode'].toString().toLowerCase() == barcode.toLowerCase());
+
+      if (medicine != null && medicine.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('Error from checkPharmacyUserExistence Method $e');
+      throw e;
+    }
+  }
+
+  Future<bool> addMedicineToPharmacyAndOfficial({
     List<File> image,
     String medicineName,
     String barCode,
-    String price,
-    String prescription,
-    String pills,
+    double price,
+    bool prescription,
+    Map<int,int> dosagePills,
     String description,
   }) async {
     try {
-
+      print('Start Method addMedicineToPharmacyAndOfficial');
       var ret2 = await _fireStore
           .collection('OFFICIAL_MEDICINE')
           .add({
-        'medicine Name': medicineName,
-        'bar Code': barCode,
+        'name': medicineName,
+        'barCode': barCode,
         'price': price,
-        'prescription': prescription,
-        'pills': pills,
+        'PrescriptionRequired': prescription,
+        'DosagePills': dosagePills,
         'description': description,
       });
+      print('Added to official');
       var ret = await _fireStore
           .collection('PHARMACY')
           .doc(_pharmacist.pharmacy.pharmacyId)
           .collection('MEDICINE')
           .add({
-        'medicine Name': medicineName,
-        'bar Code': barCode,
+        'name': medicineName,
+        'barCode': barCode,
         'price': price,
-        'prescription': prescription,
-        'pills': pills,
+        'PrescriptionRequired': prescription,
+        'DosagePills': dosagePills,
         'description': description,
+        'OFFICIAL_MEDICINE_Id': ret2.id,
       });
-
+      print('Added to pharmacy ${_pharmacist.pharmacy.pharmacyId} MEDICINE');
       List<String> imageUrls = [];
       for (int i = 0; i < image.length; i++) {
         String fileUrl = await uploadFileToFirebase(
             file: image[i], filePathInStorage: '${ret.id}/$i');
+        print('upload file $i to fire Storage');
         imageUrls.add(fileUrl);
       }
       _fireStore
@@ -1022,6 +1093,103 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
           .collection('MEDICINE')
           .doc(ret.id)
           .update({'imageURLs': imageUrls});
+    } catch (e) {
+      print('Error from Method addMedicineToPharmacyAndOfficial $e');
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> addMedicineToPharmacy({
+    List<File> image,
+    String medicineName,
+    String barCode,
+    double price,
+    bool prescription,
+    Map<int,int> dosagePills,
+    String description,
+  }) async {
+    try {
+      var querySnapshot = await _fireStore.collection('OFFICIAL_MEDICINE').get();
+      var medicine = querySnapshot.docs.where((element) =>
+      element['name'].toString().toLowerCase() == medicineName.toLowerCase());
+
+      if (medicine != null && medicine.length > 0) {
+        var ret = await _fireStore
+            .collection('PHARMACY')
+            .doc(_pharmacist.pharmacy.pharmacyId)
+            .collection('MEDICINE')
+            .add({
+          'name': medicineName,
+          'barCode': barCode,
+          'price': price,
+          'PrescriptionRequired': prescription,
+          'DosagePills': dosagePills,
+          'description': description,
+          'OFFICIAL_MEDICINE_Id': medicine.first.id,
+        });
+        List<String> imageUrls = [];
+        for (int i = 0; i < image.length; i++) {
+          String fileUrl = await uploadFileToFirebase(
+              file: image[i], filePathInStorage: '${ret.id}/$i');
+          imageUrls.add(fileUrl);
+        }
+        _fireStore
+            .collection('PHARMACY')
+            .doc(_pharmacist.pharmacy.pharmacyId)
+            .collection('MEDICINE')
+            .doc(ret.id)
+            .update({'imageURLs': imageUrls});
+      }
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> addMedicineToPharmacyFromOfficial({
+    String medicineName,
+  }) async {
+    try {
+      var querySnapshot = await _fireStore.collection('OFFICIAL_MEDICINE').get();
+      var medicine = querySnapshot.docs.where((element) =>
+      element['name'].toString().toLowerCase() == medicineName.toLowerCase());
+
+      if (medicine != null && medicine.length > 0) {
+          String medicineName = medicine.first.data()['name'];
+          String barCode = medicine.first.data()['barCode'];
+          var _price = medicine.first.data()['price'];
+          double price ;
+          if ( _price.runtimeType == int ) {
+            price = double.parse(_price.toString());
+          }else
+            price = _price;
+          bool prescription = medicine.first.data()['PrescriptionRequired'];
+
+          Map<int,int> _dosagePills = {};
+          Map<String,dynamic> dosagePills = medicine.first.data()['DosagePills'];
+          dosagePills.forEach((key, value) {
+            var d = int.parse(key);
+            _dosagePills.addAll({d:value});
+          });
+          String description = medicine.first.data()['description'];
+          List<String> image = medicine.first.data()['ImageUrls'];
+          var ret = await _fireStore
+              .collection('PHARMACY')
+              .doc(_pharmacist.pharmacy.pharmacyId)
+              .collection('MEDICINE')
+              .add({
+            'name': medicineName,
+            'ImageUrls': image,
+            'barCode': barCode,
+            'price': price,
+            'PrescriptionRequired': prescription,
+            'DosagePills': _dosagePills,
+            'description': description,
+            'OFFICIAL_MEDICINE_Id': medicine.first.id,
+          });
+
+      }
     } catch (e) {
       return false;
     }

@@ -58,9 +58,7 @@ class _BodyState extends State<Body>with CanShowMessages {
 
   Widget getImages(List<String> imagesUrls, index) {
     if (imagesUrls != null &&
-        imagesUrls.length > 0 &&
-        index > 0 &&
-        index < imagesUrls.length) {
+        imagesUrls.length > 0 ) {
       return Image.network(
         imagesUrls[index],
         height: getProportionateScreenHeight(100),

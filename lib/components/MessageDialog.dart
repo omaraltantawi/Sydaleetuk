@@ -79,7 +79,7 @@ class MessageDialog {
               },
             ),
             TextButton(
-              child: Text('Cancel'),
+              child: Text('No'),
               onPressed: () {
                 Navigator.of(context).pop(QuestionMessage.CANCEL);
               },
