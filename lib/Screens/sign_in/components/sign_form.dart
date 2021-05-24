@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:graduationproject/Screens/home/home_screen.dart';
 import 'package:graduationproject/Screens/lets_text.dart';
-import 'package:graduationproject/Screens/pharmacist_screen/manager_screen.dart';
+import 'package:graduationproject/Screens/manager_screen/manager_screen.dart';
 import 'package:graduationproject/ServiceClasses/SignInMethods.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/components/custom_surfix_icon.dart';

@@ -1,11 +1,12 @@
 import 'package:flutter/widgets.dart';
-import 'package:graduationproject/Screens/SelectProduct.dart';
-import 'package:graduationproject/Screens/order_success/order_success_screen.dart';
-import 'package:graduationproject/Screens/pharmacist_screen/manager_screen.dart';
-import 'package:graduationproject/Screens/pharmacist_screen/medicine_list.dart';
-import 'package:graduationproject/Screens/pharmacist_screen/medicine_screen_manager.dart';
-import 'package:graduationproject/Screens/profile/profile_screen.dart';
-import 'package:graduationproject/Screens/reminder/reminder_screen.dart';
+import 'Screens/SelectProduct.dart';
+import 'Screens/manager_screen/manager_screen.dart';
+import 'Screens/manager_screen/medicines/add_medicine.dart';
+import 'Screens/manager_screen/medicines/medicine_list.dart';
+import 'Screens/manager_screen/medicines/medicine_screen_manager.dart';
+import 'Screens/order_success/order_success_screen.dart';
+import 'Screens/profile/profile_screen.dart';
+import 'Screens/reminder/reminder_screen.dart';
 import 'Screens/home/home_screen.dart';
 import 'Screens/lets_text.dart';
 import 'Screens/order.dart';
@@ -37,5 +38,6 @@ final Map<String, WidgetBuilder> routes = {
   ManagerScreen.routeName : (context) => ManagerScreen(),
   MedicineList.routeName : (context) => MedicineList(),
   MedicineScreenManager.routeName : (context) => MedicineScreenManager(),
+  AddMedicine.routeName : (context) => AddMedicine(),
 
 };

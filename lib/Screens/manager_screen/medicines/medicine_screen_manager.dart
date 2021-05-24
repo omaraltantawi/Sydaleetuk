@@ -13,6 +13,8 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
 
   String price = '4.5';
 
+  String pill = '30';
+
   String description =
       'Aspirin is used to reduce fever and relieve mild to moderate pain from conditions such as muscle aches, toothaches, common cold, and headaches. It may also be used to reduce pain and swelling in conditions such as arthritis.';
 
@@ -43,7 +45,7 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
             Container(
               height: 200,
               width: double.infinity,
-              color: Colors.green,
+              color: Colors.red,
               child: Center(
                 child: Text('Medicine Images'),
               ),
@@ -118,49 +120,108 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                     icon: Icon(Icons.edit),
                     onPressed: () {
                       TextEditingController _controller =
-                          TextEditingController(text: price);
+                      TextEditingController(text: price);
                       showDialog(
                           context: context,
                           builder: (_) => AlertDialog(
-                                title: Text('Change price'),
-                                actions: [
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      hintText: 'Enter the new price',
-                                      labelText: 'New price',
+                            title: Text('Change price'),
+                            actions: [
+                              TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'Enter the new price',
+                                  labelText: 'New price',
+                                ),
+                                controller: _controller,
+                              ),
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      child: Text('Submit'),
+                                      onPressed: () {
+                                        setState(() {
+                                          price = _controller.text;
+                                          Navigator.pop(context);
+                                        });
+                                      },
                                     ),
-                                    controller: _controller,
                                   ),
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: ElevatedButton(
-                                          child: Text('Submit'),
-                                          onPressed: () {
-                                            setState(() {
-                                              price = _controller.text;
-                                              Navigator.pop(context);
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: ElevatedButton(
-                                          child: Text('Cancel'),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                      ),
-                                    ],
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
                                   ),
                                 ],
-                              ));
+                              ),
+                            ],
+                          ));
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Pills: $pill '),
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      TextEditingController _controller =
+                      TextEditingController(text: pill);
+                      showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: Text('Change pill'),
+                            actions: [
+                              TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'the new  Number of pills',
+                                  labelText: 'Number of pills',
+                                ),
+                                controller: _controller,
+                              ),
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      child: Text('Submit'),
+                                      onPressed: () {
+                                        setState(() {
+                                          pill = _controller.text;
+                                          Navigator.pop(context);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ));
                     },
                   ),
                 ],

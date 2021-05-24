@@ -1,10 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:graduationproject/Screens/pharmacist_screen/medicine_list.dart';
+import '/data_models/Pharmacist.dart';
+import '/firebase/auth/auth.dart';
+import 'package:provider/provider.dart';
 
-final _fireStore = FirebaseFirestore.instance;
+import 'medicines/medicine_list.dart';
+
 User loggedInUser;
+Pharmacist phar;
 
 class ManagerScreen extends StatefulWidget {
   static const String routeName = "/ManagerScreen";
@@ -27,16 +30,16 @@ class _ManagerScreenState extends State<ManagerScreen> {
       final user = _auth.currentUser;
       if (user != null) {
         loggedInUser = user;
+
+        getPharmacist().then((value) => null);
       }
     } catch (e) {
       print(e);
     }
   }
 
-  List getAllInformationAboutManager() {
-    List currentUser = [];
-    String userID = loggedInUser.uid;
-    return currentUser;
+  Future<void> getPharmacist() async {
+    phar = await Provider.of<FireBaseAuth>(context, listen: false).currentUser;
   }
 
   @override
@@ -66,14 +69,14 @@ class _ManagerScreenState extends State<ManagerScreen> {
                       Column(
                         children: [
                           Text(
-                            'FirstName',
+                            phar.fName,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
                             ),
                           ),
                           Text(
-                            'Last Name',
+                            phar.lName,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -88,7 +91,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
             ),
             ListTile(
               leading: Icon(Icons.message),
-              title: Text('Messages'),
+              title: Text('Pharmacy'),
             ),
             ListTile(
               leading: Icon(Icons.account_circle),
@@ -102,7 +105,8 @@ class _ManagerScreenState extends State<ManagerScreen> {
               leading: Icon(Icons.logout),
               title: Text('LogOut'),
               onTap: () {
-                print('hii');
+                Navigator.pop(context);
+                Navigator.pop(context);
               },
             ),
           ],
@@ -110,7 +114,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
       ),
       appBar: AppBar(
         title: Text(
-          'Pharmacy Name',
+          phar.pharmacy.name,
           style: TextStyle(color: Colors.white, fontSize: 25),
         ),
         centerTitle: true,
@@ -128,7 +132,8 @@ class _ManagerScreenState extends State<ManagerScreen> {
               Icons.notifications,
               color: Colors.white,
             ),
-            onPressed: () {},
+            onPressed: () {
+            },
           ),
         ],
       ),
@@ -140,7 +145,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
               Container(
                 child: Center(
                   child: Text(
-                    'Welcome (First Name) to your pharmacy',
+                    'Welcome ${phar.fName} to your pharmacy',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
