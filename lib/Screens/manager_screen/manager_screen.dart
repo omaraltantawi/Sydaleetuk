@@ -145,7 +145,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
               Container(
                 child: Center(
                   child: Text(
-                    'Welcome ${phar.fName} to your pharmacy',
+                    'Welcome FirstName to your pharmacy',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
