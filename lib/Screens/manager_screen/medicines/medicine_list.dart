@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:graduationproject/data_models/Pharmacist.dart';
+import 'package:graduationproject/firebase/auth/auth.dart';
+import 'package:provider/provider.dart';
 import 'add_medicine.dart';
 import 'medicine_screen_manager.dart';
 
@@ -13,8 +17,29 @@ class MedicineList extends StatefulWidget {
 }
 
 class _MedicineListState extends State<MedicineList> {
+
+  User loggedInUser;
+  Pharmacist phar;
+
+  @override
+  void initState() {
+    super.initState();
+
+    getPharmacist();
+  }
+
+  Future<void> getPharmacist() async {
+    Pharmacist p =
+    await Provider.of<FireBaseAuth>(context, listen: false).currentUser;
+    setState(() {
+      phar = p;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    loggedInUser = Provider.of<FireBaseAuth>(context, listen: false).loggedUser;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xFF099F9D),
@@ -131,18 +156,6 @@ class Data extends StatelessWidget {
 
 List<Widget> medicine() {
   medicines = [
-    Medicine(
-      number: 1,
-      name: 'cook',
-    ),
-    Medicine(
-      number: 2,
-      name: 'aspirin',
-    ),
-    Medicine(
-      number: 3,
-      name: 'cola',
-    ),
   ];
 
   return medicines;

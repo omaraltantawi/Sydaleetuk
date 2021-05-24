@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'add_employee.dart';
+import 'employee_screen.dart';
 
 List employee=[];
 
@@ -11,7 +13,9 @@ class EmployeeList extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xFF099F9D),
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, AddEmployee.routeName);
+        },
       ),
       appBar: AppBar(
         title: Text(
@@ -34,6 +38,9 @@ class EmployeeList extends StatelessWidget {
         children: [
           ListTile(
             title: Text('1. Employee Name 1'),
+            onTap: (){
+              Navigator.pushNamed(context, EmployeeScreen.routeName);
+            },
           ),
           ListTile(
             title: Text('2. Employee Name 2'),

@@ -4,11 +4,15 @@ import 'package:graduationproject/Screens/UserOrders.dart';
 import 'package:graduationproject/Screens/complete_pharmacy_profile/complete_pharmacy_profile_screen.dart';
 import 'package:graduationproject/Screens/signup_pharmacy/sign_up_pharmacy_screen.dart';
 import 'Screens/SelectProduct.dart';
-import 'Screens/manager_screen/employee_list/employee_list.dart';
+import 'Screens/manager_screen/employee/add_employee.dart';
+import 'Screens/manager_screen/employee/employee_list.dart';
+import 'Screens/manager_screen/employee/employee_screen.dart';
 import 'Screens/manager_screen/manager_screen.dart';
 import 'Screens/manager_screen/medicines/add_medicine.dart';
 import 'Screens/manager_screen/medicines/medicine_list.dart';
 import 'Screens/manager_screen/medicines/medicine_screen_manager.dart';
+import 'Screens/manager_screen/order/order_list.dart';
+import 'Screens/manager_screen/order/order_screen.dart';
 import 'Screens/order_success/order_success_screen.dart';
 import 'Screens/profile/profile_screen.dart';
 import 'Screens/reminder/reminder_screen.dart';
@@ -49,5 +53,9 @@ final Map<String, WidgetBuilder> routes = {
   UserOrders.routeName: (context) => UserOrders(),
   SignUpPharmacyScreen.routeName: (context) => SignUpPharmacyScreen(),
   CompletePharmacyProfileScreen.routeName: (context) => CompletePharmacyProfileScreen(),
+  EmployeeScreen.routeName: (context) => EmployeeScreen(),
+  AddEmployee.routeName : (context) => AddEmployee(),
+  OrderList.routeName : (context) => OrderList(),
+  OrderScreen.routeName : (context) => OrderScreen(),
 
 };

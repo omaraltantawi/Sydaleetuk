@@ -1,14 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:graduationproject/Screens/manager_screen/employee_list/employee_list.dart';
+import 'package:graduationproject/Screens/manager_screen/order/order_list.dart';
 import 'package:graduationproject/data_models/Pharmacist.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:provider/provider.dart';
 
+import 'employee/employee_list.dart';
 import 'medicines/medicine_list.dart';
-
-User loggedInUser;
-Pharmacist phar;
 
 class ManagerScreen extends StatefulWidget {
   static const String routeName = "/ManagerScreen";
@@ -18,33 +16,23 @@ class ManagerScreen extends StatefulWidget {
 }
 
 class _ManagerScreenState extends State<ManagerScreen> {
-  final _auth = FirebaseAuth.instance;
+
+  User loggedInUser;
+  Pharmacist phar;
 
   @override
-  void initState() {
+  void initState()  {
+    setState(() {
+
+      phar = Provider.of<FireBaseAuth>(context, listen: false).pharmacist;
+    });
     super.initState();
-    getCurrentUser();
-  }
 
-  void getCurrentUser() {
-    try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        loggedInUser = user;
-
-        getPharmacist().then((value) => null);
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> getPharmacist() async {
-    phar = await Provider.of<FireBaseAuth>(context, listen: false).currentUser;
   }
 
   @override
   Widget build(BuildContext context) {
+    loggedInUser = Provider.of<FireBaseAuth>(context, listen: false).loggedUser;
     return Scaffold(
       drawer: Drawer(
         child: ListView(
@@ -106,8 +94,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
               leading: Icon(Icons.logout),
               title: Text('LogOut'),
               onTap: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
+                Provider.of<FireBaseAuth>(context, listen: false).logout();
               },
             ),
           ],
@@ -115,7 +102,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
       ),
       appBar: AppBar(
         title: Text(
-          'phar.pharmacy.name',
+        phar.pharmacy.name,
           style: TextStyle(color: Colors.white, fontSize: 25),
         ),
         centerTitle: true,
@@ -133,8 +120,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
               Icons.notifications,
               color: Colors.white,
             ),
-            onPressed: () {
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -146,7 +132,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
               Container(
                 child: Center(
                   child: Text(
-                    'Welcome FirstName to your pharmacy',
+                    'Welcome ${phar.fName} to your pharmacy',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -169,7 +155,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
               ),
               MainButtons(
                 title: 'The Order List',
-                page: 'null',
+                page: OrderList.routeName,
               ),
               SizedBox(
                 height: 30,
