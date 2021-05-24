@@ -32,8 +32,7 @@ class _AddMedicineState extends State<AddMedicine> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Stack(
-          children: [
+        child:
             ListView(
               children: [
                 Container(
@@ -51,6 +50,15 @@ class _AddMedicineState extends State<AddMedicine> {
                   decoration: InputDecoration(
                     labelText: 'Medicine Name',
                     hintText: 'Enter medicine name',
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'bar code',
+                    hintText: 'bar code',
                   ),
                 ),
                 SizedBox(
@@ -92,20 +100,15 @@ class _AddMedicineState extends State<AddMedicine> {
                     hintText: 'Description',
                   ),
                 ),
-              ],
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(child: ElevatedButton(onPressed: (){},child: Text('Cancel'),),),
-                    SizedBox(width: 10,),
-                    Expanded(child: ElevatedButton(onPressed: (){},child: Text('Submit'),),),
-                  ],
-                ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(child: ElevatedButton(onPressed: (){},child: Text('Cancel'),),),
+                  SizedBox(width: 10,),
+                  Expanded(child: ElevatedButton(onPressed: (){},child: Text('Submit'),),),
+                ],
               ),
             ),
           ],

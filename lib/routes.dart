@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'Screens/SelectProduct.dart';
+import 'Screens/manager_screen/employee_list/employee_list.dart';
 import 'Screens/manager_screen/manager_screen.dart';
 import 'Screens/manager_screen/medicines/add_medicine.dart';
 import 'Screens/manager_screen/medicines/medicine_list.dart';
@@ -39,5 +40,6 @@ final Map<String, WidgetBuilder> routes = {
   MedicineList.routeName : (context) => MedicineList(),
   MedicineScreenManager.routeName : (context) => MedicineScreenManager(),
   AddMedicine.routeName : (context) => AddMedicine(),
+  EmployeeList.routeName: (context) => EmployeeList(),
 
 };

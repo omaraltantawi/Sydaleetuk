@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:graduationproject/Screens/manager_screen/employee_list/employee_list.dart';
 import '/data_models/Pharmacist.dart';
 import '/firebase/auth/auth.dart';
 import 'package:provider/provider.dart';
@@ -69,14 +70,14 @@ class _ManagerScreenState extends State<ManagerScreen> {
                       Column(
                         children: [
                           Text(
-                            phar.fName,
+                            'phar.fName',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
                             ),
                           ),
                           Text(
-                            phar.lName,
+                            'phar.lName',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -114,7 +115,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
       ),
       appBar: AppBar(
         title: Text(
-          phar.pharmacy.name,
+          'phar.pharmacy.name',
           style: TextStyle(color: Colors.white, fontSize: 25),
         ),
         centerTitle: true,
@@ -175,7 +176,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
               ),
               MainButtons(
                 title: 'The Employee List',
-                page: 'null',
+                page: EmployeeList.routeName,
               ),
               SizedBox(
                 height: 30,
