@@ -5,7 +5,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:graduationproject/Screens/splash/splash_screen.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/data_models/Patient.dart';
 import 'package:graduationproject/data_models/Pharmacist.dart';
@@ -17,9 +16,16 @@ import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FireBaseAuth with ChangeNotifier, CanShowMessages {
-  final _fireStore = FirebaseFirestore.instance;
+  static FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   static FirebaseAuth auth = FirebaseAuth.instance;
+
+  FirebaseFirestore get fireStore{
+    return _fireStore;
+  }
+
   // BuildContext context ;
+  String key = '123';
+  bool isLoading ;
 
   Timer timer;
   UserType loggedUserType;
@@ -27,14 +33,17 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
   Patient _patient;
   Pharmacist _pharmacist;
   User _loggedUser;
-
+  String userId;
+  String photoUri;
   Patient get patient {
     return _patient;
   }
 
   FireBaseAuth() {
     loggedUser = auth.currentUser;
+    isLoading = true;
     if (isAuth) getCurrentUserData();
+
     // timer = Timer.periodic(Duration(seconds: 5), timerMethod);
     // checkUser();
   }
@@ -250,13 +259,16 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     }
   }
 
-  Future<void> getCurrentUserData() async {
+  Future<UserType> getCurrentUserData() async {
     try {
       print('Start getCurrentUserData ');
+      if(!isAuth)
+        return null ;
       var querySnapshot = await _fireStore.collection('USER').get();
       var user = querySnapshot.docs.where((element) =>
           element['email'].toString().toLowerCase() ==
           this.loggedUser.email.toString().toLowerCase());
+
       print('after');
       if (user != null && user.length > 0) {
         switch (user.first.data()['type']) {
@@ -264,7 +276,9 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
             loggedUserType = UserType.NormalUser;
             _patient = Patient();
             _patient.userId = user.first.id;
+            userId = user.first.id;
             _patient.email = loggedUser.email;
+            photoUri = user.first.data()['photoUri'];
             _patient.fName = user.first.data()['fName'];
             _patient.lName = user.first.data()['lName'];
             _patient.phoneNo = user.first.data()['phoneNo'];
@@ -277,6 +291,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
               _patient.healthState = userData.first.data()['healthStatus'];
               _patient.address = userData.first.data()['address'];
               _patient.gender = userData.first.data()['gender'];
+              _patient.age = userData.first.data()['age'];
               _patient.addressGeoPoint =
                   userData.first.data()['addressGeoPoint'];
               Timestamp stamp = userData.first.data()['birthDate'];
@@ -286,36 +301,43 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
             break;
           case 'PharmacyUser':
             loggedUserType = UserType.PharmacyUser;
+            print ( 'after1' );
             _pharmacist = Pharmacist();
             _pharmacist.userType = UserType.PharmacyUser;
             _pharmacist.userId = user.first.id;
+            userId = user.first.id;
             _pharmacist.email = loggedUser.email;
             _pharmacist.fName = user.first.data()['fName'];
             _pharmacist.lName = user.first.data()['lName'];
             _pharmacist.phoneNo = user.first.data()['phoneNo'];
 
             pharmacyId = "";
-
+            print ( 'after2' );
             var querySnapshotData =
                 await _fireStore.collection('PHARMACIST').get();
             var userData = querySnapshotData.docs
                 .where((element) => element['id'] == _pharmacist.userId);
             if (userData != null) {
+              print ( 'after3' );
               _pharmacist.experience = userData.first.data()['experience'];
               _pharmacist.pharmacy = Pharmacy();
               _pharmacist.pharmacy.pharmacyId =
                   userData.first.data()['pharmacyId'];
               pharmacyId = userData.first.data()['pharmacyId'];
-
+              print ( 'after4' );
               var querySnapshotPharmacyData =
                   await _fireStore.collection('PHARMACY').get();
               var pharmacyData = querySnapshotPharmacyData.docs
                   .where((element) => element.id == pharmacyId);
               if (pharmacyData != null) {
+                print ( 'after5' );
                 _pharmacist.pharmacy.name =
                     pharmacyData.first.data()['pharmacyName'];
                 _pharmacist.pharmacy.phoneNo =
                     pharmacyData.first.data()['phoneNo'];
+                _pharmacist.pharmacy.addressGeo =
+                    pharmacyData.first.data()['addressGeoPoint'];
+                print ( 'after6' );
               }
             }
 
@@ -325,6 +347,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
             _pharmacist = Pharmacist();
             _pharmacist.userType = UserType.EmployeeUser;
             _pharmacist.userId = user.first.id;
+            userId = user.first.id;
             _pharmacist.email = loggedUser.email;
             _pharmacist.fName = user.first.data()['fName'];
             _pharmacist.lName = user.first.data()['lName'];
@@ -352,6 +375,8 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
                     pharmacyData.first.data()['pharmacyName'];
                 _pharmacist.pharmacy.phoneNo =
                     pharmacyData.first.data()['phoneNo'];
+                _pharmacist.pharmacy.addressGeo =
+                  pharmacyData.first.data()['addressGeoPoint'];
               }
             }
 
@@ -361,10 +386,14 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
             break;
         }
         print(loggedUserType);
+        isLoading = false ;
+        return loggedUserType;
       }
+      else
+        return null ;
     } catch (e) {
       print('Error from Get Method $e');
-      // throw e;
+      throw e;
     }
   }
 
@@ -426,6 +455,9 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     loggedUserType = null;
     _patient = null;
     _pharmacist = null;
+    key='1234';
+    userId='';
+    photoUri='';
     auth.signOut();
     notifyListeners();
   }
@@ -436,6 +468,8 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     pharmacyId = '';
     _patient = null;
     _pharmacist = null;
+    key='1234';
+    photoUri='';
     await auth.currentUser.delete();
     notifyListeners();
   }
@@ -453,6 +487,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
       GeoPoint addressGeoPoint) async {
     try {
       await _signUpNew(email, pass);
+      int age = calculateAge(birthDate);
       var ret = await _fireStore.collection('USER').add({
         'fName': fName,
         'lName': lName,
@@ -467,6 +502,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
         'gender': gender,
         'address': address,
         'birthDate': birthDate,
+        'age': age,
         'addressGeoPoint': addressGeoPoint
       });
 
@@ -474,6 +510,23 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     } catch (error) {
       throw error;
     }
+  }
+
+  calculateAge(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+    return age;
   }
 
   Future<void> linkLoggedUserWithCredintal({AuthCredential credential}) async {
@@ -535,8 +588,9 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
 
   Future<void> signUpPharmacyWithUser(String email, String fName, String lName,
       String phoneNo, String experience,
-      {String pharmacyName, String pharmacyPhoneNo, List<File> files}) async {
+      {String pharmacyName, String pharmacyPhoneNo, GeoPoint addressGeoPoint , List<File> files}) async {
     try {
+      await auth.signInAnonymously();
       var ret = await _fireStore.collection('TempUSER').add({
         'fName': fName,
         'lName': lName,
@@ -548,18 +602,21 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
         'pharmacyName': pharmacyName,
         'phoneNo': pharmacyPhoneNo,
         'pharmacistId': ret.id,
-        'NoOfPharmacyDoc': files.length
+        'NoOfPharmacyDoc': files.length,
+        'addressGeoPoint': addressGeoPoint
       });
       var ret3 = await _fireStore
           .collection('TempPHARMACIST')
           .add({'id': ret.id, 'experience': experience, 'pharmacyId': ret2.id});
 
       for (int i = 0; i < files.length; i++) {
-        uploadFileToFirebase(
+        await uploadFileToFirebase(
             file: files[i], filePathInStorage: '${ret2.id}/$i');
       }
-    } catch (error) {
-      throw error;
+      await auth.currentUser.delete();
+      // await auth.signOut();
+    } catch (e) {
+      // print(e);
     }
   }
 
@@ -606,13 +663,12 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
       fileURL =
           await firebaseStorageRef.child(filePathInStorage).getDownloadURL();
     } catch (e) {
-      print('error From uploadFileToFirebase\n$e');
+      // print('error From uploadFileToFirebase\n$e');
     }
     return fileURL;
   }
 
-  Future<void> changeUserProfileImage({@required File file}) async {
-    String fileURL = '';
+  Future<String> changeUserProfileImage({@required File file}) async {
     try {
       print('Start upload Profile Image To Firebase');
       String userId = '';
@@ -620,23 +676,33 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
         userId = _patient.userId;
       else
         userId = _pharmacist.userId;
-      Reference firebaseStorageRef = FirebaseStorage.instance.ref();
-      firebaseStorageRef
-          .child('$userId/$userId')
-          .putFile(file)
-          .then((TaskSnapshot taskSnapshot) {
-        taskSnapshot.ref.getDownloadURL().then((value) async {
-          print("Done: $value");
-          fileURL = value;
-          await auth.currentUser.updateProfile(photoURL: fileURL);
-          print(auth.currentUser.photoURL);
-          loggedUser = auth.currentUser;
-          auth.currentUser.reload();
-          print(loggedUser.photoURL);
-        });
-      });
+      // Reference firebaseStorageRef = FirebaseStorage.instance.ref();
+      // firebaseStorageRef
+      //     .child('$userId/$userId')
+      //     .putFile(file)
+      //     .then((TaskSnapshot taskSnapshot) {
+      //   taskSnapshot.ref.getDownloadURL().then((value) async {
+      //     print("Done: $value");
+      //     fileURL = value;
+      //     await auth.currentUser.updateProfile(photoURL: fileURL);
+      //     print(auth.currentUser.photoURL);
+      //     loggedUser = auth.currentUser;
+      //     auth.currentUser.reload();
+      //     print(loggedUser.photoURL);
+      //     updateCollectionField(collectionName: 'USER', fieldName: 'photoUri', fieldValue: value, docId: userId);
+      //   });
+      // });
+      String fileURL = await uploadFileToFirebase(file: file, filePathInStorage: '$userId/$userId');
+      await auth.currentUser.updateProfile(photoURL: fileURL);
+      loggedUser = auth.currentUser;
+      updateCollectionField(collectionName: 'USER', fieldName: 'photoUri', fieldValue: fileURL, docId: userId);
+      auth.currentUser.reload();
+      photoUri = fileURL;
+      notifyListeners();
+      return fileURL;
     } catch (e) {
       print('error From change User profile Image\n$e');
+      return null ;
     }
   }
 
@@ -700,7 +766,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
   Future<void> updateCollectionField(
       {@required String collectionName,
       @required String fieldName,
-      @required String fieldValue,
+      @required dynamic fieldValue,
       @required String docId }) async {
     try {
       print('Start updateCollectionField.');
@@ -731,7 +797,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
       print('Start checkUserExistence ');
       var querySnapshot = await _fireStore.collection('USER').get();
       var user = querySnapshot.docs.where(
-          (element) => element['email'].toString().toLowerCase() == email);
+          (element) => element['email'].toString().toLowerCase() == email.toLowerCase());
       if (user != null && user.length > 0) {
         return true;
       }
@@ -743,8 +809,31 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     }
   }
 
+  Future<int> checkPharmacyUserExistence({@required String email}) async {
+    try {
+      print('Start checkPharmacyUserExistence ');
+      var querySnapshot = await _fireStore.collection('USER').get();
+      var user = querySnapshot.docs.where(
+          (element) => element['email'].toString().toLowerCase() == email.toLowerCase());
+
+      var querySnapshotTemp = await _fireStore.collection('TempUSER').get();
+      var userTemp = querySnapshotTemp.docs.where(
+          (element) => element['email'].toString().toLowerCase() == email.toLowerCase());
+      if (user != null && user.length > 0 ) {
+        return 1;
+      }
+      if (userTemp != null && userTemp.length > 0 ) {
+        return 2;
+      }
+      return 0;
+    } catch (e) {
+      print('Error from checkPharmacyUserExistence Method $e');
+      // return false ;
+      throw e;
+    }
+  }
+
   ///If user account exist, this method will send forget email
-  // ignore: missing_return
   Future<bool> forgetPasswordEmail({String email}) async {
     try {
       print('Start forgetPasswordEmail.');
@@ -755,7 +844,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
       return false;
     } catch (e) {
       print('error Method forgetPasswordEmail \n$e');
-      throw e;
+      return false;
     }
   }
 
@@ -794,14 +883,6 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     return 0;
   }
 
-  setOrderStatus ( String orderId , String newStatus){
-    try {
-      updateCollectionField(collectionName: 'Order', fieldName: 'Status', fieldValue:'' , docId: orderId );
-    }catch(e){
-
-    }
-  }
-
   Future<bool> orderProduct(
       {Product product,
       int quantity,
@@ -826,10 +907,49 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
         'prescriptionUrl': prescriptionUrl,
         'OrderNo': ordersNo,
         'Status': 'Pending',
+        'productName': product.name,
+        'price': product.price,
+        'totalPrice': product.price*quantity,
+        'productImageUrl': product.imageUrls != null && product.imageUrls.length > 0 ? product.imageUrls[0] : '',
+        'pharmacyName': product.pharmacy.name,
+        'isNewForUser': false,
+        'isNewForPhar': true,
+        'isRejectFromPrescription': false,
+        'PharNote': '',
       });
     } catch (e) {
       return false ;
     }
     return true;
   }
+
+  void setOrderStatus ( String orderId , String newStatus)async{
+    try {
+      print('Start Method setOrderStatus');
+      await updateCollectionField(collectionName: 'Order', fieldName: 'Status', fieldValue:newStatus , docId: orderId );
+    }catch(e){
+      print('Error from setOrderStatus $e');
+    }
+  }
+
+  void updateOrderPrescription ( String orderId ,String pharmacyId, String productId, int orderNo , File prescription  )async{
+    try {
+      print('Start Method updateOrderPrescription');
+      String prescriptionUrl = '';
+      if (prescription != null) {
+        prescriptionUrl = await uploadFileToFirebase(
+            file: prescription,
+            filePathInStorage:
+            'Orders/$pharmacyId-$productId-${patient.userId}-$orderNo');
+        print(prescriptionUrl);
+      }
+      setOrderStatus(orderId,'Pending');
+      await updateCollectionField(collectionName: 'Order', fieldName: 'isNew', fieldValue:false , docId: orderId );
+    }catch(e){
+      print('Error from updateOrderPrescription $e');
+    }
+  }
+
+
+
 }

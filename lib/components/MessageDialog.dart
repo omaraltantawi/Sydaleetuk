@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:graduationproject/constants.dart';
 import 'package:graduationproject/data_models/User.dart';
 import 'package:graduationproject/providers/ProductProvider.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MessageDialog {
   List<Text> getTextWidget(List<String> _textList) {
     List<Text> list = [];
     for (String _text in _textList) {
-      list.add(Text(_text));
+      list.add(Text(_text,textAlign: TextAlign.center,));
     }
     return list;
   }
@@ -78,6 +82,73 @@ class MessageDialog {
               child: Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop(QuestionMessage.CANCEL);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<File> _showPickFileDialog(
+      {@required BuildContext context,
+      @required List<String> msgText,}) async {
+    File file ;
+    return await showDialog<File>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Icon(Icons.warning_amber_rounded, size: 32.0,color: kPrimaryColor,),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: getTextWidget(msgText),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Upload Prescription'),
+              onPressed: () async {
+                try {
+                  // file = await pickImage();
+                  // if (file != null) {
+                  //   print ('File picked');
+                  //   return ;
+                  // } else {
+                  //   showMessageDialog(
+                  //       context: this.context,
+                  //       msgTitle: 'Warning',
+                  //       msgText: [
+                  //         'Prescription is required to make an order!!',
+                  //       ],
+                  //       buttonText: 'OK');
+                  //   return;
+                  // }
+                  final picker = ImagePicker();
+                  final pickedFile = await picker.getImage(source: ImageSource.gallery);
+                  if (pickedFile != null) {
+                    file = File(pickedFile.path);
+                  } else {
+                    file = null ;
+                    return;
+                  }
+                }catch(e){
+                  _showDialog(
+                      context: context,
+                      msgTitle: 'Warning',
+                      msgText: [
+                        'Something went wrong','Please try again.'
+                      ],
+                      buttonText: 'OK');
+                  return;
+                }
+                Navigator.of(context).pop(file);
+              },
+            ),
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(null);
               },
             ),
           ],
@@ -239,14 +310,18 @@ class MessageDialog {
   // },
   // ),
   Future<DateTime> _showDatePickerDialog(
-      {@required BuildContext context}) async {
-    DateTime date = DateTime.now();
+      {@required BuildContext context , @required DateTime dateTime}) async {
+    DateTime date;
+    if ( dateTime == null )
+      date = DateTime.now();
+    else
+      date = dateTime;
     return await showDatePicker(
       context: context,
       initialDate: date,
-      lastDate: date,
+      lastDate: DateTime.now(),
       firstDate: DateTime(date.year - 100, 1, 1),
-      currentDate: date,
+      currentDate: DateTime.now(),
       confirmText: 'OK',
       cancelText: 'Cancel',
     );
@@ -254,7 +329,7 @@ class MessageDialog {
 }
 
 mixin CanShowMessages {
-  MessageDialog _messageDialog = new MessageDialog();
+  final MessageDialog _messageDialog = MessageDialog();
 
   Future<void> showMessageDialog(
       {@required BuildContext context,
@@ -282,9 +357,9 @@ mixin CanShowMessages {
   }
 
   Future<DateTime> showDatePickerDialog(
-      {@required BuildContext context}) async {
+      {@required BuildContext context, @required DateTime dateTime}) async {
     DateTime selectedDate =
-        await _messageDialog._showDatePickerDialog(context: context);
+        await _messageDialog._showDatePickerDialog(context: context , dateTime: dateTime);
     return selectedDate;
   }
 
@@ -300,6 +375,13 @@ mixin CanShowMessages {
     ProductSearchFilter selectedUser =
         await _messageDialog._showFilterByPickerDialog(context: context,filter: filter);
     return selectedUser;
+  }
+
+  Future<File> showPickFileDialog(
+      {@required BuildContext context , @required List<String> msgText,}) async {
+    File selectedFile =
+        await _messageDialog._showPickFileDialog(context: context,msgText: msgText);
+    return selectedFile;
   }
 }
 

@@ -5,6 +5,7 @@ import 'User.dart';
 class Patient extends SUser {
   String healthState , address ;
   DateTime birthDate ;
-  DateTime gender ;
+  String gender ;
+  int age ;
   GeoPoint addressGeoPoint;
 }

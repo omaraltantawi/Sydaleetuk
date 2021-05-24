@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:graduationproject/Screens/LoadAppScreen/components/load_screen_content.dart';
 import 'package:graduationproject/Screens/sign_in/sign_in_screen.dart';
 import 'package:graduationproject/constants.dart';
 import 'package:graduationproject/size_config.dart';
 // This is the best practice
-import '../components/splash_content.dart';
 import '../../../components/default_button.dart';
 
 class Body extends StatefulWidget {
@@ -15,17 +16,17 @@ class _BodyState extends State<Body> {
   int currentPage = 0;
   List<Map<String, String>> splashData = [
     {
-      "text": "Welcome to Sydaleetuk",
+      "text": "",
       "image": "assets/images/splash_1.png"
     },
     {
       "text":
-          "We help people connect with pharmacies  \naround Jordan",
+          "",
       "image": "assets/images/splash_2.png"
 
     },
     {
-      "text": "Don't forget to buy back your treatments \nbefore they expire , use our reminder to remember",
+      "text": "",
       "image": "assets/images/splash.png"
     },
   ];
@@ -45,7 +46,7 @@ class _BodyState extends State<Body> {
                   });
                 },
                 itemCount: splashData.length,
-                itemBuilder: (context, index) => SplashContent(
+                itemBuilder: (context, index) => LoadAppContent(
                   image: splashData[index]["image"],
                   text: splashData[index]['text'],
                 ),
@@ -67,19 +68,9 @@ class _BodyState extends State<Body> {
                       ),
                     ),
                     Spacer(flex: 3),
-                    // widget.isLoading ?
-                    // SizedBox(
-                    //   width: SizeConfig.screenWidth * 0.05,
-                    //   height: SizeConfig.screenHeight * 0.025,
-                    //   child: CircularProgressIndicator(
-                    //     backgroundColor: kPrimaryColor,
-                    //   ),
-                    // ):
-                    DefaultButton(
-                      text: "Continue",
-                      press: () {
-                        Navigator.pushNamed(context, SignInScreen.routeName);
-                      },
+                    SpinKitDoubleBounce(
+                      color: kPrimaryColor,
+                      size: SizeConfig.screenWidth * 0.15,
                     ),
                     Spacer(),
                   ],

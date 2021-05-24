@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graduationproject/Screens/reminder/reminder_screen.dart';
 import 'package:graduationproject/components/no_account_text.dart';
+import 'package:graduationproject/components/no_pharmacy_account_text.dart';
 import '../../../size_config.dart';
 import 'sign_form.dart';
 
@@ -33,6 +34,7 @@ class Body extends StatelessWidget {
                 SignForm(),
 
                 NoAccountText(),
+                NoPharmacyAccountText(),
                 SizedBox(height: SizeConfig.screenHeight * 0.03),
                 FloatingActionButton.extended(
                   elevation: 0.0,

@@ -107,8 +107,7 @@ class _BodyState extends State<Body>with CanShowMessages {
     if (cond) return "( Prescription required )";
     return "";
   }
-
-
+  
   Future<File> pickImage() async {
     List<Asset> resultList = [];
     try {
@@ -306,15 +305,15 @@ class _BodyState extends State<Body>with CanShowMessages {
                 // Navigator.of(context).pushNamedAndRemoveUntil(OrderSuccessScreen.routeName, (Route<dynamic> route) => false);
               },
             ),
-            TextButton(onPressed: (){
-              // final picker = ImagePicker();
-              // final pickedFile = await picker.getImage(source: ImageSource.gallery);
-              // File file = File(pickedFile.path);
-              // print ( pickedFile.path );
-              // Provider.of<FireBaseAuth>(context,listen: false).signUpPharmacyWithUser('pharmacy2@Sydaleetuk.com','Pharmacist','2','','Good',pharmacyName: 'Pharmacy 2',pharmacyPhoneNo: '0790000000',files: [file]);
-              Provider.of<FireBaseAuth>(context,listen: false).addEmployeeUser('pharmacy@Sydaleetuk.com','emp@12345','Employee','1','','Good','JnLHedMrmjqmyso4Zfzc');
-              // Provider.of<FireBaseAuth>(context,listen: false).signUpPharmacyWithUser('pharmacy@Sydaleetuk.com','Pharmacist','1','','Good',pharmacyName: 'Pharmacy 1',pharmacyPhoneNo: '0790000000',files: []);
-            }, child: Text('SignUp Pharmacy'))
+            // TextButton(onPressed: (){
+            //   // final picker = ImagePicker();
+            //   // final pickedFile = await picker.getImage(source: ImageSource.gallery);
+            //   // File file = File(pickedFile.path);
+            //   // print ( pickedFile.path );
+            //   // Provider.of<FireBaseAuth>(context,listen: false).signUpPharmacyWithUser('pharmacy2@Sydaleetuk.com','Pharmacist','2','','Good',pharmacyName: 'Pharmacy 2',pharmacyPhoneNo: '0790000000',files: [file]);
+            //   Provider.of<FireBaseAuth>(context,listen: false).addEmployeeUser('pharmacy@Sydaleetuk.com','emp@12345','Employee','1','','Good','JnLHedMrmjqmyso4Zfzc');
+            //   // Provider.of<FireBaseAuth>(context,listen: false).signUpPharmacyWithUser('pharmacy@Sydaleetuk.com','Pharmacist','1','','Good',pharmacyName: 'Pharmacy 1',pharmacyPhoneNo: '0790000000',files: []);
+            // }, child: Text('SignUp Pharmacy'))
 
           ],
         ),

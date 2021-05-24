@@ -180,7 +180,43 @@ class ProductProvider with ChangeNotifier {
     isCompleted = false ;
     selectedProduct = Product();
     _searchController.text = "" ;
-    searchResults = [];
+    // searchResults = [];
+    print("reset done");
+  }
+
+  Future<Product> getProductData(String productId,String pharmacyId , GeoPoint userLocation) async {
+    try {
+      var phar = await _fireStore.collection('PHARMACY').doc(pharmacyId).get();
+      var medicine = await _fireStore.collection('PHARMACY').doc(pharmacyId).collection('Medicine').doc(productId).get();
+      GeoPoint pharmacylocation = phar.data()['addressGeoPoint'];
+      Product prod = Product();
+      prod.id = medicine.id;
+      prod.name = medicine.data()['name'];
+      var price = medicine.data()['price'];
+      if ( price.runtimeType == int ) {
+        double p = double.parse(price.toString());
+        prod.price = p;
+      }else
+        prod.price = price;
+      prod.pharmacy = Pharmacy();
+      prod.pharmacy.pharmacyId = phar.id;
+      prod.pharmacy.name = phar.data()['pharmacyName'];
+      prod.company = phar.data()['pharmacyName'];
+      prod.pharmacy.phoneNo = phar.data()['phoneNo'];
+      prod.pharmacy.distance = await Location.getDistance(startLatitude: userLocation.latitude, startLongitude: userLocation.longitude, endLatitude: pharmacylocation.latitude, endLongitude: pharmacylocation.longitude);
+      prod.imageUrls = medicine.data()['imageUrls'];
+      if  ( prod.imageUrls == null )
+        prod.imageUrls = [];
+      prod.prescriptionRequired = medicine.data()['PrescriptionRequired'];
+      Map<String,dynamic> dosagePills = medicine.data()['DosagePills'];
+      dosagePills.forEach((key, value) {
+        var d = int.parse(key);
+        prod.dosagePills.addAll({d:value});
+      });
+      return prod;
+    }catch(e){
+      return null ;
+    }
   }
 
 }

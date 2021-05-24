@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:graduationproject/Screens/UserOrders.dart';
 import 'package:graduationproject/Screens/reminder/reminder_screen.dart';
 import 'package:graduationproject/Screens/sign_in/sign_in_screen.dart';
+import 'package:graduationproject/Screens/splash/splash_screen.dart';
+import 'package:graduationproject/data_models/Patient.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:provider/provider.dart';
 
@@ -19,12 +22,22 @@ class Body extends StatelessWidget {
           ProfileMenu(
             text: "My Account",
             icon: "assets/icons/User Icon.svg",
-            press: () => {},
+            press: () {
+
+            },
           ),
           ProfileMenu(
-            text: "Notifications",
+            text: "My Orders",
             icon: "assets/icons/Bell.svg",
-            press: () {},
+            press: () {
+              Navigator.pushNamed(context, UserOrders.routeName);
+            },
+          ),
+          ProfileMenu(
+            text: "Medicines Reminder",
+            icon: "assets/icons/alarm clock 1.svg",
+            press: ()  =>
+              Navigator.pushNamed(context, ReminderScreen.routeName),
           ),
           ProfileMenu(
             text: "Settings",
@@ -32,17 +45,12 @@ class Body extends StatelessWidget {
             press: () {},
           ),
           ProfileMenu(
-            text: "Medicines Reminder",
-            icon: "assets/icons/alarm clock 1.svg",
-            press: ()  =>
-              Navigator.pushNamed(context, ReminderScreen.routeName),
-
-          ),
-          ProfileMenu(
             text: "Log Out",
             icon: "assets/icons/Log out.svg",
-            press: () { Provider.of<FireBaseAuth>(context, listen: false).logout();
-              Navigator.pushNamedAndRemoveUntil(context, SignInScreen.routeName, (route) => false);},
+            press: () {
+              Provider.of<FireBaseAuth>(context, listen: false).logout();
+              Navigator.pushNamedAndRemoveUntil(context, SplashScreen.routeName, (route) => false);
+            },
           ),
         ],
       ),

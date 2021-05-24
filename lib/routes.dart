@@ -1,4 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:graduationproject/Screens/LoadAppScreen/load_screen.dart';
+import 'package:graduationproject/Screens/UserOrders.dart';
+import 'package:graduationproject/Screens/complete_pharmacy_profile/complete_pharmacy_profile_screen.dart';
+import 'package:graduationproject/Screens/signup_pharmacy/sign_up_pharmacy_screen.dart';
 import 'Screens/SelectProduct.dart';
 import 'Screens/manager_screen/employee_list/employee_list.dart';
 import 'Screens/manager_screen/manager_screen.dart';
@@ -41,5 +45,9 @@ final Map<String, WidgetBuilder> routes = {
   MedicineScreenManager.routeName : (context) => MedicineScreenManager(),
   AddMedicine.routeName : (context) => AddMedicine(),
   EmployeeList.routeName: (context) => EmployeeList(),
+  LoadAppScreen.routeName: (context) => LoadAppScreen(),
+  UserOrders.routeName: (context) => UserOrders(),
+  SignUpPharmacyScreen.routeName: (context) => SignUpPharmacyScreen(),
+  CompletePharmacyProfileScreen.routeName: (context) => CompletePharmacyProfileScreen(),
 
 };

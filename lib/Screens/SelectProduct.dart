@@ -15,6 +15,7 @@ class SelectProduct extends StatelessWidget with CanShowMessages{
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
     productProvider.user = Provider.of<FireBaseAuth>(context).patient ;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -91,21 +92,13 @@ class SelectProduct extends StatelessWidget with CanShowMessages{
   }
 }
 
-class Body extends StatefulWidget {
+class Body extends StatelessWidget {
   const Body({Key key}) : super(key: key);
-
-  @override
-  _BodyState createState() => _BodyState();
-}
-
-class _BodyState extends State<Body> {
-  initiate(ProductProvider provider) {
-    provider.initiate();
-  }
 
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
+    // productProvider.initiate();
     return ListView.builder(
       itemCount: productProvider.searchResults.length,
       itemBuilder: (BuildContext context, int i) {
@@ -124,6 +117,41 @@ class _BodyState extends State<Body> {
     );
   }
 }
+
+//
+// class Body extends StatefulWidget {
+//   const Body({Key key}) : super(key: key);
+//
+//   @override
+//   _BodyState createState() => _BodyState();
+// }
+//
+// class _BodyState extends State<Body> {
+//   initiate(ProductProvider provider) {
+//     provider.initiate();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final productProvider = Provider.of<ProductProvider>(context);
+//     return ListView.builder(
+//       itemCount: productProvider.searchResults.length,
+//       itemBuilder: (BuildContext context, int i) {
+//         return SelectableWidget(
+//           product: productProvider.searchResults[i],
+//           selectThisProduct: (Product c) {
+//             // productProvider.reset();
+//             print(i);
+//             print('${c.name} ${c.pharmacy.distance} ${c.pharmacy.name}');
+//             productProvider.isCompleted = false ;
+//             productProvider.selectedProduct = c;
+//             Navigator.pushNamed(context, order.OrderProduct.routeName,arguments: c);
+//           },
+//         );
+//       },
+//     );
+//   }
+// }
 
 class SearchProductTF extends StatelessWidget {
   final TextEditingController controller;
@@ -184,24 +212,38 @@ class SelectableWidget extends StatelessWidget {
                   height: getProportionateScreenHeight(50),
                   width: getProportionateScreenWidth(50),
                 ),
-                SizedBox(width: getProportionateScreenWidth(10),),
+                SizedBox(width: getProportionateScreenWidth(20),),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                   Text(
-                        product.name +
-                        "\n" +
-                        product.price.toString() +
-                        " JOD\n" +
-                        product.pharmacy.name+
-                        "\n"+
-                        "Distance: "+(product.pharmacy.distance/1000).toStringAsFixed(2) +
-                        " Km" ,
+                        product.name,
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 18.0,
-                        fontWeight: FontWeight.w500),
+                        fontWeight: FontWeight.w700),
                   ),
+                    Text(
+                        product.pharmacy.name,
+                        style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w200),
+                  ),
+                    Text(
+                        "Distance: "+(product.pharmacy.distance/1000).toStringAsFixed(2) +" Km",
+                        style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w200),
+                  ),
+                    Text(
+                          product.price.toString() + " JOD" ,
+                      style: TextStyle(
+                          color: kPrimaryColor,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w500),
+                    ),
                   ],
                 ),
               ],

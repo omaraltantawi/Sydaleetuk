@@ -33,6 +33,9 @@ const String kNamelNullError = "Please Enter your name";
 const String kPhoneNumberNullError = "Please Enter your phone number";
 const String kInvalidPhoneNumberError = "Please Enter a Valid phone number";
 const String kAddressNullError = "Please Enter your address";
+const String kDocsEmptyError = "Please choose at least one doc.";
+const String kGenderEmptyError = "Please choose your gender.";
+const String kBirthDateEmptyError = "Please choose your birth date.";
 
 final otpInputDecoration = InputDecoration(
   contentPadding:

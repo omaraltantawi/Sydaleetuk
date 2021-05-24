@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:graduationproject/Screens/manager_screen/employee_list/employee_list.dart';
-import '/data_models/Pharmacist.dart';
-import '/firebase/auth/auth.dart';
+import 'package:graduationproject/data_models/Pharmacist.dart';
+import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:provider/provider.dart';
 
 import 'medicines/medicine_list.dart';

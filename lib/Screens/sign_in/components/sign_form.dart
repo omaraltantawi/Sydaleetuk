@@ -50,9 +50,9 @@ class _SignFormState extends State<SignForm> with CanShowMessages {
       child: Column(
         children: [
           buildEmailFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
+          SizedBox(height: getProportionateScreenHeight(20)),
           buildPasswordFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
+          SizedBox(height: getProportionateScreenHeight(20)),
           Row(
             children: [
               Checkbox(
@@ -79,7 +79,7 @@ class _SignFormState extends State<SignForm> with CanShowMessages {
             ],
           ),
           FormError(errors: errors),
-          SizedBox(height: getProportionateScreenHeight(20)),
+          SizedBox(height: getProportionateScreenHeight(15)),
           DefaultButton(
             text: "Continue",
             press: () async {

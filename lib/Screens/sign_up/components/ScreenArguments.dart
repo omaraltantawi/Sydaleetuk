@@ -9,6 +9,7 @@ class ScreenArguments {
   String address;
   DateTime birthDate;
   String gender ;
+  String experience ;
   GeoPoint addressGeoPoint;
-  ScreenArguments({this.email, this.password,this.fName,this.lName,this.phoneNo,this.address,this.birthDate,this.gender,this.addressGeoPoint});
+  ScreenArguments({this.experience,this.email, this.password,this.fName,this.lName,this.phoneNo,this.address,this.birthDate,this.gender,this.addressGeoPoint});
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:graduationproject/Screens/sign_up/components/ScreenArguments.dart';
+import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/components/custom_surfix_icon.dart';
 import 'package:graduationproject/components/default_button.dart';
 import 'package:graduationproject/components/form_error.dart';
 import 'package:graduationproject/providers/phone_auth.dart';
 import 'package:graduationproject/screens/otp/otp_screen.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
@@ -17,13 +19,15 @@ class CompleteProfileForm extends StatefulWidget {
   _CompleteProfileFormState createState() => _CompleteProfileFormState();
 }
 
-class _CompleteProfileFormState extends State<CompleteProfileForm> {
+class _CompleteProfileFormState extends State<CompleteProfileForm> with CanShowMessages {
   final _formKey = GlobalKey<FormState>();
   final List<String> errors = [];
   String firstName;
   String lastName;
   String phoneNumber;
   String address;
+  DateTime birthDate;
+  String gender;
 
   void addError({String error}) {
     if (!errors.contains(error))
@@ -52,11 +56,78 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
           buildPhoneNumberFormField(),
           SizedBox(height: getProportionateScreenHeight(30)),
           buildAddressFormField(),
+          SizedBox(height: getProportionateScreenHeight(30)),
+          Row(
+            children: [
+              SizedBox(width: 10.0,),
+              Text(
+                'Gender : ' ,
+                style: TextStyle(
+                  fontSize: 18.0
+                ),
+              ),
+              SizedBox(width: 10.0,),
+              DropdownButton<String>(
+                value: gender ,
+                iconSize: 24,
+                elevation: 16,
+                style: const TextStyle(color: kPrimaryColor, fontSize: 18.0),
+                underline: Container(
+                  height: 2.0,
+                  color: kPrimaryColor,
+                ),
+                onChanged: (String newValue) {
+                  setState(() {
+                    gender  = newValue;
+                  });
+                  print('Selected gender = $gender ');
+                },
+                items: <String>['Male','Female']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+          SizedBox(height: getProportionateScreenHeight(15)),
+          SizedBox(
+            width: SizeConfig.screenWidth * 0.5,
+            child: DefaultButton(
+              text: "Birth Date",
+              press: () async {
+                DateTime time = await showDatePickerDialog(context: context,dateTime: birthDate );
+                setState(() {
+                  if ( time != null )
+                    birthDate = time;
+                });
+              },
+            ),
+          ),
+          Text(
+              'Birth Date : ${birthDate == null ? '' : DateFormat('dd/MM/yyyy').format(birthDate)}'
+          ),
+          SizedBox(height: getProportionateScreenHeight(15)),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
             text: "continue",
             press: () {
+              bool hasError = false ;
+              if ( birthDate == null ) {
+                addError(error: kBirthDateEmptyError);
+                hasError = true;
+              }else
+                removeError(error: kBirthDateEmptyError);
+              if ( gender == null || gender == '' ) {
+                addError(error: kGenderEmptyError);
+                hasError = true;
+              }else
+                removeError(error: kGenderEmptyError);
+              if ( hasError )
+                return;
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
                 startPhoneAuth();
@@ -76,7 +147,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         phoneNo: '+962${phoneNumber.substring(1)}',
         onCodeSent: () {
           print('onCodeSent Get Phone');
-          Navigator.pushNamed(context, OtpScreen.routeName,arguments: ScreenArguments(email: widget.arguments.email,password: widget.arguments.password, addressGeoPoint: widget.arguments.addressGeoPoint,address: address,fName: firstName,lName: lastName,phoneNo: '+962${phoneNumber.substring(1)}'));
+          Navigator.pushNamed(context, OtpScreen.routeName,arguments: ScreenArguments(email: widget.arguments.email,password: widget.arguments.password, addressGeoPoint: widget.arguments.addressGeoPoint,address: address,fName: firstName,lName: lastName, birthDate: birthDate , gender: gender ,phoneNo: '+962${phoneNumber.substring(1)}'));
         },
         onFailed: () {
           print('onFailed Get Phone');
