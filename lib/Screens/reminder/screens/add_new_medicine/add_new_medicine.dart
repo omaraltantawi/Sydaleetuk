@@ -104,7 +104,7 @@ class _AddNewMedicineState extends State<AddNewMedicine> {
                 height: deviceHeight * 0.05,
                 child: FittedBox(
                     child: Text(
-                  "Add Pills",
+                  "Add Treat",
                   style: Theme.of(context)
                       .textTheme
                       .headline3
@@ -364,7 +364,9 @@ class _AddNewMedicineState extends State<AddNewMedicine> {
           await _notifications.showNotification(pill.name, pill.amount + " " + pill.medicineForm + " " + pill.type, time,
               pill.notifyId,
               flutterLocalNotificationsPlugin);
-          setDate = setDate.add(Duration(milliseconds: 604800000));
+          //to make it for days change the duration to 86400000 milliseconds (this number equal one day)
+          //to make it for weeks change the duration to 604800000 milliseconds (this number equal one week)
+          setDate = setDate.add(Duration(milliseconds: 86400000));
           pill.time = setDate.millisecondsSinceEpoch;
           pill.notifyId = Random().nextInt(10000000);
         }

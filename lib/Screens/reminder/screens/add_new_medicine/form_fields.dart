@@ -32,7 +32,7 @@ class FormFields extends StatelessWidget {
               decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(
                       horizontal: 15.0, vertical: 20.0),
-                  labelText: "Pills Name",
+                  labelText: "Treatment name",
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide:
@@ -59,7 +59,7 @@ class FormFields extends StatelessWidget {
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(
                             horizontal: 15.0, vertical: 20.0),
-                        labelText: "Pills Amount",
+                        labelText: "Amount",
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
                             borderSide: BorderSide(
@@ -122,7 +122,9 @@ class FormFields extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.bottomRight,
-            child: FittedBox(child: Text('$howManyWeeks weeks')),
+            // child: FittedBox(child: Text('$howManyWeeks Days')),
+            // child: FittedBox(child: Text('$howManyWeeks weeks')),
+            child: FittedBox(child: Text('$howManyWeeks Days')),
           )
         ],
       ),
