@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:graduationproject/Screens/employee_screen/main_employee_screen.dart';
 import 'package:graduationproject/Screens/home/home_screen.dart';
-import 'package:graduationproject/Screens/lets_text.dart';
 import 'package:graduationproject/Screens/manager_screen/manager_screen.dart';
 import 'package:graduationproject/ServiceClasses/SignInMethods.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
@@ -106,14 +106,15 @@ class _SignFormState extends State<SignForm> with CanShowMessages {
                     // Provider.of<FireBaseAuth>(context,listen: false).addEmployeeUser('Emp@Sydaleetuk.com','emp@12345','Employee','1','','Good','JnLHedMrmjqmyso4Zfzc');
                     Navigator.pushNamed(context, ManagerScreen.routeName);
                   } else if (type == UserType.EmployeeUser) {
-                    // print('Logged Successfully');
-                    // print(Provider.of<FireBaseAuth>(context, listen: false)
-                    //     .loggedUserType);
-                    // Pharmacist phar =
-                    //     await Provider.of<FireBaseAuth>(context, listen: false)
-                    //         .currentUser;
-                    // print(
-                    //     '${phar.userId} ${phar.pharmacy.name} ${phar.pharmacy.pharmacyId}');
+                    print('Logged Successfully');
+                    print(Provider.of<FireBaseAuth>(context, listen: false)
+                        .loggedUserType);
+                    Pharmacist phar =
+                        await Provider.of<FireBaseAuth>(context, listen: false)
+                            .currentUser;
+                    print(
+                        '${phar.userId} ${phar.pharmacy.name} ${phar.pharmacy.pharmacyId}');
+                    Navigator.pushNamed(context, MainEmployeeScreen.routeName);
                   }
                 } on FirebaseAuthException catch (e) {
                   print(e);

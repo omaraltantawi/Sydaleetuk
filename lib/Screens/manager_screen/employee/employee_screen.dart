@@ -23,46 +23,56 @@ class EmployeeScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            height: 200,
-            color: Colors.green,
-            child: Text('Profile Pic'),
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+            children: [
+              Container(
+                width: double.infinity,
+                height: 200,
+                color: Colors.green,
+                child: Text('Profile Pic'),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                height: 50,
+                child: Text('Employee Name'),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                height: 50,
+                child: Text('Phone Number'),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                height: 50,
+                child: Text('Email'),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                height: 50,
+                child: ElevatedButton(
+                  child: Text('Delete this User'),
+                  onPressed: (){},
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.red),
+                  ),
+                ),
+              ),
+            ],
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            height: 50,
-            child: Text('Employee Name'),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            height: 50,
-            child: Text('Phone Number'),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            height: 50,
-            child: Text('Email'),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            height: 50,
-            child: ElevatedButton(
-              child: Text('Delete this User'),
-              onPressed: (){},
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

@@ -9,11 +9,15 @@ class MedicineScreenManager extends StatefulWidget {
 }
 
 class _MedicineScreenManagerState extends State<MedicineScreenManager> {
-  String medicineName = 'ASPIRIN';
+  String medicineName = 'Vitamin C man zinc tupedu';
 
   String price = '4.5';
 
-  String pill = '30';
+  List<String> type = ['pills', 'ml', 'mg'];
+
+  String size = '30';
+
+  var types;
 
   String barcode = '2013546136';
 
@@ -22,18 +26,19 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
   String description =
       'Aspirin is used to reduce fever and relieve mild to moderate pain from conditions such as muscle aches, toothaches, common cold, and headaches. It may also be used to reduce pain and swelling in conditions such as arthritis.';
 
+  Color background = Color(0xFF099F9D);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          medicineName,
+          '$medicineName',
           style: TextStyle(
             fontSize: 25,
             color: Colors.white,
           ),
         ),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: background,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -48,7 +53,7 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              height: 200,
+              height: 150,
               width: double.infinity,
               color: Colors.red,
               child: Center(
@@ -57,11 +62,17 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
             ),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15.0),
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Name: $medicineName'),
+                  Container(
+                    child: Text(
+                      'Name: $medicineName',
+                      overflow: TextOverflow.fade,
+                    ),
+                    width: MediaQuery.of(context).size.width - 100,
+                  ),
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
@@ -91,6 +102,12 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                               Navigator.pop(context);
                                             });
                                           },
+
+
+
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(background),
+                                          ),
                                         ),
                                       ),
                                       SizedBox(
@@ -103,6 +120,9 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(background),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -116,7 +136,7 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
             ),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15.0),
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -137,6 +157,8 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                       labelText: 'New barcode',
                                     ),
                                     controller: _controller,
+                                    keyboardType: TextInputType.number,
+                                    maxLength: 20,
                                   ),
                                   Row(
                                     children: [
@@ -150,6 +172,9 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                               Navigator.pop(context);
                                             });
                                           },
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(background),
+                                          ),
                                         ),
                                       ),
                                       SizedBox(
@@ -162,6 +187,9 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(background),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -175,7 +203,7 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
             ),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15.0),
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -192,10 +220,12 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                 actions: [
                                   TextField(
                                     decoration: InputDecoration(
-                                      hintText: 'Enter the new price',
-                                      labelText: 'New price',
-                                    ),
+                                        hintText: 'Enter the new price',
+                                        labelText: 'New price',
+                                        suffixText: 'JOD'),
                                     controller: _controller,
+                                    keyboardType: TextInputType.number,
+                                    maxLength: 6,
                                   ),
                                   Row(
                                     children: [
@@ -209,6 +239,10 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                               Navigator.pop(context);
                                             });
                                           },
+
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(background),
+                                          ),
                                         ),
                                       ),
                                       SizedBox(
@@ -221,6 +255,9 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(background),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -234,27 +271,56 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
             ),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15.0),
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Pills: $pill '),
+                  Text('pills: $size'),
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
                       TextEditingController _controller =
-                          TextEditingController(text: pill);
+                          TextEditingController(text: size);
                       showDialog(
                           context: context,
                           builder: (_) => AlertDialog(
-                                title: Text('Change pill'),
+                                title: Text('Change barCode'),
                                 actions: [
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      hintText: 'the new  Number of pills',
-                                      labelText: 'Number of pills',
-                                    ),
-                                    controller: _controller,
+                                  Row(
+                                    children: [
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          hintText: 'Enter the new pill',
+                                          labelText: 'New pill',
+                                          constraints: BoxConstraints(
+                                            maxWidth: 150,
+                                            maxHeight: 150
+                                          ),
+                                        ),
+                                        maxLength: 4,
+                                        controller: _controller,
+                                        keyboardType: TextInputType.number,
+                                      ),
+                                      DropdownButton(
+                                          value: 1,
+                                          items: [
+                                            DropdownMenuItem(
+                                              child: Text(type[0]),
+                                              value: 1,
+                                            ),
+                                            DropdownMenuItem(
+                                              child: Text(type[1]),
+                                              value: 2,
+                                            ),
+                                            DropdownMenuItem(
+                                                child: Text(type[2]), value: 3),
+                                          ],
+                                          onChanged: (value) {
+                                            setState(() {
+                                              types = value;
+                                            });
+                                          }),
+                                    ],
                                   ),
                                   Row(
                                     children: [
@@ -264,10 +330,14 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                           child: Text('Submit'),
                                           onPressed: () {
                                             setState(() {
-                                              pill = _controller.text;
+                                              barcode = _controller.text;
                                               Navigator.pop(context);
                                             });
                                           },
+
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(background),
+                                          ),
                                         ),
                                       ),
                                       SizedBox(
@@ -280,6 +350,10 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
+
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(background),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -293,7 +367,7 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
             ),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15.0),
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -308,11 +382,22 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                           builder: (_) => AlertDialog(
                                 title: Text('Change prescription '),
                                 actions: [
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      labelText: 'change prescription',
-                                    ),
-                                    controller: _controller,
+                                  Row(
+                                    children: [
+                                      Text('prescription? '),
+                                      Switch(
+                                        value: prescription,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            prescription = value;
+                                            print(prescription);
+                                          });
+                                        },
+                                        activeTrackColor:
+                                            Colors.lightGreenAccent,
+                                        activeColor: Colors.green,
+                                      ),
+                                    ],
                                   ),
                                   Row(
                                     children: [
@@ -327,6 +412,10 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                               Navigator.pop(context);
                                             });
                                           },
+
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(background),
+                                          ),
                                         ),
                                       ),
                                       SizedBox(
@@ -339,6 +428,9 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(background),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -355,7 +447,7 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
               children: [
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.only(top: 15, left: 15.0, right: 15.0),
+                  padding: EdgeInsets.only(left: 15.0, right: 15.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -394,6 +486,10 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                                   Navigator.pop(context);
                                                 });
                                               },
+
+                                              style: ButtonStyle(
+                                                backgroundColor: MaterialStateProperty.all(background),
+                                              ),
                                             ),
                                           ),
                                           SizedBox(
@@ -406,6 +502,9 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                               onPressed: () {
                                                 Navigator.pop(context);
                                               },
+                                              style: ButtonStyle(
+                                                backgroundColor: MaterialStateProperty.all(background),
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -423,7 +522,7 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                   child: Container(
                     constraints: BoxConstraints(
                       minHeight: 50.0,
-                      maxHeight: 300.0,
+                      maxHeight: 150.0,
                     ),
                     padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                     decoration: BoxDecoration(

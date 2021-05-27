@@ -79,34 +79,34 @@ class OrderScreen extends StatelessWidget {
             SizedBox(
               height: 50,
             ),
-            Container(
-              width: double.infinity,
-              height: 400,
-              padding: EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(width: 2,color: Colors.red),
-
-              ),
-              child: ListView(
-
-                children: [
-                  ListTile(
-                    title: Text('Medicine Name 1'),
-                  ),
-                  ListTile(
-                    title: Text('Medicine Name 2'),
-                  ),
-                  ListTile(
-                    title: Text('Medicine Name 3'),
-                  ),
-                  ListTile(
-                    title: Text('Medicine Name 4'),
-                  ),
-
-                ],
-              ),
-            ),
+            // Container(
+            //   width: double.infinity,
+            //   height: 400,
+            //   padding: EdgeInsets.all(10.0),
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(10),
+            //     border: Border.all(width: 2,color: Colors.red),
+            //
+            //   ),
+            //   child: ListView(
+            //
+            //     children: [
+            //       ListTile(
+            //         title: Text('Medicine Name 1'),
+            //       ),
+            //       ListTile(
+            //         title: Text('Medicine Name 2'),
+            //       ),
+            //       ListTile(
+            //         title: Text('Medicine Name 3'),
+            //       ),
+            //       ListTile(
+            //         title: Text('Medicine Name 4'),
+            //       ),
+            //
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),

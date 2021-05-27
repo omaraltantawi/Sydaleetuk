@@ -12,14 +12,14 @@ import 'medicine_screen.dart';
 
 List<Widget> medicines;
 
-class MedicineList extends StatefulWidget {
-  static const String routeName = 'MedicineList';
+class EmployeeMedicineList extends StatefulWidget {
+  static const String routeName = 'EmployeeMedicineList';
 
   @override
-  _MedicineListState createState() => _MedicineListState();
+  _EmployeeMedicineListState createState() => _EmployeeMedicineListState();
 }
 
-class _MedicineListState extends State<MedicineList> {
+class _EmployeeMedicineListState extends State<EmployeeMedicineList> {
   User loggedInUser;
   Pharmacist phar;
 
@@ -144,7 +144,7 @@ class _MedicineListState extends State<MedicineList> {
                           TextButton(
                             onPressed: () {
                               Navigator.pushNamed(
-                                  context, AddMedicine.routeName);
+                                  context, EmployeeAddMedicine.routeName);
                             },
                             child: Container(
                               width: 150,
@@ -275,7 +275,7 @@ class Medicine extends StatelessWidget {
         ),
       ),
       onTap: () {
-        Navigator.pushNamed(context, MedicineScreenManager.routeName);
+        Navigator.pushNamed(context, EmployeeMedicineScreen.routeName);
       },
     );
   }

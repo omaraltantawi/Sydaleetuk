@@ -41,28 +41,37 @@ class _AddEmployeeState extends State<AddEmployee> {
           SizedBox(
             height: 20,
           ),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Employee Name',
-              hintText: 'Enter employee name',
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Employee Name',
+                hintText: 'Enter employee name',
+              ),
             ),
           ),
           SizedBox(
             height: 20,
           ),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'phone number',
-              hintText: 'Enter the phone Number of the employee',
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'phone number',
+                hintText: 'Enter the phone Number of the employee',
+              ),
             ),
           ),
           SizedBox(
             height: 20,
           ),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Email',
-              hintText: 'Enter the Email of the employee',
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Email',
+                hintText: 'Enter the Email of the employee',
+              ),
             ),
           ),
           SizedBox(
@@ -73,9 +82,29 @@ class _AddEmployeeState extends State<AddEmployee> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(child: ElevatedButton(onPressed: (){},child: Text('Cancel'),),),
-                SizedBox(width: 10,),
-                Expanded(child: ElevatedButton(onPressed: (){},child: Text('Submit'),),),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: Text('Cancel'),
+
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Color(0xFF099F9D)),
+                    ),
+                  ),
+
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: Text('Submit'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Color(0xFF099F9D)),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
