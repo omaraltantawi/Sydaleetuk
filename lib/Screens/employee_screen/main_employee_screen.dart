@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:graduationproject/Screens/manager_screen/pharmacy/pharmacy_screen.dart';
-import 'package:graduationproject/Screens/manager_screen/profile/profile_screen_pharmacist.dart';
+import '/Screens/manager_screen/pharmacy/pharmacy_screen.dart';
+import '/Screens/manager_screen/profile/profile_screen_pharmacist.dart';
 import 'package:graduationproject/Screens/manager_screen/order/order_list.dart';
 import 'package:graduationproject/data_models/Pharmacist.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';

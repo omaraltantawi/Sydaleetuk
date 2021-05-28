@@ -93,6 +93,7 @@ class _MedicineListState extends State<MedicineList> {
     loggedInUser = Provider.of<FireBaseAuth>(context, listen: false).loggedUser;
 
 
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xFF099F9D),
@@ -111,7 +112,7 @@ class _MedicineListState extends State<MedicineList> {
                             onPressed: () {
                               scanBarcodeNormal();
                               setState(() {
-                                s=_scanBarcode;
+                                print(_scanBarcode);
                               });
                             },
                             child: Container(
@@ -197,7 +198,7 @@ class _MedicineListState extends State<MedicineList> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: medicine().length == 0 ? NoData() : Data(),
+      body: listMedicines().length == 0 ? NoData() : Data(),
     );
   }
 }
@@ -207,20 +208,23 @@ class Data extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       padding: EdgeInsets.all(8.0),
-      children: medicine(),
+      children: listMedicines(),
     );
   }
 }
-String s = 'Panadol';
-List<Widget> medicine() {
+List<Widget> listMedicines() {
   medicines = [
     Medicine(
-      name: s,
+      name: 'Panadol',
       number: 1,
+      barCode: 1234567890,
+      price: 3.6666.toString(),
     ),
     Medicine(
       name: 'Vitamin C man zinc tupedu',
       number: 2,
+      barCode: 1234567890,
+      price: 301.66615646.toString(),
     ),
   ];
 
@@ -230,10 +234,12 @@ List<Widget> medicine() {
 class Medicine extends StatelessWidget {
   final int number;
   final String name;
+  final int barCode;
+  final String price;
 
   // final Image image;
 
-  Medicine({this.number, this.name});
+  Medicine({this.number, this.name,this.barCode, this.price});
 
   @override
   Widget build(BuildContext context) {
@@ -262,14 +268,15 @@ class Medicine extends StatelessWidget {
                     ),
                   ],
                 ),
-                Text('BarCode: 123548910'),
+                Text('BarCode: $barCode'),
               ],
             ),
             Text(
-              '3.5 JOD',
+              '${price.substring(0,4)} JOD',
               style: TextStyle(
                 fontSize: 25,
               ),
+
             ),
           ],
         ),

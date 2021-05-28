@@ -1,21 +1,25 @@
 import 'package:flutter/cupertino.dart';
 
 class Medicine {
+  Image image;
   String name;
   String barCode;
-  Map type;
-  String description;
-  Map date;
+  String EXPDate;
+  String MFGDate;
   String price;
+  String size;
+  String type;
   bool prescription;
-  List image;
+  String description;
 
   Medicine(
       {@required this.name,
       @required this.barCode,
       this.type,
       this.description,
-      this.date,
+      this.size,
+      this.EXPDate,
+      this.MFGDate,
       @required this.price,
       this.prescription,
       this.image});

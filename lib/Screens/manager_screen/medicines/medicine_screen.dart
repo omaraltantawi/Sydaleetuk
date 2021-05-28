@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import 'medicine.dart';
+
 class MedicineScreenManager extends StatefulWidget {
   static const String routeName = 'MedicineScreenManager';
 
@@ -9,30 +11,32 @@ class MedicineScreenManager extends StatefulWidget {
 }
 
 class _MedicineScreenManagerState extends State<MedicineScreenManager> {
-  String medicineName = 'Vitamin C man zinc tupedu';
-
-  String price = '4.5';
-
-  List<String> type = ['pills', 'ml', 'mg'];
-
-  String size = '30';
-
-  var types;
-
-  String barcode = '2013546136';
-
-  bool prescription = false;
-
-  String description =
-      'Aspirin is used to reduce fever and relieve mild to moderate pain from conditions such as muscle aches, toothaches, common cold, and headaches. It may also be used to reduce pain and swelling in conditions such as arthritis.';
+  Medicine medicine = Medicine(
+      name: 'Vitamin C man zinc tupedu',
+      barCode: '2013546136',
+      price: '3.4',
+      type: 'pills',
+      size: '30',
+      EXPDate: DateTime(2022, 11).toString(),
+      MFGDate: DateTime(2022, 11).toString(),
+      description:
+          'Aspirin is used to reduce fever and relieve mild to moderate pain from conditions such as muscle aches, toothaches, common cold, and headaches. It may also be used to reduce pain and swelling in conditions such as arthritis.',
+      image: Image.network(
+          'https://kaifanonline.com/ecdata/stores/GRYBA173/image/cache/data/products/1602084178_aspirin-protect-595x738.png'),
+      prescription: false);
 
   Color background = Color(0xFF099F9D);
+  TextStyle _textStyle = TextStyle(
+    color: Colors.black,
+    fontSize: 15,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '$medicineName',
+          '${medicine.name}',
           style: TextStyle(
             fontSize: 25,
             color: Colors.white,
@@ -55,9 +59,8 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
             Container(
               height: 150,
               width: double.infinity,
-              color: Colors.red,
               child: Center(
-                child: Text('Medicine Images'),
+                child: medicine.image,
               ),
             ),
             Container(
@@ -68,8 +71,9 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                 children: [
                   Container(
                     child: Text(
-                      'Name: $medicineName',
+                      'Name: ${medicine.name}',
                       overflow: TextOverflow.fade,
+                      style: _textStyle,
                     ),
                     width: MediaQuery.of(context).size.width - 100,
                   ),
@@ -77,7 +81,7 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                     icon: Icon(Icons.edit),
                     onPressed: () {
                       TextEditingController _controller =
-                          TextEditingController(text: medicineName);
+                          TextEditingController(text: medicine.name);
                       showDialog(
                           context: context,
                           builder: (_) => AlertDialog(
@@ -98,15 +102,14 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                           child: Text('Submit'),
                                           onPressed: () {
                                             setState(() {
-                                              medicineName = _controller.text;
+                                              medicine.name = _controller.text;
                                               Navigator.pop(context);
                                             });
                                           },
-
-
-
                                           style: ButtonStyle(
-                                            backgroundColor: MaterialStateProperty.all(background),
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    background),
                                           ),
                                         ),
                                       ),
@@ -121,7 +124,9 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                             Navigator.pop(context);
                                           },
                                           style: ButtonStyle(
-                                            backgroundColor: MaterialStateProperty.all(background),
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    background),
                                           ),
                                         ),
                                       ),
@@ -140,12 +145,15 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Barcode: $barcode'),
+                  Text(
+                    'Barcode: ${medicine.barCode}',
+                    style: _textStyle,
+                  ),
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
                       TextEditingController _controller =
-                          TextEditingController(text: barcode);
+                          TextEditingController(text: medicine.barCode);
                       showDialog(
                           context: context,
                           builder: (_) => AlertDialog(
@@ -168,12 +176,15 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                           child: Text('Submit'),
                                           onPressed: () {
                                             setState(() {
-                                              barcode = _controller.text;
+                                              medicine.barCode =
+                                                  _controller.text;
                                               Navigator.pop(context);
                                             });
                                           },
                                           style: ButtonStyle(
-                                            backgroundColor: MaterialStateProperty.all(background),
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    background),
                                           ),
                                         ),
                                       ),
@@ -188,7 +199,9 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                             Navigator.pop(context);
                                           },
                                           style: ButtonStyle(
-                                            backgroundColor: MaterialStateProperty.all(background),
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    background),
                                           ),
                                         ),
                                       ),
@@ -207,12 +220,15 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Price: $price JOD'),
+                  Text(
+                    'Price: ${medicine.price} JOD',
+                    style: _textStyle,
+                  ),
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
                       TextEditingController _controller =
-                          TextEditingController(text: price);
+                          TextEditingController(text: medicine.price);
                       showDialog(
                           context: context,
                           builder: (_) => AlertDialog(
@@ -235,13 +251,14 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                           child: Text('Submit'),
                                           onPressed: () {
                                             setState(() {
-                                              price = _controller.text;
+                                              medicine.price = _controller.text;
                                               Navigator.pop(context);
                                             });
                                           },
-
                                           style: ButtonStyle(
-                                            backgroundColor: MaterialStateProperty.all(background),
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    background),
                                           ),
                                         ),
                                       ),
@@ -256,7 +273,9 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                             Navigator.pop(context);
                                           },
                                           style: ButtonStyle(
-                                            backgroundColor: MaterialStateProperty.all(background),
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    background),
                                           ),
                                         ),
                                       ),
@@ -275,91 +294,84 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('pills: $size'),
+                  Row(
+                    children: [
+                      Text(
+                        'Size: ${medicine.size}',
+                        style: _textStyle,
+                      ),
+                      SizedBox(width: 20,),
+                      Text(
+                        'Type: ${medicine.type}',
+                        style: _textStyle,
+                      ),
+                    ],
+                  ),
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
                       TextEditingController _controller =
-                          TextEditingController(text: size);
+                      TextEditingController(text: medicine.price);
                       showDialog(
                           context: context,
                           builder: (_) => AlertDialog(
-                                title: Text('Change barCode'),
-                                actions: [
-                                  Row(
-                                    children: [
-                                      TextField(
-                                        decoration: InputDecoration(
-                                          hintText: 'Enter the new pill',
-                                          labelText: 'New pill',
-                                          prefixIconConstraints: BoxConstraints(
-                                            maxWidth: 150,
-                                            maxHeight: 150
-                                          ),
-                                        ),
-                                        maxLength: 4,
-                                        controller: _controller,
-                                        keyboardType: TextInputType.number,
-                                      ),
-                                      DropdownButton(
-                                          value: 1,
-                                          items: [
-                                            DropdownMenuItem(
-                                              child: Text(type[0]),
-                                              value: 1,
-                                            ),
-                                            DropdownMenuItem(
-                                              child: Text(type[1]),
-                                              value: 2,
-                                            ),
-                                            DropdownMenuItem(
-                                                child: Text(type[2]), value: 3),
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              types = value;
-                                            });
-                                          }),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: ElevatedButton(
-                                          child: Text('Submit'),
-                                          onPressed: () {
-                                            setState(() {
-                                              barcode = _controller.text;
-                                              Navigator.pop(context);
-                                            });
-                                          },
-
-                                          style: ButtonStyle(
-                                            backgroundColor: MaterialStateProperty.all(background),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: ElevatedButton(
-                                          child: Text('Cancel'),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-
-                                          style: ButtonStyle(
-                                            backgroundColor: MaterialStateProperty.all(background),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                            title: Text('Change size and type'),
+                            actions: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 120,
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                          hintText: 'Size',
+                                          labelText: 'Size',),
+                                      controller: _controller,
+                                      keyboardType: TextInputType.number,
+                                      maxLength: 6,
+                                    ),
                                   ),
                                 ],
-                              ));
+                              ),
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      child: Text('Submit'),
+                                      onPressed: () {
+                                        setState(() {
+                                          medicine.size = _controller.text;
+                                          Navigator.pop(context);
+                                        });
+                                      },
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                        MaterialStateProperty.all(
+                                            background),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: ElevatedButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                        MaterialStateProperty.all(
+                                            background),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ));
                     },
                   ),
                 ],
@@ -371,73 +383,19 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('prescription : $prescription '),
-                  IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () {
-                      TextEditingController _controller =
-                          TextEditingController(text: prescription.toString());
-                      showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                                title: Text('Change prescription '),
-                                actions: [
-                                  Row(
-                                    children: [
-                                      Text('prescription? '),
-                                      Switch(
-                                        value: prescription,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            prescription = value;
-                                            print(prescription);
-                                          });
-                                        },
-                                        activeTrackColor:
-                                            Colors.lightGreenAccent,
-                                        activeColor: Colors.green,
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: ElevatedButton(
-                                          child: Text('Submit'),
-                                          onPressed: () {
-                                            setState(() {
-                                              prescription =
-                                                  _controller.text.isNotEmpty;
-                                              Navigator.pop(context);
-                                            });
-                                          },
-
-                                          style: ButtonStyle(
-                                            backgroundColor: MaterialStateProperty.all(background),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: ElevatedButton(
-                                          child: Text('Cancel'),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          style: ButtonStyle(
-                                            backgroundColor: MaterialStateProperty.all(background),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ));
+                  Text(
+                    'prescription : ${medicine.prescription ? 'need' : 'don\'t need'} ',
+                    style: _textStyle,
+                  ),
+                  Switch(
+                    value: medicine.prescription,
+                    onChanged: (value) {
+                      setState(() {
+                        medicine.prescription = value;
+                      });
                     },
+                    activeTrackColor: Colors.lightGreenAccent,
+                    activeColor: Colors.green,
                   ),
                 ],
               ),
@@ -451,12 +409,15 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Description:'),
+                      Text(
+                        'Description:',
+                        style: _textStyle,
+                      ),
                       IconButton(
                         icon: Icon(Icons.edit),
                         onPressed: () {
                           TextEditingController _controller =
-                              TextEditingController(text: description);
+                              TextEditingController(text: medicine.description);
                           showDialog(
                               context: context,
                               builder: (_) => AlertDialog(
@@ -481,14 +442,15 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                               child: Text('Submit'),
                                               onPressed: () {
                                                 setState(() {
-                                                  description =
+                                                  medicine.description =
                                                       _controller.text;
                                                   Navigator.pop(context);
                                                 });
                                               },
-
                                               style: ButtonStyle(
-                                                backgroundColor: MaterialStateProperty.all(background),
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        background),
                                               ),
                                             ),
                                           ),
@@ -503,7 +465,9 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                                 Navigator.pop(context);
                                               },
                                               style: ButtonStyle(
-                                                backgroundColor: MaterialStateProperty.all(background),
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        background),
                                               ),
                                             ),
                                           ),
@@ -528,12 +492,15 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15.0),
                       border: Border.all(
-                        color: Colors.red,
-                        width: 3,
+                        color: Colors.grey.shade700,
+                        width: 2,
                       ),
                     ),
                     child: SingleChildScrollView(
-                      child: Text(description),
+                      child: Text(
+                        medicine.description,
+                        style: TextStyle(fontSize: 17, color: Colors.grey[600]),
+                      ),
                     ),
                   ),
                 ),

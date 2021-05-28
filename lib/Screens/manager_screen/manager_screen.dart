@@ -6,7 +6,6 @@ import 'package:graduationproject/Screens/manager_screen/requests_medicines/requ
 import 'package:graduationproject/data_models/Pharmacist.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:provider/provider.dart';
-
 import 'employee/employee_list.dart';
 import 'medicines/medicine_list.dart';
 import 'profile/profile_screen_pharmacist.dart';
@@ -66,6 +65,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
                               fontSize: 24,
                             ),
                           ),
+
                           Text(
                             'phar.lName',
                             style: TextStyle(
@@ -157,28 +157,28 @@ class _ManagerScreenState extends State<ManagerScreen> {
                   height: 30,
                 ),
                 MainButtons(
-                  title: 'The Medicine List',
+                  title: 'Medicine List',
                   page: MedicineList.routeName,
                 ),
                 SizedBox(
                   height: 30,
                 ),
                 MainButtons(
-                  title: 'The Order List',
+                  title: 'Order List',
                   page: OrderList.routeName,
                 ),
                 SizedBox(
                   height: 30,
                 ),
                 MainButtons(
-                  title: 'The Employee List',
+                  title: 'Employee List',
                   page: EmployeeList.routeName,
                 ),
                 SizedBox(
                   height: 30,
                 ),
                 MainButtons(
-                  title: 'The Requests Medicines',
+                  title: 'Requests Medicines',
                   page: RequestScreen.routeName,
                 ),
               ],
