@@ -9,7 +9,6 @@ import 'package:graduationproject/components/custom_surfix_icon.dart';
 import 'package:graduationproject/components/default_button.dart';
 import 'package:graduationproject/components/form_error.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
-import 'package:graduationproject/screens/complete_profile/complete_profile_screen.dart';
 import 'package:provider/provider.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
