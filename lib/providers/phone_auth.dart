@@ -189,7 +189,6 @@ class PhoneAuthDataProvider with ChangeNotifier {
         verificationId: actualCode, smsCode: smsCode);
 
     if (onVerified != null) onVerified(authCredential);
-
     // UserCredential user = await FireBaseAuth.auth
     //     .signInWithCredential(_authCredential)
 

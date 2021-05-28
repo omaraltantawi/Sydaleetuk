@@ -156,7 +156,7 @@ class UserScreen extends StatelessWidget with CanShowMessages {
                   ),
                 ElevatedButton(
                   onPressed: () => {
-                  Provider.of<FireBaseAuth>(context, listen: false).changeUserName(fNameNew: 'Omar', lNameNew: 'Altantawi'),
+                    Provider.of<FireBaseAuth>(context, listen: false).changeUserName(fNameNew: 'Omar', lNameNew: 'Altantawi'),
                   },
                   child: Text('Change User Name'),
                 ),

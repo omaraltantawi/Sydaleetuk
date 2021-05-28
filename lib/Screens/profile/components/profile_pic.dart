@@ -26,7 +26,7 @@ class ProfilePic extends StatelessWidget with CanShowMessages{
         overflow: Overflow.visible,
         children: [
           CircleAvatar(
-            backgroundImage: photoUri == null && photoUri == '' ? AssetImage("assets/images/Profile Image.png"): NetworkImage(photoUri ) ,
+            backgroundImage: photoUri == null || photoUri == '' ? AssetImage("assets/images/Profile Image.png"): NetworkImage(photoUri ) ,
           ),
           Positioned(
             right: -16,

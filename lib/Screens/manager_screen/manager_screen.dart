@@ -26,7 +26,6 @@ class _ManagerScreenState extends State<ManagerScreen> {
   @override
   void initState()  {
     setState(() {
-
       phar = Provider.of<FireBaseAuth>(context, listen: false).pharmacist;
     });
     super.initState();

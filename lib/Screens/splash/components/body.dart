@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:graduationproject/Screens/sign_in/sign_in_screen.dart';
 import 'package:graduationproject/constants.dart';
 import 'package:graduationproject/size_config.dart';
-// This is the best practice
 import '../components/splash_content.dart';
 import '../../../components/default_button.dart';
 

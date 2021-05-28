@@ -1,16 +1,19 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
+import 'package:graduationproject/data_models/OrderClass.dart';
 import 'package:graduationproject/data_models/Patient.dart';
 import 'package:graduationproject/data_models/Pharmacist.dart';
 import 'package:graduationproject/data_models/Pharmacy.dart';
 import 'package:graduationproject/data_models/Product.dart';
 import 'package:graduationproject/data_models/User.dart';
+import 'package:graduationproject/ServiceClasses/Location.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -292,6 +295,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
             var userData = querySnapshotData.docs
                 .where((element) => element['id'] == _patient.userId);
             if (userData != null) {
+              _patient.patientId = userData.first.id;
               _patient.healthState = userData.first.data()['healthStatus'];
               _patient.address = userData.first.data()['address'];
               _patient.gender = userData.first.data()['gender'];
@@ -465,16 +469,40 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     notifyListeners();
   }
 
-  deleteUser() async {
-    loggedUser = null;
-    loggedUserType = null;
-    pharmacyId = '';
-    _patient = null;
-    _pharmacist = null;
-    key = '1234';
-    photoUri = '';
-    await auth.currentUser.delete();
-    notifyListeners();
+  Future<void> deleteUser() async {
+    try {
+      loggedUser = null;
+      loggedUserType = null;
+      pharmacyId = '';
+      _patient = null;
+      _pharmacist = null;
+      key = '1234';
+      photoUri = '';
+      await auth.currentUser.delete();
+      notifyListeners();
+    } catch (e) {
+      print('error Method resetPasswordEmail \n$e');
+      throw e;
+    }
+  }
+
+  Future<void> deleteUserAccount({@required String oldPass}) async {
+    try {
+      print('Start deleteUserAccount.');
+      print('Old Pass is $oldPass');
+      AuthCredential authCredential = EmailAuthProvider.credential(
+          email: loggedUser.email, password: oldPass);
+      print('AuthCredential in reset func. is $authCredential');
+      await auth.currentUser.reauthenticateWithCredential(authCredential);
+      Reference firebaseStorageRef = FirebaseStorage.instance.ref();
+      await firebaseStorageRef.child('$userId/$userId').delete();
+      await _fireStore.collection('PATIENT').doc(_patient.patientId).delete();
+      await _fireStore.collection('USER').doc(_patient.userId).delete();
+      await deleteUser();
+    } catch (e) {
+      print('error Method deleteUserAccount \n$e');
+      throw e;
+    }
   }
 
   Future<void> signUpNormalUserWithAllData(
@@ -538,6 +566,19 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
       UserCredential user =
           await FireBaseAuth.auth.currentUser.linkWithCredential(credential);
       this.loggedUser = user.user;
+      print('loggedUser from linkLoggedUserWithCredintal $loggedUser');
+      notifyListeners();
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> updateLoggedUserPhoneNo({AuthCredential credential}) async {
+    try {
+      print('credential from linkLoggedUserWithCredintal is $credential');
+      // UserCredential user =
+      //     await FireBaseAuth.auth.currentUser.update
+      // this.loggedUser = user.user;
       print('loggedUser from linkLoggedUserWithCredintal $loggedUser');
       notifyListeners();
     } catch (e) {
@@ -727,17 +768,17 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
         userId = _patient.userId;
       else
         userId = _pharmacist.userId;
-      updateCollectionField(
+      await updateCollectionField(
           collectionName: 'USER',
           fieldName: 'fName',
           fieldValue: fNameNew,
           docId: userId);
-      updateCollectionField(
+      await updateCollectionField(
           collectionName: 'USER',
           fieldName: 'lName',
           fieldValue: lNameNew,
           docId: userId);
-      loggedUser.updateProfile(displayName: '$fNameNew $lNameNew');
+      await loggedUser.updateProfile(displayName: '$fNameNew $lNameNew');
     } catch (e) {
       print('error From changeUserName Method\n$e');
     }
@@ -809,6 +850,72 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     }
   }
 
+  Future<void> updateHealthState({
+    @required String value,
+  }) async {
+    try {
+      print('Start updateHealthState.');
+      await _fireStore
+          .collection('PATIENT')
+          .doc(patient.patientId)
+          .update({'healthStatus': value});
+      patient.healthState = value;
+      notifyListeners();
+    } catch (e) {
+      print('error Method updateHealthState \n$e');
+      throw e;
+    }
+  }
+
+  Future<void> updateUserProfileData({
+    @required String fName,
+    @required String lName,
+    @required String address,
+    @required String gender,
+    @required DateTime birthDate,
+  }) async {
+    try {
+      print('Start updateUserProfileData.');
+      if (fName != null && lName != null) {
+        print('Change FName and LName');
+        await changeUserName(fNameNew: fName, lNameNew: lName);
+      } else if (fName != null) {
+        print('Change FName');
+        await changeUserName(fNameNew: fName, lNameNew: _patient.lName);
+      } else if (lName != null) {
+        print('Change LName');
+        await changeUserName(fNameNew: _patient.fName, lNameNew: lName);
+      }
+
+      Map<String, dynamic> values = {};
+      if (address != null) {
+        values.addAll({'address': address});
+        patient.address = address;
+      }
+      if (gender != null) {
+        values.addAll({'gender': gender});
+        patient.gender = gender;
+      }
+      if (birthDate != null) {
+        int age = calculateAge(birthDate);
+        values.addAll({'birthDate': birthDate, 'age': age});
+        patient.birthDate = birthDate;
+        patient.age = age;
+      }
+      print(values);
+      if (values.length > 0)
+        await _fireStore
+            .collection('PATIENT')
+            .doc(patient.patientId)
+            .update(values);
+      patient.healthState = '';
+      notifyListeners();
+    } catch (e) {
+      print('error Method updateUserProfileData \n$e');
+      throw e;
+    }
+  }
+
   Future<bool> checkUserExistence({@required String email}) async {
     try {
       print('Start checkUserExistence ');
@@ -875,9 +982,10 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
       print('AuthCredential in reset func. is $authCredential');
       await auth.currentUser.reauthenticateWithCredential(authCredential);
       await loggedUser.updatePassword(newPass);
+      await loggedUser.reload();
     } catch (e) {
       print('error Method resetPasswordEmail \n$e');
-      // throw e;
+      throw e;
     }
   }
 
@@ -885,7 +993,10 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     try {
       print('Start verifyEmail.');
       print('Email verified ${loggedUser.emailVerified}');
-      auth.currentUser.sendEmailVerification();
+      if (!loggedUser.emailVerified)
+        auth.currentUser.sendEmailVerification();
+      else
+        auth.currentUser.reload();
     } catch (e) {
       print('error Method verifyEmail \n$e');
       // throw e;
@@ -893,51 +1004,339 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
   }
 
   Future<int> getOrderNo() async {
-    var doc = await _fireStore.collection('Order').get();
-    if (doc != null) {
-      return doc.docs.length;
+    try {
+      var doc = await _fireStore.collection('Order').get();
+      if (doc != null) {
+        return doc.docs.length;
+      }
+      return 0;
+    } catch (e) {
+      return 0;
     }
-    return 0;
   }
 
-  Future<bool> orderProduct(
-      {Product product, int quantity, int dosage, File prescription}) async {
+  Future<int> getUserCartProductsNo() async {
+    try {
+      var doc = await _fireStore
+          .collection('PATIENT')
+          .doc(_patient.patientId)
+          .collection('Cart')
+          .orderBy('OrderNo',descending: true ).get();
+      if (doc != null) {
+        return doc.docs.first.data()['OrderNo'];
+      }
+      return 0;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  Future<bool> orderProducts({
+    Order orders,
+  }) async {
     try {
       int ordersNo = await getOrderNo();
+      // double distance = await Location.getDistance(startLatitude: _patient.addressGeoPoint.latitude, startLongitude: _patient.addressGeoPoint.longitude, endLatitude: orders.pharmacy.addressGeo.latitude, endLongitude: orders.pharmacy.addressGeo.longitude);
+      var ret = await _fireStore.collection('Order').add({
+        'pharmacyId': orders.pharmacy.pharmacyId,
+        'pharmacyName': orders.pharmacy.name,
+        'pharmacyAddress': orders.pharmacy.addressGeo,
+        'pharmacyPhoneNo': orders.pharmacy.phoneNo,
+        'distance': orders.pharmacy.distance,
+        'userId': _patient.userId,
+        'userName': '${_patient.fName} ${_patient.lName}',
+        'userHealthState': _patient.healthState,
+        'userAge': _patient.age,
+        'orderTime': orders.orderTime,
+        'OrderNo': ordersNo,
+        'Status': 'Pending',
+        'isNewForUser': false,
+        'isNewForPhar': true,
+        'isRejectFromPrescription': false,
+        'PharNote': '',
+        'NoOfProducts': orders.products.length,
+      });
+      double totalPrice = 0;
+      for (int i = 0; i < orders.products.length; i++) {
+        String prescriptionUrl = '';
+        if (orders.products[i].prescription != null) {
+          prescriptionUrl = await uploadFileToFirebase(
+              file: orders.products[i].prescription,
+              filePathInStorage:
+                  'Orders/${orders.pharmacy.pharmacyId}-${patient.userId}-$ordersNo/$i');
+          print(prescriptionUrl);
+        }
+        totalPrice += (orders.products[i].price * orders.products[i].quantity);
+        var retProd = await _fireStore
+            .collection('Order')
+            .doc(ret.id)
+            .collection('Products')
+            .doc(i.toString())
+            .set({
+          'productNo': i,
+          'productId': orders.products[i].id,
+          'productName': orders.products[i].name,
+          'dosageUnit': orders.products[i].dosageUnit,
+          'pillsUnit': orders.products[i].pillsUnit,
+          'description': orders.products[i].description,
+          'quantity': orders.products[i].quantity,
+          'price': orders.products[i].price,
+          'prescriptionUrl': prescriptionUrl,
+          'productImageUrl': orders.products[i].imageUrls != null &&
+                  orders.products[i].imageUrls.length > 0
+              ? orders.products[i].imageUrls[0]
+              : '',
+          'isRejectFromPrescription': false,
+          'PharNote': '',
+          'pills': orders.products[i].selectedPills,
+          'dosage': orders.products[i].selectedDosage,
+        });
+      }
+      await updateCollectionField(
+          collectionName: 'Order',
+          fieldName: 'totalPrice',
+          fieldValue: totalPrice,
+          docId: ret.id);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> orderProductsFromCart({
+    Order orders,
+  }) async {
+    try {
+      int ordersNo = await getOrderNo();
+
+      // double distance = await Location.getDistance(startLatitude: _patient.addressGeoPoint.latitude, startLongitude: _patient.addressGeoPoint.longitude, endLatitude: orders.pharmacy.addressGeo.latitude, endLongitude: orders.pharmacy.addressGeo.longitude);
+
+      var ret = await _fireStore.collection('Order').add({
+        'pharmacyId': orders.pharmacy.pharmacyId,
+        'pharmacyName': orders.pharmacy.name,
+        'pharmacyAddress': orders.pharmacy.addressGeo,
+        'pharmacyPhoneNo': orders.pharmacy.phoneNo,
+        'distance': orders.pharmacy.distance,
+        'userId': _patient.userId,
+        'userName': '${_patient.fName} ${_patient.lName}',
+        'userHealthState': _patient.healthState,
+        'userAge': _patient.age,
+        'orderTime': orders.orderTime,
+        'OrderNo': ordersNo,
+        'Status': 'Pending',
+        'isNewForUser': false,
+        'isNewForPhar': true,
+        'isRejectFromPrescription': false,
+        'PharNote': '',
+        'NoOfProducts': orders.products.length,
+      });
+      double totalPrice = 0;
+      for (int i = 0; i < orders.products.length; i++) {
+        String prescriptionUrl = '';
+        if (orders.products[i].prescriptionRequired ) {
+          Reference firebaseStorageRef = FirebaseStorage.instance.ref();
+          Uint8List data = await firebaseStorageRef.child('${patient.userId}/${orders.products[i].pharmacy.pharmacyId}-${patient.userId}-${orders.products[i].productNo}').getData();
+          await firebaseStorageRef.child('Orders/${orders.pharmacy.pharmacyId}-${patient.userId}-$ordersNo/$i').putData(data);
+          prescriptionUrl = await firebaseStorageRef.child('Orders/${orders.pharmacy.pharmacyId}-${patient.userId}-$ordersNo/$i').getDownloadURL();
+          await firebaseStorageRef.child('${patient.userId}/${orders.products[i].pharmacy.pharmacyId}-${patient.userId}-${orders.products[i].productNo}').delete();
+          print(prescriptionUrl);
+        }
+        totalPrice += (orders.products[i].price * orders.products[i].quantity);
+        var retProd = await _fireStore
+            .collection('Order')
+            .doc(ret.id)
+            .collection('Products')
+            .doc(i.toString())
+            .set({
+          'productNo': i,
+          'productId': orders.products[i].id,
+          'productName': orders.products[i].name,
+          'dosageUnit': orders.products[i].dosageUnit,
+          'pillsUnit': orders.products[i].pillsUnit,
+          'quantity': orders.products[i].quantity,
+          'price': orders.products[i].price,
+          'description': orders.products[i].description,
+          'prescriptionUrl': prescriptionUrl,
+          'productImageUrl': orders.products[i].imageUrls != null &&
+                  orders.products[i].imageUrls.length > 0
+              ? orders.products[i].imageUrls[0]
+              : '',
+          'isRejectFromPrescription': false,
+          'PharNote': '',
+          'pills': orders.products[i].selectedPills,
+          'dosage': orders.products[i].selectedDosage,
+        });
+      }
+      await updateCollectionField(
+          collectionName: 'Order',
+          fieldName: 'totalPrice',
+          fieldValue: totalPrice,
+          docId: ret.id);
+      var ref = await _fireStore.collection('PATIENT').doc(_patient.patientId).collection('Cart').where('pharmacyId',isEqualTo: orders.pharmacy.pharmacyId).get();
+      if ( ref != null ){
+        ref.docs.forEach((element) {element.reference.delete();});
+      }
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> addToCart(
+      {Product product,
+      int quantity,
+      int dosage,
+      int pills,
+      double distance,
+      String dosageUnit,
+      String pillsUnit,
+      File prescription}) async {
+    try {
+      int ordersNo = await getUserCartProductsNo();
+      ordersNo ++ ;
       String prescriptionUrl = '';
       if (prescription != null) {
         prescriptionUrl = await uploadFileToFirebase(
             file: prescription,
             filePathInStorage:
-                'Orders/${product.pharmacy.pharmacyId}-${product.id}-${patient.userId}-$ordersNo');
+                '${patient.userId}/${product.pharmacy.pharmacyId}-${patient.userId}-$ordersNo');
         print(prescriptionUrl);
-      }
-      var ret = await _fireStore.collection('Order').add({
-        'productId': product.id,
-        'pharmacyId': product.pharmacy.pharmacyId,
-        'userId': _patient.userId,
-        'quantity': quantity,
-        'dosage': dosage,
-        'prescriptionUrl': prescriptionUrl,
-        'OrderNo': ordersNo,
-        'Status': 'Pending',
-        'productName': product.name,
-        'price': product.price,
-        'totalPrice': product.price * quantity,
-        'productImageUrl':
+        var ret = await _fireStore.collection('PATIENT')
+            .doc(_patient.patientId)
+            .collection('Cart')
+            .doc(ordersNo.toString()).set({
+          'productId': product.id,
+          'pharmacyId': product.pharmacy.pharmacyId,
+          'pharmacyAddress': product.pharmacy.addressGeo,
+          'pharmacyPhoneNo': product.pharmacy.phoneNo,
+          'quantity': quantity,
+          'dosage': dosage,
+          'description': product.description,
+          'prescriptionUrl': prescriptionUrl,
+          'OrderNo': ordersNo,
+          'productName': product.name,
+          'price': product.price,
+          'totalPrice': product.price * quantity,
+          'productImageUrl':
+          product.imageUrls != null && product.imageUrls.length > 0
+              ? product.imageUrls[0]
+              : '',
+          'pharmacyName': product.pharmacy.name,
+          'pills': pills,
+          'dosageUnit': dosageUnit,
+          'pillsUnit': pillsUnit,
+          'distance': distance,
+        });
+      }else {
+        var ref = await _fireStore.collection('PATIENT')
+            .doc(_patient.patientId)
+            .collection('Cart').where('productId',isEqualTo: product.id).get();
+        print(product.id);
+        if ( ref != null && ref.docs.length > 0 ){
+          var refDoc = await ref.docs[0].reference.get();
+          int _quantity = refDoc.data()['quantity'];
+          _quantity += quantity;
+          await refDoc.reference.update({'quantity':_quantity});
+        }else {
+          var ret = await _fireStore.collection('PATIENT')
+              .doc(_patient.patientId)
+              .collection('Cart')
+              .doc(ordersNo.toString()).set({
+            'productId': product.id,
+            'pharmacyId': product.pharmacy.pharmacyId,
+            'quantity': quantity,
+            'dosage': dosage,
+            'prescriptionUrl': prescriptionUrl,
+            'OrderNo': ordersNo,
+            'productName': product.name,
+            'price': product.price,
+            'pharmacyAddress': product.pharmacy.addressGeo,
+            'pharmacyPhoneNo': product.pharmacy.phoneNo,
+            'totalPrice': product.price * quantity,
+            'productImageUrl':
             product.imageUrls != null && product.imageUrls.length > 0
                 ? product.imageUrls[0]
                 : '',
-        'pharmacyName': product.pharmacy.name,
-        'isNewForUser': false,
-        'isNewForPhar': true,
-        'isRejectFromPrescription': false,
-        'PharNote': '',
-      });
+            'pharmacyName': product.pharmacy.name,
+            'pills': pills,
+            'dosageUnit': dosageUnit,
+            'pillsUnit': pillsUnit,
+            'distance': distance,
+          });
+        }
+      }
     } catch (e) {
       return false;
     }
     return true;
+  }
+
+  Future<bool> checkCartFromSamePharmacy({String pharmacyId}) async {
+    try {
+      var docs = await _fireStore.collection('PATIENT')
+          .doc(_patient.patientId)
+          .collection('Cart')
+          .where('pharmacyId',isNotEqualTo: pharmacyId).get();
+      if ( docs!= null && docs.docs.length > 0 )
+        return true;
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> deleteProductFromCart(
+      {int productNo , String pharmacyId , bool hasPrescription}) async {
+    try {
+      if ( hasPrescription ) {
+        Reference firebaseStorageRef = FirebaseStorage.instance.ref();
+        await firebaseStorageRef.child(
+            '${patient.userId}/$pharmacyId-${patient.userId}-$productNo')
+            .delete();
+      }
+      await _fireStore.collection('PATIENT')
+          .doc(_patient.patientId)
+          .collection('Cart')
+          .doc(productNo.toString()).delete();
+      return true;
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> deleteAllProductsFromCart() async {
+    try {
+      var ref = await _fireStore.collection('PATIENT').doc(_patient.patientId).collection('Cart').get();
+      if ( ref != null ){
+        for ( var doc in ref.docs ){
+          if ( doc.data()['prescriptionUrl'] != null && doc.data()['prescriptionUrl'] != '' ){
+            Reference firebaseStorageRef = FirebaseStorage.instance.ref();
+            await firebaseStorageRef.child(
+                '${patient.userId}/${doc.data()['pharmacyId']}-${patient.userId}-${doc.id}')
+                .delete();
+          }
+          doc.reference.delete();
+        }
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> updateProductQuantityFromCart(
+      {int productNo , int quantity}) async {
+    try {
+      await _fireStore.collection('PATIENT')
+          .doc(_patient.patientId)
+          .collection('Cart')
+          .doc(productNo.toString()).update({'quantity':quantity});
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   void setOrderStatus(String orderId, String newStatus) async {
@@ -968,8 +1367,13 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
       setOrderStatus(orderId, 'Pending');
       await updateCollectionField(
           collectionName: 'Order',
-          fieldName: 'isNew',
+          fieldName: 'isNewForUser',
           fieldValue: false,
+          docId: orderId);
+      await updateCollectionField(
+          collectionName: 'Order',
+          fieldName: 'isNewForPhar',
+          fieldValue: true,
           docId: orderId);
     } catch (e) {
       print('Error from updateOrderPrescription $e');
@@ -979,9 +1383,11 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
   Future<bool> checkMedicineExistence({@required String medicineName}) async {
     try {
       print('Start checkPharmacyUserExistence ');
-      var querySnapshot = await _fireStore.collection('OFFICIAL_MEDICINE').get();
+      var querySnapshot =
+          await _fireStore.collection('OFFICIAL_MEDICINE').get();
       var medicine = querySnapshot.docs.where((element) =>
-      element['name'].toString().toLowerCase() == medicineName.toLowerCase());
+          element['name'].toString().toLowerCase() ==
+          medicineName.toLowerCase());
 
       if (medicine != null && medicine.length > 0) {
         return true;
@@ -993,12 +1399,14 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     }
   }
 
-  Future<bool> checkPharmacyMedicineExistence({@required String medicineName}) async {
+  Future<bool> checkPharmacyMedicineExistence(
+      {@required String medicineName}) async {
     try {
       print('Start checkPharmacyUserExistence ');
       var querySnapshot = await _fireStore.collection('MEDICINE').get();
       var medicine = querySnapshot.docs.where((element) =>
-      element['name'].toString().toLowerCase() == medicineName.toLowerCase());
+          element['name'].toString().toLowerCase() ==
+          medicineName.toLowerCase());
 
       if (medicine != null && medicine.length > 0) {
         return true;
@@ -1010,12 +1418,14 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     }
   }
 
-  Future<bool> checkMedicineExistenceByBarcode({@required String barcode}) async {
+  Future<bool> checkMedicineExistenceByBarcode(
+      {@required String barcode}) async {
     try {
       print('Start checkPharmacyUserExistence ');
-      var querySnapshot = await _fireStore.collection('OFFICIAL_MEDICINE').get();
+      var querySnapshot =
+          await _fireStore.collection('OFFICIAL_MEDICINE').get();
       var medicine = querySnapshot.docs.where((element) =>
-      element['barCode'].toString().toLowerCase() == barcode.toLowerCase());
+          element['barCode'].toString().toLowerCase() == barcode.toLowerCase());
 
       if (medicine != null && medicine.length > 0) {
         return true;
@@ -1027,12 +1437,13 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     }
   }
 
-  Future<bool> checkPharmacyMedicineExistenceByBarcode({@required String barcode}) async {
+  Future<bool> checkPharmacyMedicineExistenceByBarcode(
+      {@required String barcode}) async {
     try {
       print('Start checkPharmacyUserExistence ');
       var querySnapshot = await _fireStore.collection('MEDICINE').get();
       var medicine = querySnapshot.docs.where((element) =>
-      element['barCode'].toString().toLowerCase() == barcode.toLowerCase());
+          element['barCode'].toString().toLowerCase() == barcode.toLowerCase());
 
       if (medicine != null && medicine.length > 0) {
         return true;
@@ -1050,14 +1461,12 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     String barCode,
     double price,
     bool prescription,
-    Map<int,int> dosagePills,
+    Map<int, int> dosagePills,
     String description,
   }) async {
     try {
       print('Start Method addMedicineToPharmacyAndOfficial');
-      var ret2 = await _fireStore
-          .collection('OFFICIAL_MEDICINE')
-          .add({
+      var ret2 = await _fireStore.collection('OFFICIAL_MEDICINE').add({
         'name': medicineName,
         'barCode': barCode,
         'price': price,
@@ -1106,13 +1515,15 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     String barCode,
     double price,
     bool prescription,
-    Map<int,int> dosagePills,
+    Map<int, int> dosagePills,
     String description,
   }) async {
     try {
-      var querySnapshot = await _fireStore.collection('OFFICIAL_MEDICINE').get();
+      var querySnapshot =
+          await _fireStore.collection('OFFICIAL_MEDICINE').get();
       var medicine = querySnapshot.docs.where((element) =>
-      element['name'].toString().toLowerCase() == medicineName.toLowerCase());
+          element['name'].toString().toLowerCase() ==
+          medicineName.toLowerCase());
 
       if (medicine != null && medicine.length > 0) {
         var ret = await _fireStore
@@ -1151,48 +1562,50 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     String medicineName,
   }) async {
     try {
-      var querySnapshot = await _fireStore.collection('OFFICIAL_MEDICINE').get();
+      var querySnapshot =
+          await _fireStore.collection('OFFICIAL_MEDICINE').get();
       var medicine = querySnapshot.docs.where((element) =>
-      element['name'].toString().toLowerCase() == medicineName.toLowerCase());
+          element['name'].toString().toLowerCase() ==
+          medicineName.toLowerCase());
 
       if (medicine != null && medicine.length > 0) {
-          String medicineName = medicine.first.data()['name'];
-          String barCode = medicine.first.data()['barCode'];
-          var _price = medicine.first.data()['price'];
-          double price ;
-          if ( _price.runtimeType == int ) {
-            price = double.parse(_price.toString());
-          }else
-            price = _price;
-          bool prescription = medicine.first.data()['PrescriptionRequired'];
+        String medicineName = medicine.first.data()['name'];
+        String barCode = medicine.first.data()['barCode'];
+        var _price = medicine.first.data()['price'];
+        double price;
+        if (_price.runtimeType == int) {
+          price = double.parse(_price.toString());
+        } else
+          price = _price;
+        bool prescription = medicine.first.data()['PrescriptionRequired'];
 
-          Map<int,int> _dosagePills = {};
-          Map<String,dynamic> dosagePills = medicine.first.data()['DosagePills'];
-          dosagePills.forEach((key, value) {
-            var d = int.parse(key);
-            _dosagePills.addAll({d:value});
-          });
-          String description = medicine.first.data()['description'];
-          List<String> image = medicine.first.data()['ImageUrls'];
-          var ret = await _fireStore
-              .collection('PHARMACY')
-              .doc(_pharmacist.pharmacy.pharmacyId)
-              .collection('MEDICINE')
-              .add({
-            'name': medicineName,
-            'ImageUrls': image,
-            'barCode': barCode,
-            'price': price,
-            'PrescriptionRequired': prescription,
-            'DosagePills': _dosagePills,
-            'description': description,
-            'OFFICIAL_MEDICINE_Id': medicine.first.id,
-          });
-
+        Map<int, int> _dosagePills = {};
+        Map<String, dynamic> dosagePills = medicine.first.data()['DosagePills'];
+        dosagePills.forEach((key, value) {
+          var d = int.parse(key);
+          _dosagePills.addAll({d: value});
+        });
+        String description = medicine.first.data()['description'];
+        List<String> image = medicine.first.data()['ImageUrls'];
+        var ret = await _fireStore
+            .collection('PHARMACY')
+            .doc(_pharmacist.pharmacy.pharmacyId)
+            .collection('MEDICINE')
+            .add({
+          'name': medicineName,
+          'ImageUrls': image,
+          'barCode': barCode,
+          'price': price,
+          'PrescriptionRequired': prescription,
+          'DosagePills': _dosagePills,
+          'description': description,
+          'OFFICIAL_MEDICINE_Id': medicine.first.id,
+        });
       }
     } catch (e) {
       return false;
     }
     return true;
   }
+
 }

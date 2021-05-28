@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:graduationproject/constants.dart';
 import 'package:graduationproject/data_models/User.dart';
@@ -14,6 +15,8 @@ class MessageDialog {
     }
     return list;
   }
+
+
 
   Future<void> _showDialog(
       {@required BuildContext context,
@@ -82,6 +85,57 @@ class MessageDialog {
               child: Text('No'),
               onPressed: () {
                 Navigator.of(context).pop(QuestionMessage.CANCEL);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<String> _showInputDialog(
+      {@required BuildContext context,
+        @required String title,
+        @required String textFieldLabelText,
+        @required String textFieldHintText,
+        @required String defaultValue,}) async {
+    TextEditingController _textFieldController = TextEditingController();
+    _textFieldController.text = defaultValue;
+    String text = defaultValue;
+    return await showDialog<String>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title:  Row(children: <Widget>[
+            Image.asset('assets/images/splash_2.png',
+                width: 50, height: 50, fit: BoxFit.contain),
+            SizedBox(width: 10.0,),
+            Text(title)
+          ]),
+          content: TextField(
+            onChanged: (value) {
+                text = value;
+            },
+            controller: _textFieldController,
+            maxLines: 5,
+            keyboardType: TextInputType.multiline,
+            decoration: InputDecoration(
+              labelText: textFieldLabelText,
+              hintText: textFieldHintText,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(text);
+              },
+            ),
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(null);
               },
             ),
           ],
@@ -382,6 +436,17 @@ mixin CanShowMessages {
     File selectedFile =
         await _messageDialog._showPickFileDialog(context: context,msgText: msgText);
     return selectedFile;
+  }
+
+  Future<String> showInputDialog(
+      {@required BuildContext context,
+        @required String title,
+        @required String textFieldLabelText,
+        @required String textFieldHintText,
+        @required String defaultValue,}) async {
+    String text =
+        await _messageDialog._showInputDialog(context: context,title: title,defaultValue: defaultValue , textFieldHintText: textFieldHintText,textFieldLabelText: textFieldLabelText);
+    return text;
   }
 }
 

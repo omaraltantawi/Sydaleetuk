@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graduationproject/Screens/UserOrders.dart';
 import 'package:graduationproject/Screens/home/home_screen.dart';
 import 'package:graduationproject/Screens/order_success/components/arguments.dart';
 import 'package:graduationproject/components/default_button.dart';
@@ -23,7 +24,7 @@ class Body extends StatelessWidget {
             "assets/images/success.png",
             height: SizeConfig.screenHeight * 0.25, //40%
           ),
-          // SizedBox(height: SizeConfig.screenHeight * 0.08),
+          SizedBox(height: SizeConfig.screenHeight * 0.04),
           Text(
             "Your order sent successfully to",
             style: TextStyle(
@@ -44,14 +45,25 @@ class Body extends StatelessWidget {
           SizedBox(
             width: SizeConfig.screenWidth * 0.6,
             child: DefaultButton(
-              text: "Back to home",
+              text: "My Orders",
               press: () {
                 // Navigator.pu(context, HomeScreen.routeName);
                 Navigator.of(context)
-                    .pushNamedAndRemoveUntil(HomeScreen.routeName, (Route<dynamic> route) => false);
+                    .pushNamedAndRemoveUntil(UserOrders.routeName, ModalRoute.withName(HomeScreen.routeName));
               },
             ),
           ),
+          // SizedBox(
+          //   width: SizeConfig.screenWidth * 0.6,
+          //   child: DefaultButton(
+          //     text: "Back to home",
+          //     press: () {
+          //       // Navigator.pu(context, HomeScreen.routeName);
+          //       Navigator.of(context)
+          //           .pushNamedAndRemoveUntil(HomeScreen.routeName, (Route<dynamic> route) => false);
+          //     },
+          //   ),
+          // ),
           // Spacer(),
         ],
       ),

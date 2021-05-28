@@ -27,14 +27,13 @@ class OrderButton extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           // borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          gradient: LinearGradient(
+          gradient: !isRed ? kPrimaryGradientColor : LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
             colors: [
-              if (isRed) Colors.red[900],
-              if (isRed) Colors.red[900],
-              if (isRed) kPrimaryColor,
-              if (!isRed) kPrimaryColor,
-              if (!isRed) kPrimaryColor,
-              if (!isRed) kPrimaryColor.withOpacity(0.35),
+              Colors.red[900],
+              Colors.red[900],
+              kPrimaryColor,
             ],
           ),
         ),

@@ -32,7 +32,7 @@ class Body extends StatelessWidget {
             ),
                 SizedBox(height: SizeConfig.screenHeight * 0.04),
                 SignForm(),
-
+                SizedBox(height: SizeConfig.screenHeight * 0.01),
                 NoAccountText(),
                 NoPharmacyAccountText(),
                 SizedBox(height: SizeConfig.screenHeight * 0.03),
@@ -50,6 +50,7 @@ class Body extends StatelessWidget {
                   "To open the reminder without Sign in\nclick here !",
                   backgroundColor: Colors.white,
                 ),
+                SizedBox(height: SizeConfig.screenHeight * 0.03),
               ],
             ),
           ),

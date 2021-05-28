@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:graduationproject/Screens/UserOrders.dart';
 import 'package:graduationproject/Screens/reminder/reminder_screen.dart';
+import 'package:graduationproject/Screens/show_profile/show_profile_screen.dart';
 import 'package:graduationproject/Screens/sign_in/sign_in_screen.dart';
 import 'package:graduationproject/Screens/splash/splash_screen.dart';
+import 'package:graduationproject/Screens/userSettings.dart';
 import 'package:graduationproject/data_models/Patient.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:provider/provider.dart';
@@ -23,12 +25,12 @@ class Body extends StatelessWidget {
             text: "My Account",
             icon: "assets/icons/User Icon.svg",
             press: () {
-
+              Navigator.pushNamed(context, ShowProfileScreen.routeName);
             },
           ),
-          ProfileMenu(
+          ProfileMenuIcon(
             text: "My Orders",
-            icon: "assets/icons/Bell.svg",
+            icon: Icons.assignment_outlined,
             press: () {
               Navigator.pushNamed(context, UserOrders.routeName);
             },
@@ -42,7 +44,9 @@ class Body extends StatelessWidget {
           ProfileMenu(
             text: "Settings",
             icon: "assets/icons/Settings.svg",
-            press: () {},
+            press: () {
+              Navigator.pushNamed(context, UserSettingsScreen.routeName);
+            },
           ),
           ProfileMenu(
             text: "Log Out",

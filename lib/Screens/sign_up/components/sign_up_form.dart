@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_place_picker/google_maps_place_picker.dart';
+import 'package:google_maps_flutter_platform_interface/src/types/location.dart' as loca;
 import 'package:graduationproject/Screens/sign_up/components/ScreenArguments.dart';
 import 'package:graduationproject/ServiceClasses/Location.dart';
 import 'package:graduationproject/ServiceClasses/SignInMethods.dart';
@@ -9,6 +12,8 @@ import 'package:graduationproject/components/default_button.dart';
 import 'package:graduationproject/components/form_error.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:graduationproject/screens/complete_profile/complete_profile_screen.dart';
+import 'package:nominatim_location_picker/nominatim_location_picker.dart';
+
 import 'package:provider/provider.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
@@ -81,32 +86,65 @@ class _SignUpFormState extends State<SignUpForm> with CanShowMessages {
                 //       buttonText: 'OK');
                 // });
                 try {
-                  if (!(await Provider.of<FireBaseAuth>(context, listen: false)
-                      .checkUserExistence(email: email))) {
-                    print('before condition');
-                    Location location = Location();
-                    bool condition = await location.getCurrentLocation();
-                    print('condition $condition , Location ${location.latitude} ${location.longitude} ');
-                    if ( condition ) {
-                      Navigator.pushNamed(
-                        context, CompleteProfileScreen.routeName,
-                        arguments: ScreenArguments(
-                            email: email, password: password,addressGeoPoint: GeoPoint(location.latitude,location.longitude)),);
-                    }
-                    else {
-                      showMessageDialog(
-                          context: this.context,
-                          msgTitle: 'Warning',
-                          msgText: ['Address permission denied.'],
-                          buttonText: 'OK');
-                    }
-                  } else {
+
+                  // print ('result');
+                  // Map result = await showDialog(
+                  //     context: context,
+                  //     builder: (BuildContext ctx) {
+                  //       return NominatimLocationPicker(
+                  //         searchHint: 'Pick your Location',
+                  //         awaitingForLocation: "Procurando por sua localização",
+                  //       );
+                  //     });
+                  // if (result != null) {
+                  //   print (result);
+                  // } else {
+                  //   return;
+                  // }
+
+                    if (!(await Provider.of<FireBaseAuth>(context, listen: false)
+                        .checkUserExistence(email: email))) {
+                      print('before condition');
+                      Location location = Location();
+                      bool condition = await location.getCurrentLocation();
+                      print('condition $condition , Location ${location.latitude} ${location.longitude} ');
+                      // await Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => PlacePicker(
+                      //       apiKey: 'AIzaSyAa0rx1kO9JJNQR9W_3Ivcre9Uy-AMDCgI',   // Put YOUR OWN KEY here.
+                      //       onPlacePicked: (result) {
+                      //         print('${result.geometry.location.lat} ${result.geometry.location.lng}');
+                      //         Navigator.of(context).pop();
+                      //       },
+                      //       desiredLocationAccuracy: LocationAccuracy.high,
+                      //       useCurrentLocation: true, initialPosition: loca.LatLng(location.latitude,location.longitude),
+                      //     ),
+                      //   ),
+                      // );
+                      // condition = false;
+                      if ( condition ) {
+                        Navigator.pushNamed(
+                          context, CompleteProfileScreen.routeName,
+                          arguments: ScreenArguments(
+                              email: email, password: password,addressGeoPoint: GeoPoint(location.latitude,location.longitude)),);
+                      }
+                      else {
+                        showMessageDialog(
+                            context: this.context,
+                            msgTitle: 'Warning',
+                            msgText: ['Address permission denied.'],
+                            buttonText: 'OK');
+                      }
+                    } else {
                       showMessageDialog(
                           context: this.context,
                           msgTitle: 'Warning',
                           msgText: ['This email address is already in use.'],
                           buttonText: 'OK');
-                  }
+                    }
+
+
                 } catch (e) {
                   var msgTxt = ['Something went wrong.', 'Please try again'];
                   showMessageDialog(

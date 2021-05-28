@@ -9,12 +9,12 @@ import 'package:graduationproject/size_config.dart';
 import 'package:provider/provider.dart';
 import '../constants.dart';
 
-class SelectProduct extends StatelessWidget with CanShowMessages{
+class SelectProduct extends StatelessWidget with CanShowMessages {
   static String routeName = "/select_product";
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
-    productProvider.user = Provider.of<FireBaseAuth>(context).patient ;
+    productProvider.user = Provider.of<FireBaseAuth>(context).patient;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -27,11 +27,13 @@ class SelectProduct extends StatelessWidget with CanShowMessages{
             children: [
               SearchProductTF(controller: productProvider.searchController),
               IconButton(
-                icon: const Icon(Icons.filter_alt_outlined,color: Colors.blue),
+                icon: const Icon(Icons.filter_alt_outlined, color: Colors.blue),
                 tooltip: 'Filter',
                 onPressed: () async {
-                  ProductSearchFilter filter = await showFilterByPickerDialog(context: context , filter: productProvider.searchFilter);
-                  print ('filter  $filter');
+                  FocusScope.of(context).unfocus();
+                  ProductSearchFilter filter = await showFilterByPickerDialog(
+                      context: context, filter: productProvider.searchFilter);
+                  print('filter  $filter');
                   productProvider.searchFilter = filter;
                 },
               ),
@@ -40,54 +42,6 @@ class SelectProduct extends StatelessWidget with CanShowMessages{
         ),
       ),
       body: Body(),
-      // floatingActionButton: Stack(
-      //   children: <Widget>[
-      //     Align(
-      //       alignment: Alignment.bottomRight,
-      //       child: TextButton(
-      //         style: ButtonStyle(
-      //           foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-      //         ),
-      //         onPressed: () {
-      //           productProvider.searchFilter = ProductSearchFilter.Price;
-      //         },
-      //         child: Text('Filter on Price'),
-      //       ),
-      //     ),
-      //     Align(
-      //       alignment: Alignment.bottomCenter,
-      //       child: TextButton(
-      //         style: ButtonStyle(
-      //           foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-      //         ),
-      //         onPressed: () async {
-      //           productProvider.searchFilter = ProductSearchFilter.Name;
-      //           // await Location().getCurrentLocation ();
-      //         },
-      //         child: Text('Filter on Name'),
-      //       ),
-      //     ),
-      //     Align(
-      //       alignment: Alignment.bottomLeft,
-      //       child: TextButton(
-      //         style: ButtonStyle(
-      //           foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-      //         ),
-      //         onPressed: () {
-      //           productProvider.searchFilter = ProductSearchFilter.Distance;
-      //         },
-      //         child: Text('Filter on Distance'),
-      //       ),
-      //     ),
-      //   ],
-      // )
-      // TextButton(
-      //   style: ButtonStyle(
-      //     foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-      //   ),
-      //   onPressed: () { },
-      //   child: Text('Filter on Price'),
-      // )
     );
   }
 }
@@ -98,61 +52,56 @@ class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
-    // productProvider.initiate();
-    return ListView.builder(
-      itemCount: productProvider.searchResults.length,
-      itemBuilder: (BuildContext context, int i) {
-        return SelectableWidget(
-          product: productProvider.searchResults[i],
-          selectThisProduct: (Product c) {
-            // // productProvider.reset();
-            print(i);
-            print('${c.name} ${c.pharmacy.distance} ${c.pharmacy.name}');
-            productProvider.isCompleted = false ;
-            productProvider.selectedProduct = c;
-
-            Navigator.pushNamed(context, order.OrderProduct.routeName,arguments: c);
-          },
-        );
-      },
+    List<Widget> widgets = [];
+    for (int i = 0; i < productProvider.searchResults.length; i++) {
+      widgets.add(SelectableWidget(
+        product: productProvider.searchResults[i],
+        selectThisProduct: (Product c) async {
+          print(i);
+          print('${c.name} ${c.pharmacy.distance} ${c.pharmacy.name}');
+          productProvider.isCompleted = true;
+          productProvider.selectedProduct = c.clone();
+          await productProvider.completeProductInfo();
+          Navigator.pushNamed(context, order.OrderProduct.routeName,
+              arguments: productProvider.selectedProduct.clone());
+        },
+      ));
+      widgets.add(
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.0),
+          child: Divider(
+            color: Colors.black.withOpacity(0.25),
+            thickness: 1,
+          ),
+        ),
+      );
+    }
+    return ListView(
+      padding: EdgeInsets.all(
+        10.0,
+      ),
+      children: widgets,
     );
+    // return ListView.builder(
+    //   itemCount: productProvider.searchResults.length,
+    //   itemBuilder: (BuildContext context, int i) {
+    //     return SelectableWidget(
+    //       product: productProvider.searchResults[i],
+    //       selectThisProduct: (Product c) {
+    //         // // productProvider.reset();
+    //         print(i);
+    //         print('${c.name} ${c.pharmacy.distance} ${c.pharmacy.name}');
+    //         productProvider.isCompleted = false ;
+    //         productProvider.selectedProduct = c;
+    //
+    //         Navigator.pushNamed(context, order.OrderProduct.routeName,arguments: c);
+    //       },
+    //     );
+    //   },
+    // );
   }
-}
 
-//
-// class Body extends StatefulWidget {
-//   const Body({Key key}) : super(key: key);
-//
-//   @override
-//   _BodyState createState() => _BodyState();
-// }
-//
-// class _BodyState extends State<Body> {
-//   initiate(ProductProvider provider) {
-//     provider.initiate();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final productProvider = Provider.of<ProductProvider>(context);
-//     return ListView.builder(
-//       itemCount: productProvider.searchResults.length,
-//       itemBuilder: (BuildContext context, int i) {
-//         return SelectableWidget(
-//           product: productProvider.searchResults[i],
-//           selectThisProduct: (Product c) {
-//             // productProvider.reset();
-//             print(i);
-//             print('${c.name} ${c.pharmacy.distance} ${c.pharmacy.name}');
-//             productProvider.isCompleted = false ;
-//             productProvider.selectedProduct = c;
-//             Navigator.pushNamed(context, order.OrderProduct.routeName,arguments: c);
-//           },
-//         );
-//       },
-//     );
-//   }
-// }
+}
 
 class SearchProductTF extends StatelessWidget {
   final TextEditingController controller;
@@ -201,45 +150,77 @@ class SelectableWidget extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Container(
+            padding: EdgeInsets.all(7.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5),
+                  topRight: Radius.circular(5),
+                  bottomLeft: Radius.circular(5),
+                  bottomRight: Radius.circular(5)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 3,
+                  blurRadius: 7,
+                  offset: Offset(0, 3), // changes position of shadow
+                ),
+              ],
+            ),
             child: Row(
               children: [
-                product.imageUrls != null && product.imageUrls.length > 0 ?
-                Image.network(
-                  product.imageUrls[0],
-                  height: getProportionateScreenHeight(50),
-                  width: getProportionateScreenWidth(50),
-                ) : Image.asset(
-                  "assets/images/syrup.png",
-                  height: getProportionateScreenHeight(50),
-                  width: getProportionateScreenWidth(50),
+                product.imageUrls != null && product.imageUrls.length > 0
+                    ? Image.network(
+                        product.imageUrls[0],
+                        height: getProportionateScreenHeight(100),
+                        width: getProportionateScreenWidth(75),
+                      )
+                    : Image.asset(
+                        "assets/images/syrup.png",
+                        height: getProportionateScreenHeight(100),
+                        width: getProportionateScreenWidth(75),
+                      ),
+                SizedBox(
+                  width: getProportionateScreenWidth(10),
                 ),
-                SizedBox(width: getProportionateScreenWidth(20),),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  Text(
-                        product.name,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w700),
-                  ),
                     Text(
-                        product.pharmacy.name,
-                        style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w200),
-                  ),
+                      product.name,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(5),
+                    ),
                     Text(
-                        "Distance: "+(product.pharmacy.distance/1000).toStringAsFixed(2) +" Km",
-                        style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w200),
-                  ),
+                      product.pharmacy.name,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w200),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(5),
+                    ),
                     Text(
-                          product.price.toString() + " JOD" ,
+                      "Distance: " +
+                          (product.pharmacy.distance / 1000)
+                              .toStringAsFixed(2) +
+                          " Km",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w200),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(5),
+                    ),
+                    Text(
+                      product.price.toStringAsFixed(2) + " JOD",
                       style: TextStyle(
                           color: kPrimaryColor,
                           fontSize: 18.0,
@@ -250,19 +231,6 @@ class SelectableWidget extends StatelessWidget {
               ],
             ),
           ),
-          // child: Text(
-          //       product.name +
-          //       "\n" +
-          //       product.price.toString() +
-          //       " JOD\n" +
-          //       (product.pharmacy.distance/1000).toString() +
-          //       " Km\n" +
-          //       product.pharmacy.name,//.toString(),
-          //   style: TextStyle(
-          //       color: Colors.black,
-          //       fontSize: 18.0,
-          //       fontWeight: FontWeight.w500),
-          // ),
         ),
       ),
     );

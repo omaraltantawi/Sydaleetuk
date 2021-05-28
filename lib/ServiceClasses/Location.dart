@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:geocoder/geocoder.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:geolocator/geolocator.dart';
 
 class Location {

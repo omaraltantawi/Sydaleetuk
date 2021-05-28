@@ -51,3 +51,24 @@ OutlineInputBorder outlineInputBorder() {
     borderSide: BorderSide(color: kTextColor),
   );
 }
+
+final textHeadStyle = TextStyle(
+  fontSize: getProportionateScreenWidth(19),
+  fontWeight: FontWeight.normal,
+  color: Colors.black54,
+  height: 1.5,
+);
+
+final textHeadStyleBlack = TextStyle(
+  fontSize: getProportionateScreenWidth(19),
+  fontWeight: FontWeight.normal,
+  color: Colors.black,
+  height: 1.5,
+);
+
+final textBodyStyle = TextStyle(
+  fontSize: getProportionateScreenWidth(19),
+  fontWeight: FontWeight.w600,
+  color: Colors.black,
+  height: 1.5,
+);

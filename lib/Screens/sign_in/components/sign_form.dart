@@ -81,7 +81,7 @@ class _SignFormState extends State<SignForm> with CanShowMessages {
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(15)),
           DefaultButton(
-            text: "Continue",
+            text: "Sign In",
             press: () async {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();

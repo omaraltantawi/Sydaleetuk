@@ -1,14 +1,20 @@
 import 'package:flutter/widgets.dart';
+import 'package:graduationproject/Screens/LoadAppScreen/load_screen.dart';
+import 'package:graduationproject/Screens/OrderInfoScreen.dart';
+import 'package:graduationproject/Screens/UserOrders.dart';
+import 'package:graduationproject/Screens/checkOutOrderScreen.dart';
+import 'package:graduationproject/Screens/complete_pharmacy_profile/complete_pharmacy_profile_screen.dart';
+import 'package:graduationproject/Screens/employee_screen/main_employee_screen.dart';
+import 'package:graduationproject/Screens/employee_screen/medicine/add_medicine.dart';
 import 'package:graduationproject/Screens/employee_screen/medicine/medicine_list.dart';
+import 'package:graduationproject/Screens/employee_screen/medicine/medicine_screen.dart';
+import 'package:graduationproject/Screens/manager_screen/medicines/medicine_screen.dart';
 import 'package:graduationproject/Screens/manager_screen/pharmacy/pharmacy_screen.dart';
 import 'package:graduationproject/Screens/manager_screen/profile/profile_screen_pharmacist.dart';
-import 'Screens/LoadAppScreen/load_screen.dart';
-import 'Screens/UserOrders.dart';
-import 'Screens/complete_pharmacy_profile/complete_pharmacy_profile_screen.dart';
-import 'Screens/employee_screen/main_employee_screen.dart';
-import 'Screens/employee_screen/medicine/add_medicine.dart';
-import 'Screens/employee_screen/medicine/medicine_screen.dart';
-import 'Screens/signup_pharmacy/sign_up_pharmacy_screen.dart';
+import 'package:graduationproject/Screens/manager_screen/requests_medicines/request_screen.dart';
+import 'package:graduationproject/Screens/signup_pharmacy/sign_up_pharmacy_screen.dart';
+import 'package:graduationproject/Screens/userCartScreen.dart';
+import 'package:graduationproject/Screens/userSettings.dart';
 import 'Screens/SelectProduct.dart';
 import 'Screens/manager_screen/employee/add_employee.dart';
 import 'Screens/manager_screen/employee/employee_list.dart';
@@ -16,16 +22,15 @@ import 'Screens/manager_screen/employee/employee_screen.dart';
 import 'Screens/manager_screen/manager_screen.dart';
 import 'Screens/manager_screen/medicines/add_medicine.dart';
 import 'Screens/manager_screen/medicines/medicine_list.dart';
-import 'Screens/manager_screen/medicines/medicine_screen.dart';
 import 'Screens/manager_screen/order/order_list.dart';
 import 'Screens/manager_screen/order/order_screen.dart';
-import 'Screens/manager_screen/requests_medicines/request_screen.dart';
 import 'Screens/order_success/order_success_screen.dart';
 import 'Screens/profile/profile_screen.dart';
 import 'Screens/reminder/reminder_screen.dart';
 import 'Screens/home/home_screen.dart';
 import 'Screens/lets_text.dart';
 import 'Screens/order.dart';
+import 'Screens/show_profile/show_profile_screen.dart';
 import 'screens/complete_profile/complete_profile_screen.dart';
 import 'screens/forgot_password/forgot_password_screen.dart';
 import 'screens/login_success/login_success_screen.dart';
@@ -64,6 +69,11 @@ final Map<String, WidgetBuilder> routes = {
   AddEmployee.routeName : (context) => AddEmployee(),
   OrderList.routeName : (context) => OrderList(),
   OrderScreen.routeName : (context) => OrderScreen(),
+  ShowProfileScreen.routeName : (context) => ShowProfileScreen(),
+  UserSettingsScreen.routeName : (context) => UserSettingsScreen(),
+  CheckOutOrdersScreen.routeName : (context) => CheckOutOrdersScreen(),
+  UserCartScreen.routeName : (context) => UserCartScreen(),
+  OrderInfoScreen.routeName : (context) => OrderInfoScreen(),
   RequestScreen.routeName : (context) => RequestScreen(),
   PharmacyScreen.routeName: (context) => PharmacyScreen(),
   ProfileScreenPharmacist.routeName: (context) => ProfileScreenPharmacist(),
@@ -71,5 +81,4 @@ final Map<String, WidgetBuilder> routes = {
   EmployeeMedicineList.routeName:(context) => EmployeeMedicineList(),
   EmployeeMedicineScreen.routeName:(context) => EmployeeMedicineScreen(),
   EmployeeAddMedicine.routeName:(context) => EmployeeAddMedicine(),
-
 };

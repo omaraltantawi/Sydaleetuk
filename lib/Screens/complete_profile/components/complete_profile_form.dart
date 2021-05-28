@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graduationproject/Screens/reminder/helpers/platform_flat_button.dart';
 import 'package:graduationproject/Screens/sign_up/components/ScreenArguments.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/components/custom_surfix_icon.dart';
@@ -41,6 +42,14 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> with CanShowM
       setState(() {
         errors.remove(error);
       });
+  }
+
+  Future<void> openDatePicker() async {
+    DateTime time = await showDatePickerDialog(context: context,dateTime: birthDate );
+    setState(() {
+      if ( time != null )
+        birthDate = time;
+    });
   }
 
   @override
@@ -94,20 +103,40 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> with CanShowM
           ),
           SizedBox(height: getProportionateScreenHeight(15)),
           SizedBox(
-            width: SizeConfig.screenWidth * 0.5,
-            child: DefaultButton(
-              text: "Birth Date",
-              press: () async {
-                DateTime time = await showDatePickerDialog(context: context,dateTime: birthDate );
-                setState(() {
-                  if ( time != null )
-                    birthDate = time;
-                });
-              },
+            height : getProportionateScreenHeight(50),
+            width :  SizeConfig.screenWidth * 0.90,
+            child: Container(
+              child: PlatformFlatButton(
+                handler: () => openDatePicker(),
+                buttonChild: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Birth Date:',
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w200),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      this.birthDate != null ?DateFormat("dd/MM/yyyy").format(this.birthDate) : '',
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(width: 10),
+                    Icon(
+                      Icons.event,
+                      size: 30,
+                      color: Theme.of(context).primaryColor,
+                    )
+                  ],
+                ),
+                color: Color.fromRGBO(7, 190, 200, 0.1),
+              ),
             ),
-          ),
-          Text(
-              'Birth Date : ${birthDate == null ? '' : DateFormat('dd/MM/yyyy').format(birthDate)}'
           ),
           SizedBox(height: getProportionateScreenHeight(15)),
           FormError(errors: errors),
@@ -126,9 +155,8 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> with CanShowM
                 hasError = true;
               }else
                 removeError(error: kGenderEmptyError);
-              if ( hasError )
-                return;
-              if (_formKey.currentState.validate()) {
+
+              if (_formKey.currentState.validate() && !hasError) {
                 _formKey.currentState.save();
                 startPhoneAuth();
               }

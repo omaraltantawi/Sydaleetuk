@@ -274,7 +274,7 @@ class _AuthCardState extends State<AuthCard> with CanShowMessages {
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    DateTime picked = await showDatePickerDialog(context: context);
+    DateTime picked = await showDatePickerDialog(context: context, dateTime: null);
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;

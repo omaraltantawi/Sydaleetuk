@@ -95,6 +95,9 @@ class ProductProvider with ChangeNotifier {
               prod.id = medicine.id;
               prod.name = medicine.data()['name'];
               var price = medicine.data()['price'];
+              prod.description = medicine.data()['description'];
+              prod.dosageUnit = medicine.data()['dosageUnit'];
+              prod.pillsUnit = medicine.data()['pillsUnit'];
               if ( price.runtimeType == int ) {
                 double p = double.parse(price.toString());
                 prod.price = p;
@@ -110,6 +113,7 @@ class ProductProvider with ChangeNotifier {
               prod.pharmacy.pharmacyId = element.id;
               prod.pharmacy.name = element.data()['pharmacyName'];
               prod.company = element.data()['pharmacyName'];
+              prod.pharmacy.addressGeo = element.data()['addressGeoPoint'];
               prod.pharmacy.phoneNo = element.data()['phoneNo'];
               prod.pharmacy.distance = await Location.getDistance(startLatitude: userLocation.latitude, startLongitude: userLocation.longitude, endLatitude: pharmacylocation.latitude, endLongitude: pharmacylocation.longitude);
               _results.add(prod);
@@ -157,12 +161,13 @@ class ProductProvider with ChangeNotifier {
     Product prod = selectedProduct;
     var medicine = await _fireStore.collection('PHARMACY').doc(selectedProduct.pharmacy.pharmacyId).collection('MEDICINE').doc(selectedProduct.id).get();
     prod.prescriptionRequired = medicine.data()['PrescriptionRequired'];
+    // print(prod.prescriptionRequired);
     Map<String,dynamic> dosagePills = medicine.data()['DosagePills'];
     dosagePills.forEach((key, value) {
       var d = int.parse(key);
       prod.dosagePills.addAll({d:value});
     });
-    selectedProduct = prod;
+    selectedProduct = prod.clone();
   }
 
   Future<void> initiate () async {
@@ -189,6 +194,7 @@ class ProductProvider with ChangeNotifier {
       prod.id = medicine.id;
       prod.name = medicine.data()['name'];
       var price = medicine.data()['price'];
+      // prod.unit = medicine.data()['type'];
       if ( price.runtimeType == int ) {
         double p = double.parse(price.toString());
         prod.price = p;
