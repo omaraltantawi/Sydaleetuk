@@ -51,10 +51,7 @@ class CustomBottomNavBar extends StatelessWidget {
                 ),
 
               ),
-              IconButton(
-                icon: SvgPicture.asset("assets/icons/Heart Icon.svg"),
-                onPressed: () {},
-              ),
+
               IconButton(
                 onPressed: () =>
                     Navigator.pushNamed(context, ReminderScreen.routeName),

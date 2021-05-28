@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '/Screens/manager_screen/pharmacy/pharmacy_screen.dart';
-import '/Screens/manager_screen/order/order_list.dart';
-import '/Screens/manager_screen/requests_medicines/request_screen.dart';
-import '/data_models/Pharmacist.dart';
-import '/firebase/auth/auth.dart';
+import 'package:graduationproject/Screens/manager_screen/pharmacy/pharmacy_screen.dart';
+import 'package:graduationproject/Screens/manager_screen/order/order_list.dart';
+import 'package:graduationproject/Screens/manager_screen/requests_medicines/request_screen.dart';
+import 'package:graduationproject/data_models/Pharmacist.dart';
+import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:provider/provider.dart';
 
 import 'employee/employee_list.dart';

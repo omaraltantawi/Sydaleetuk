@@ -292,7 +292,7 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                         decoration: InputDecoration(
                                           hintText: 'Enter the new pill',
                                           labelText: 'New pill',
-                                          constraints: BoxConstraints(
+                                          prefixIconConstraints: BoxConstraints(
                                             maxWidth: 150,
                                             maxHeight: 150
                                           ),

@@ -21,11 +21,7 @@ class HomeHeader extends StatelessWidget {
             svgSrc: "assets/icons/Cart Icon.svg",
             press: () {},
           ),
-          IconBtnWithCounter(
-            svgSrc: "assets/icons/Bell.svg",
-            numOfitem: 3,
-            press: () {},
-          ),
+
         ],
       ),
     );
