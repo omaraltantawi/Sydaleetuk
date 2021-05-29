@@ -1,26 +1,30 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
+import 'package:graduationproject/components/default_button.dart';
+import 'package:graduationproject/constants.dart';
 import 'package:graduationproject/data_models/Pharmacist.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
+import 'package:graduationproject/size_config.dart';
 import 'package:provider/provider.dart';
 import 'add_medicine.dart';
 import 'medicine_screen.dart';
 
 List<Widget> medicines;
 
-class MedicineList extends StatefulWidget  {
+class MedicineList extends StatefulWidget {
   static const String routeName = 'MedicineList';
 
   @override
   _MedicineListState createState() => _MedicineListState();
 }
 
-class _MedicineListState extends State<MedicineList> with CanShowMessages{
+class _MedicineListState extends State<MedicineList> with CanShowMessages {
   User loggedInUser;
   Pharmacist phar;
 
@@ -43,7 +47,8 @@ class _MedicineListState extends State<MedicineList> with CanShowMessages{
 
   Future<void> startBarcodeScanStream() async {
     FlutterBarcodeScanner.getBarcodeStreamReceiver(
-        '#ff6666', 'Cancel', true, ScanMode.BARCODE).listen((barcode) => print(barcode));
+            '#ff6666', 'Cancel', true, ScanMode.BARCODE)
+        .listen((barcode) => print(barcode));
   }
 
   Future<void> scanQR() async {
@@ -76,7 +81,7 @@ class _MedicineListState extends State<MedicineList> with CanShowMessages{
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.BARCODE);
       print(barcodeScanRes);
-      if ( barcodeScanRes == '-1' ){
+      if (barcodeScanRes == '-1') {
         return null;
       }
       return barcodeScanRes;
@@ -98,14 +103,14 @@ class _MedicineListState extends State<MedicineList> with CanShowMessages{
   @override
   Widget build(BuildContext context) {
     loggedInUser = Provider.of<FireBaseAuth>(context, listen: false).loggedUser;
-
+    // phar = Provider.of<FireBaseAuth>(context, listen: false).pharmacist;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xFF099F9D),
         tooltip: "Click here to add new Medicine",
         child: Icon(Icons.add),
-        onPressed: () {
-          showDialog(
+        onPressed: () async{
+          await showDialog(
               builder: (context) => AlertDialog(
                     title: Text("Add new medicine"),
                     content: Container(
@@ -116,49 +121,54 @@ class _MedicineListState extends State<MedicineList> with CanShowMessages{
                           TextButton(
                             onPressed: () async {
                               String barcode = await scanBarcodeNormal();
-                              if ( barcode != null && barcode != '' ) {
+                              if (barcode != null && barcode != '') {
                                 bool cond = await Provider.of<FireBaseAuth>(
-                                    context, listen: false)
+                                        context,
+                                        listen: false)
                                     .checkMedicineExistenceByBarcode(
-                                    barcode: barcode);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('Barcode : $barcode'),
-                                      duration: Duration(seconds: 15),
-                                    ));
+                                        barcode: barcode);
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text('Barcode : $barcode'),
+                                  duration: Duration(seconds: 15),
+                                ));
                                 if (!cond) {
-                                  QuestionMessage answer = await showQuestionDialog(
-                                      context: context,
-                                      msgTitle: 'Add Medicine',
-                                      msgText: [
-                                        'Medicine is not exist in the official medicines.',
-                                        'Do you want to add it manually?'
-                                      ],
-                                      buttonText: '');
+                                  QuestionMessage answer =
+                                      await showQuestionDialog(
+                                          context: context,
+                                          msgTitle: 'Add Medicine',
+                                          msgText: [
+                                            'Medicine is not exist in the official medicines.',
+                                            'Do you want to add it manually?'
+                                          ],
+                                          buttonText: '');
                                   if (answer == QuestionMessage.YES) {
                                     Navigator.pushNamed(
-                                        context, AddMedicine.routeName,arguments: barcode);
+                                        context, AddMedicine.routeName,
+                                        arguments: barcode);
                                   }
                                 } else {
                                   bool condPhar = await Provider.of<
-                                      FireBaseAuth>(
-                                      context, listen: false)
+                                          FireBaseAuth>(context, listen: false)
                                       .checkPharmacyMedicineExistenceByBarcode(
-                                      barcode: barcode);
-                                  print('-*************************** $condPhar');
+                                          barcode: barcode);
+                                  print(
+                                      '-*************************** $condPhar');
                                   if (!condPhar) {
-                                    await Provider.of<FireBaseAuth>(
-                                        context, listen: false)
+                                    await Provider.of<FireBaseAuth>(context,
+                                            listen: false)
                                         .addMedicineToPharmacyFromOfficialByBarcode(
-                                        barCode: barcode);
-                                    await showMessageDialog(context: context,
+                                            barCode: barcode);
+                                    await showMessageDialog(
+                                        context: context,
                                         msgTitle: 'Add Medicine',
                                         msgText: [
                                           'Medicine added successfully to your pharmacy.'
                                         ],
                                         buttonText: 'OK');
                                   } else {
-                                    await showMessageDialog(context: context,
+                                    await showMessageDialog(
+                                        context: context,
                                         msgTitle: 'Warning',
                                         msgText: [
                                           'Medicine already exists in your pharmacy.'
@@ -251,36 +261,305 @@ class _MedicineListState extends State<MedicineList> with CanShowMessages{
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: listMedicines().length == 0 ? NoData() : Data(),
+      body: phar != null && phar.pharmacy != null
+          ? StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('PHARMACY')
+                  .doc(phar.pharmacy.pharmacyId)
+                  .collection('MEDICINE')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                List<Widget> widgets = [];
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  widgets.add(
+                    Center(
+                      child: Text(
+                        'Please wait...',
+                        style: TextStyle(
+                          fontSize: getProportionateScreenWidth(20),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  );
+                  widgets.add(
+                    SizedBox(
+                      width: SizeConfig.screenWidth * 0.6,
+                      height: SizeConfig.screenHeight * 0.025,
+                    ),
+                  );
+                  widgets.add(
+                    SpinKitDoubleBounce(
+                      color: kPrimaryColor,
+                      size: SizeConfig.screenWidth * 0.15,
+                    ),
+                  );
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: widgets,
+                  );
+                }
+
+                final medicies = snapshot.data.docs;
+                int i = 0;
+                for (var medicine in medicies) {
+                  String name = medicine.data()['name'];
+                  double price = medicine.data()['price'];
+                  String barCode = medicine.data()['barCode'];
+                  widgets.add(
+                    Medicine(
+                      number: ++i,
+                      barCode: barCode,
+                      price: price.toStringAsFixed(2),
+                      name: name,
+                    ),
+                  );
+                  widgets.add(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: Divider(
+                        color: Colors.black.withOpacity(0.25),
+                        thickness: 1,
+                      ),
+                    ),
+                  );
+                }
+
+                if (widgets.length == 0) {
+                  widgets.add(
+                    Icon(
+                      Icons.hourglass_empty,
+                      color: kPrimaryColor,
+                      size: SizeConfig.screenWidth * 0.4,
+                    ),
+                  );
+                  widgets.add(
+                    Center(
+                      child: Text(
+                        'You don\'t have any Medicines',
+                        style: TextStyle(
+                          fontSize: getProportionateScreenWidth(20),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  );
+                  widgets.add(
+                    SizedBox(
+                      width: SizeConfig.screenWidth * 0.6,
+                      height: SizeConfig.screenHeight * 0.025,
+                    ),
+                  );
+                  widgets.add(
+                    SizedBox(
+                      width: SizeConfig.screenWidth * 0.6,
+                      height: SizeConfig.screenHeight * 0.05,
+                      child: DefaultButton(
+                        text: "Add Medicine Now",
+                        press: () async{
+                          await showDialog(
+                              builder: (context) => AlertDialog(
+                                title: Text("Add new medicine"),
+                                content: Container(
+                                  height: 120,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () async {
+                                          String barcode = await scanBarcodeNormal();
+                                          if (barcode != null && barcode != '') {
+                                            bool cond = await Provider.of<FireBaseAuth>(
+                                                context,
+                                                listen: false)
+                                                .checkMedicineExistenceByBarcode(
+                                                barcode: barcode);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                              content: Text('Barcode : $barcode'),
+                                              duration: Duration(seconds: 15),
+                                            ));
+                                            if (!cond) {
+                                              QuestionMessage answer =
+                                              await showQuestionDialog(
+                                                  context: context,
+                                                  msgTitle: 'Add Medicine',
+                                                  msgText: [
+                                                    'Medicine is not exist in the official medicines.',
+                                                    'Do you want to add it manually?'
+                                                  ],
+                                                  buttonText: '');
+                                              if (answer == QuestionMessage.YES) {
+                                                Navigator.pushNamed(
+                                                    context, AddMedicine.routeName,
+                                                    arguments: barcode);
+                                              }
+                                            } else {
+                                              bool condPhar = await Provider.of<
+                                                  FireBaseAuth>(context, listen: false)
+                                                  .checkPharmacyMedicineExistenceByBarcode(
+                                                  barcode: barcode);
+                                              print(
+                                                  '-*************************** $condPhar');
+                                              if (!condPhar) {
+                                                await Provider.of<FireBaseAuth>(context,
+                                                    listen: false)
+                                                    .addMedicineToPharmacyFromOfficialByBarcode(
+                                                    barCode: barcode);
+                                                await showMessageDialog(
+                                                    context: context,
+                                                    msgTitle: 'Add Medicine',
+                                                    msgText: [
+                                                      'Medicine added successfully to your pharmacy.'
+                                                    ],
+                                                    buttonText: 'OK');
+                                              } else {
+                                                await showMessageDialog(
+                                                    context: context,
+                                                    msgTitle: 'Warning',
+                                                    msgText: [
+                                                      'Medicine already exists in your pharmacy.'
+                                                    ],
+                                                    buttonText: 'OK');
+                                              }
+                                            }
+                                          }
+                                        },
+                                        child: Container(
+                                          width: 150,
+                                          padding: EdgeInsets.only(bottom: 6.0),
+                                          child: Center(
+                                            child: Text(
+                                              'By Scan',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(
+                                                Color(0xFF099F9D)),
+                                            shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(25.0),
+                                                    side: BorderSide(
+                                                      color: Colors.white,
+                                                      width: 2,
+                                                    )))),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                              context, AddMedicine.routeName);
+                                        },
+                                        child: Container(
+                                          width: 150,
+                                          padding: EdgeInsets.only(bottom: 6.0),
+                                          child: Center(
+                                            child: Text(
+                                              'Manually',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(
+                                                Color(0xFF099F9D)),
+                                            shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(25.0),
+                                                    side: BorderSide(
+                                                      color: Colors.white,
+                                                      width: 2,
+                                                    )))),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              context: context);
+                        },
+                      ),
+                    ),
+                  );
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: widgets,
+                  );
+                }
+
+                return ListView(
+                  padding: EdgeInsets.all(8.0),
+                  children: widgets,
+                );
+              })
+          : ListView(
+              padding: EdgeInsets.all(8.0),
+              children: [
+                Center(
+                  child: Text(
+                    'Please wait...',
+                    style: TextStyle(
+                      fontSize: getProportionateScreenWidth(20),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: SizeConfig.screenWidth * 0.6,
+                  height: SizeConfig.screenHeight * 0.025,
+                ),
+                SpinKitDoubleBounce(
+                  color: kPrimaryColor,
+                  size: SizeConfig.screenWidth * 0.15,
+                ),
+              ],
+            ),
     );
   }
 }
-
-class Data extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.all(8.0),
-      children: listMedicines(),
-    );
-  }
-}
-List<Widget> listMedicines() {
-  medicines = [
-  ];
-
-  return medicines;
-}
+//
+// class Data extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return StreamBuilder(
+//       stream: ,
+//       builder: (context, snapshot) {
+//         return ListView(
+//           padding: EdgeInsets.all(8.0),
+//           children: widgets,
+//         );
+//       }
+//     );
+//   }
+// }
 
 class Medicine extends StatelessWidget {
   final int number;
   final String name;
-  final int barCode;
+  final String barCode;
   final String price;
 
   // final Image image;
 
-  Medicine({this.number, this.name,this.barCode, this.price});
+  Medicine({this.number, this.name, this.barCode, this.price});
 
   @override
   Widget build(BuildContext context) {
@@ -300,7 +579,7 @@ class Medicine extends StatelessWidget {
                       style: TextStyle(fontSize: 25),
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width-210,
+                      width: MediaQuery.of(context).size.width - 210,
                       child: Text(
                         name,
                         style: TextStyle(fontSize: 25),
@@ -313,11 +592,10 @@ class Medicine extends StatelessWidget {
               ],
             ),
             Text(
-              '${price.substring(0,4)} JOD',
+              '${price.substring(0, 4)} JOD',
               style: TextStyle(
                 fontSize: 25,
               ),
-
             ),
           ],
         ),
