@@ -13,6 +13,7 @@ class EmployeeScreen extends StatelessWidget {
     profilePic: Image.network(
         'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
   );
+
   final TextStyle _textStyle1 = TextStyle(
     color: Colors.black,
     fontSize: 25,
@@ -24,6 +25,7 @@ class EmployeeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text(

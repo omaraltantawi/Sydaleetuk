@@ -48,7 +48,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                   color: mainColor,
                   size: getProportionateScreenWidth(150),
                 ),
-                onTap: (){},
+                onTap: null,
               ),
               SizedBox(
                 height: getProportionateScreenHeight(20),
@@ -56,12 +56,28 @@ class _AddEmployeeState extends State<AddEmployee> {
               Container(
                 child: TextField(
                   decoration: InputDecoration(
-                    hintText: 'Full Name',
-                    labelText: 'Name',
+                    hintText: 'First Name',
+                    labelText: 'First Name',
                   ),
                   onChanged: (value){
                     setState(() {
-                      employee.fullName = value;
+                      employee.fName = value;
+                    });
+                  },
+                ),
+              ),
+              SizedBox(
+                height: getProportionateScreenHeight(20),
+              ),
+              Container(
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Last Name',
+                    labelText: 'Last Name',
+                  ),
+                  onChanged: (value){
+                    setState(() {
+                      employee.lName = value;
                     });
                   },
                 ),

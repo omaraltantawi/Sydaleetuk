@@ -687,7 +687,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
         'type': 'EmployeeUser'
       });
       var ret2 = await _fireStore.collection('PHARMACIST').add(
-          {'id': ret.id, 'experience': experience, 'pharmacyId': pharmacyId});
+          {'id': ret.id, 'experience': experience, 'pharmacyId': pharmacyId,'imageUrl' : ''});
     } catch (error) {
       print('Error from addEmployeeUser $error');
       throw error;
@@ -804,6 +804,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
             pharmacist.fName = user.first.data()['fName'];
             pharmacist.lName = user.first.data()['lName'];
             pharmacist.phoneNo = user.first.data()['phoneNo'];
+            pharmacist.imageUrl = element.data()['imageUrl'];
             pharmacist.pharmacy = Pharmacy();
             pharmacist.pharmacy.name = _pharmacist.pharmacy.name;
             pharmacist.pharmacy.phoneNo = _pharmacist.pharmacy.phoneNo;

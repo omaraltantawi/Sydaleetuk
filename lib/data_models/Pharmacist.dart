@@ -4,4 +4,5 @@ import 'Pharmacy.dart';
 class Pharmacist extends SUser {
   String experience ;
   Pharmacy pharmacy ;
+  String imageUrl;
 }

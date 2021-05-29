@@ -609,11 +609,11 @@ class MedicineWidget extends StatelessWidget {
                 product.imageUrls[0] != null && product.imageUrls[0] != ''
                     ? Image.network(
                   product.imageUrls[0],
-                  height: getProportionateScreenHeight(140),
+                  height: getProportionateScreenHeight(100),
                 )
                     : Image.asset(
                   "assets/images/syrup.png",
-                  height: getProportionateScreenHeight(140),
+                  height: getProportionateScreenHeight(100),
                 ),
                 SizedBox(
                   width: getProportionateScreenWidth(10),
