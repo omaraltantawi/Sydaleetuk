@@ -94,11 +94,11 @@ class PhoneAuthDataProvider with ChangeNotifier {
 
     phone = phoneNo;
     print(phone);
-    startAuth();
+    await startAuth();
     return true;
   }
 
-  startAuth() {
+  startAuth() async {
     print('_startAuth invoked');
     final PhoneCodeSent codeSent =
         (String verificationId, [int forceResendingToken]) async {
@@ -165,7 +165,7 @@ class PhoneAuthDataProvider with ChangeNotifier {
 
     // FireBaseAuth.auth.
     _addStatusMessage('Phone auth started');
-    FireBaseAuth.auth
+    await FireBaseAuth.auth
         .verifyPhoneNumber(
             phoneNumber: phone.toString(),
             timeout: Duration(seconds: 60),

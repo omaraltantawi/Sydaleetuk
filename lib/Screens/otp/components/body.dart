@@ -30,9 +30,13 @@ class Body extends StatelessWidget {
               OtpForm(arguments: arguments,),
               SizedBox(height: SizeConfig.screenHeight * 0.1),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   // OTP code resend
-                  Provider.of<PhoneAuthDataProvider>(context, listen: false).startAuth();
+                  await Provider.of<PhoneAuthDataProvider>(context, listen: false).startAuth();
+                  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  //   content: Text('Code resend successfully'),
+                  //   duration: Duration(seconds: 5),
+                  // ));
                 },
                 child: Text(
                   "Resend Verification Code",

@@ -22,8 +22,8 @@ class SearchField extends StatelessWidget {
         // read only to keep keyboard hidden.
         readOnly: true,
         onChanged: (value) => print(value),
-        onTap: () {
-          Provider.of<ProductProvider>(context,listen: false).initiate();
+        onTap: () async {
+          await Provider.of<ProductProvider>(context,listen: false).initiate();
           Navigator.pushNamed(context, SelectProduct.routeName );
         },
         decoration: InputDecoration(

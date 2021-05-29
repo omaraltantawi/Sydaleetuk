@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/location.dart' as loca;
@@ -44,7 +45,7 @@ class _SignUpFormState extends State<SignUpForm> with CanShowMessages {
         errors.remove(error);
       });
   }
-
+  bool isLoading = false ;
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -58,11 +59,15 @@ class _SignUpFormState extends State<SignUpForm> with CanShowMessages {
           buildConformPassFormField(),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(40)),
+          if ( !isLoading )
           DefaultButton(
             text: "Continue",
             press: () async {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
+                setState(() {
+                  isLoading = true;
+                });
                 // if all are valid then go to success screen
                 // Provider.of<FireBaseAuth>(context,listen: false).signUpNormalUser(email, password).then((value) {
                 //   Navigator.pushNamed(context, CompleteProfileScreen.routeName,arguments: ScreenArguments(email: email,password: password),);
@@ -154,7 +159,15 @@ class _SignUpFormState extends State<SignUpForm> with CanShowMessages {
                       buttonText: 'OK');
                 }
               }
+              setState(() {
+                isLoading = false;
+              });
             },
+          ),
+          if ( isLoading )
+          SpinKitDoubleBounce(
+            color: kPrimaryColor,
+            size: SizeConfig.screenWidth * 0.15,
           ),
         ],
       ),

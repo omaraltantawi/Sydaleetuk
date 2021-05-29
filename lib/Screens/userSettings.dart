@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:graduationproject/Screens/reminder/helpers/platform_flat_button.dart';
 import 'package:graduationproject/Screens/splash/splash_screen.dart';
 import 'package:graduationproject/ServiceClasses/SignInMethods.dart';
@@ -217,7 +218,7 @@ class DeleteAccountScreenDialogState extends State<DeleteAccountScreenDialog>
         errors.remove(error);
       });
   }
-
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -293,13 +294,17 @@ class DeleteAccountScreenDialogState extends State<DeleteAccountScreenDialog>
                   SizedBox(height: getProportionateScreenHeight(30)),
                   FormError(errors: errors),
                   SizedBox(height: getProportionateScreenHeight(30)),
-                  DefaultButton(
+                  if ( !isLoading )
+                    DefaultButton(
                     key: Key('Delete'),
                     text: 'Delete Account',
                     press: () async {
                       if (_formKey.currentState.validate()) {
                         _formKey.currentState.save();
                         FocusScope.of(context).unfocus();
+                        setState(() {
+                          isLoading = true;
+                        });
                         // QuestionMessage answer = await showQuestionDialog(
                         //     context: context,
                         //     msgTitle: 'Warning',
@@ -355,8 +360,16 @@ class DeleteAccountScreenDialogState extends State<DeleteAccountScreenDialog>
                               buttonText: 'OK');
                         }
                       }
+                      setState(() {
+                        isLoading = false;
+                      });
                     },
                   ),
+                  if ( isLoading )
+                    SpinKitDoubleBounce(
+                      color: kPrimaryColor,
+                      size: SizeConfig.screenWidth * 0.15,
+                    ),
                 ],
               ),
             ),
@@ -392,7 +405,7 @@ class ResetPassScreenDialogState extends State<ResetPassScreenDialog>
         errors.remove(error);
       });
   }
-
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -502,18 +515,22 @@ class ResetPassScreenDialogState extends State<ResetPassScreenDialog>
                 SizedBox(height: getProportionateScreenHeight(30)),
                 FormError(errors: errors),
                 SizedBox(height: getProportionateScreenHeight(20)),
-                DefaultButton(
+                if ( !isLoading )
+                  DefaultButton(
                   key: Key('reset'),
                   text: 'Reset Password',
                   press: () async {
                     if (_formKey.currentState.validate()) {
                       _formKey.currentState.save();
                       FocusScope.of(context).unfocus();
+                      setState(() {
+                        isLoading = true;
+                      });
                       try {
                         // Keyboard
                         await Provider.of<FireBaseAuth>(context, listen: false)
                             .resetPasswordEmail(
-                                oldPass: oldPassword, newPass: password);
+                            oldPass: oldPassword, newPass: password);
                         await showMessageDialog(
                             context: context,
                             msgTitle: 'Reset Password',
@@ -556,8 +573,17 @@ class ResetPassScreenDialogState extends State<ResetPassScreenDialog>
                             buttonText: 'OK');
                       }
                     }
+                    setState(() {
+                      isLoading = false;
+                    });
                   },
                 ),
+                if ( isLoading )
+                  SpinKitDoubleBounce(
+                    color: kPrimaryColor,
+                    size: SizeConfig.screenWidth * 0.15,
+                  ),
+
                 SizedBox(height: getProportionateScreenHeight(20)),
               ],
             ),
@@ -611,6 +637,8 @@ class EditProfileScreenDialogState extends State<EditProfileScreenDialog>
   void initState() {
     super.initState();
   }
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -806,62 +834,74 @@ class EditProfileScreenDialogState extends State<EditProfileScreenDialog>
                 SizedBox(height: getProportionateScreenHeight(15)),
                 FormError(errors: errors),
                 SizedBox(height: getProportionateScreenHeight(20)),
-                DefaultButton(
-                  key: Key('save'),
-                  text: 'Save',
-                  press: () async {
-                    if (_formKey.currentState.validate()) {
-                      _formKey.currentState.save();
-                      FocusScope.of(context).unfocus();
-                      try {
-                        String _fName , _lName , _address , _gender;
-                        DateTime _birthDate;
+                if ( !isLoading )
+                  DefaultButton(
+                    key: Key('save'),
+                    text: 'Save',
+                    press: () async {
+                      if (_formKey.currentState.validate()) {
+                        _formKey.currentState.save();
+                        FocusScope.of(context).unfocus();
+                        setState(() {
+                          isLoading = true;
+                        });
+                        try {
+                          String _fName , _lName , _address , _gender;
+                          DateTime _birthDate;
 
-                        _fName = fName == user.fName ? null : fName;
-                        _lName = lName == user.lName ? null : lName;
-                        _address = address == user.address ? null : address;
-                        _gender = gender == user.gender ? null : gender;
-                        _birthDate = birthDate == user.birthDate ? null : birthDate;
-                        print( '$_fName $fName ${user.fName}' );
-                        print( '$_lName $lName ${user.lName}' );
-                        print( '$_address $address ${user.address}' );
-                        print( '$_gender $gender ${user.gender}' );
-                        print( '$_birthDate $birthDate ${user.birthDate}' );
-                        if ( _fName != null ||_lName != null ||_address != null ||_gender != null ||_birthDate != null ) {
-                          await Provider.of<FireBaseAuth>(
-                              context, listen: false)
-                              .updateUserProfileData(fName: _fName,
-                              lName: _lName,
-                              address: _address,
-                              gender: _gender,
-                              birthDate: _birthDate);
+                          _fName = fName == user.fName ? null : fName;
+                          _lName = lName == user.lName ? null : lName;
+                          _address = address == user.address ? null : address;
+                          _gender = gender == user.gender ? null : gender;
+                          _birthDate = birthDate == user.birthDate ? null : birthDate;
+                          print( '$_fName $fName ${user.fName}' );
+                          print( '$_lName $lName ${user.lName}' );
+                          print( '$_address $address ${user.address}' );
+                          print( '$_gender $gender ${user.gender}' );
+                          print( '$_birthDate $birthDate ${user.birthDate}' );
+                          if ( _fName != null ||_lName != null ||_address != null ||_gender != null ||_birthDate != null ) {
+                            await Provider.of<FireBaseAuth>(
+                                context, listen: false)
+                                .updateUserProfileData(fName: _fName,
+                                lName: _lName,
+                                address: _address,
+                                gender: _gender,
+                                birthDate: _birthDate);
+                            await showMessageDialog(
+                                context: context,
+                                msgTitle: 'Edit Profile',
+                                msgText: ['Your data saved successfully.'],
+                                buttonText: 'OK');
+                            Navigator.pop(context);
+                          }else {
+                            await showMessageDialog(
+                                context: context,
+                                msgTitle: 'Edit Profile',
+                                msgText: ['There are no data changed to save it.'],
+                                buttonText: 'OK');
+                          }
+                        } catch (e) {
+                          var msgTxt = [
+                            'Something went wrong.',
+                            'Please try again'
+                          ];
                           await showMessageDialog(
                               context: context,
-                              msgTitle: 'Edit Profile',
-                              msgText: ['Your data saved successfully.'],
-                              buttonText: 'OK');
-                          Navigator.pop(context);
-                        }else {
-                          await showMessageDialog(
-                              context: context,
-                              msgTitle: 'Edit Profile',
-                              msgText: ['There are no data changed to save it.'],
+                              msgTitle: 'Warning',
+                              msgText: msgTxt,
                               buttonText: 'OK');
                         }
-                      } catch (e) {
-                        var msgTxt = [
-                          'Something went wrong.',
-                          'Please try again'
-                        ];
-                        await showMessageDialog(
-                            context: context,
-                            msgTitle: 'Warning',
-                            msgText: msgTxt,
-                            buttonText: 'OK');
                       }
-                    }
-                  },
-                ),
+                      setState(() {
+                        isLoading = false;
+                      });
+                    },
+                  ),
+                if ( isLoading )
+                  SpinKitDoubleBounce(
+                    color: kPrimaryColor,
+                    size: SizeConfig.screenWidth * 0.15,
+                  ),
                 SizedBox(height: getProportionateScreenHeight(20)),
               ],
             ),

@@ -104,9 +104,10 @@ class ProductProvider with ChangeNotifier {
               }else
                 prod.price = price;
               List<dynamic> list = medicine.data()['imageURLs'];
-              list.forEach((element) {
-                prod.imageUrls.add(element.toString());
-              });
+              if ( list != null )
+                list.forEach((element) {
+                  prod.imageUrls.add(element.toString());
+                });
               if  ( prod.imageUrls == null )
                 prod.imageUrls = [];
               prod.pharmacy = Pharmacy();

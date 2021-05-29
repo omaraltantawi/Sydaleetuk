@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:graduationproject/Screens/home/home_screen.dart';
 import 'package:graduationproject/Screens/lets_text.dart';
 import 'package:graduationproject/Screens/sign_up/components/ScreenArguments.dart';
@@ -66,7 +67,7 @@ class _OtpFormState extends State<OtpForm> {
       FocusScope.of(context).requestFocus(focusNode);
     }
   }
-
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
 
@@ -174,19 +175,30 @@ class _OtpFormState extends State<OtpForm> {
             ],
           ),
           SizedBox(height: SizeConfig.screenHeight * 0.15),
-          DefaultButton(
+          if ( !isLoading )
+            DefaultButton(
             text: "Continue",
             press: () {
               if ( code.containsValue('') ){
-                //Show error still there are a field empty.
-                print ('error');
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text('Please enter the complete verification code.'),
+                  duration: Duration(seconds: 5),
+                ));
               }else {
                 String _code = '${code['1']}${code['2']}${code['3']}${code['4']}${code['5']}${code['6']}' ;
                 print (_code);
+                setState(() {
+                  isLoading = true;
+                });
                 Provider.of<PhoneAuthDataProvider>(context, listen: false).verifyOTPAndLogin(smsCode: _code);
               }
             },
-          )
+          ),
+          if ( isLoading )
+            SpinKitDoubleBounce(
+              color: kPrimaryColor,
+              size: SizeConfig.screenWidth * 0.15,
+            ),
         ],
       ),
     );
@@ -208,6 +220,7 @@ class _OtpFormState extends State<OtpForm> {
   onVerified( AuthCredential user ) async {
     try {
       print('User get to Verify Method $user');
+
       // await Provider.of<FireBaseAuth>(context, listen: false).signUpNormalUser(
       //     widget.arguments.email, widget.arguments.password);
       await Provider.of<FireBaseAuth>(context,listen: false).signUpNormalUserWithAllData(widget.arguments.email,widget.arguments.password,
@@ -220,6 +233,9 @@ class _OtpFormState extends State<OtpForm> {
           .of<FireBaseAuth>(context, listen: false)
           .loggedUser}');
       await Future.delayed(Duration(seconds: 1));
+      setState(() {
+        isLoading = false;
+      });
       Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
     }catch(e){
       print(e);
@@ -227,14 +243,23 @@ class _OtpFormState extends State<OtpForm> {
   }
 
   onFailed() {
+    setState(() {
+      isLoading = false;
+    });
     print ("PhoneAuth failed ${Provider.of<PhoneAuthDataProvider>(context, listen: false).message}");
   }
 
   onError() {
+    setState(() {
+      isLoading = false;
+    });
     print ("PhoneAuth error ${Provider.of<PhoneAuthDataProvider>(context, listen: false).message}");
   }
 
   onAutoRetrievalTimeOut() {
+    setState(() {
+      isLoading = false;
+    });
     print ("PhoneAuth autoRetrieval timeout ${Provider.of<PhoneAuthDataProvider>(context, listen: false).message}");
   }
 

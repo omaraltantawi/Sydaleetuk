@@ -494,8 +494,10 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
           email: loggedUser.email, password: oldPass);
       print('AuthCredential in reset func. is $authCredential');
       await auth.currentUser.reauthenticateWithCredential(authCredential);
-      Reference firebaseStorageRef = FirebaseStorage.instance.ref();
-      await firebaseStorageRef.child('$userId/$userId').delete();
+      if ( auth.currentUser.photoURL != null && auth.currentUser.photoURL != ''  ) {
+        Reference firebaseStorageRef = FirebaseStorage.instance.ref();
+        await firebaseStorageRef.child('$userId/$userId').delete();
+      }
       await _fireStore.collection('PATIENT').doc(_patient.patientId).delete();
       await _fireStore.collection('USER').doc(_patient.userId).delete();
       await deleteUser();

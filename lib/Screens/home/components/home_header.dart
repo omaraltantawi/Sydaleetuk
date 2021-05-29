@@ -23,6 +23,7 @@ class HomeHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SearchField(),
+          if ( patient != null )
           StreamBuilder(
             stream:
               FirebaseFirestore.instance
@@ -49,6 +50,13 @@ class HomeHeader extends StatelessWidget {
               }
             }
           ),
+          if ( patient == null )
+            IconBtnWithCounter(
+              svgSrc: "assets/icons/Cart Icon.svg",
+              press: () {
+                Navigator.pushNamed(context, UserCartScreen.routeName);
+              },
+            )
           // IconBtnWithCounter(
           //   svgSrc: "assets/icons/Bell.svg",
           //   numOfitem: 3,

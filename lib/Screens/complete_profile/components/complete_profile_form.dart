@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:graduationproject/Screens/reminder/helpers/platform_flat_button.dart';
 import 'package:graduationproject/Screens/sign_up/components/ScreenArguments.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
@@ -51,7 +52,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> with CanShowM
         birthDate = time;
     });
   }
-
+  bool isLoading = false ;
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -80,6 +81,9 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> with CanShowM
                 value: gender ,
                 iconSize: 24,
                 elevation: 16,
+                onTap: (){
+                  FocusScope.of(context).unfocus();
+                },
                 style: const TextStyle(color: kPrimaryColor, fontSize: 18.0),
                 underline: Container(
                   height: 2.0,
@@ -90,6 +94,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> with CanShowM
                     gender  = newValue;
                   });
                   print('Selected gender = $gender ');
+                  FocusScope.of(context).unfocus();
                 },
                 items: <String>['Male','Female']
                     .map<DropdownMenuItem<String>>((String value) {
@@ -107,7 +112,10 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> with CanShowM
             width :  SizeConfig.screenWidth * 0.90,
             child: Container(
               child: PlatformFlatButton(
-                handler: () => openDatePicker(),
+                handler: () {
+                    FocusScope.of(context).unfocus();
+                    openDatePicker();
+                  },
                 buttonChild: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -141,9 +149,11 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> with CanShowM
           SizedBox(height: getProportionateScreenHeight(15)),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(40)),
-          DefaultButton(
+          if ( !isLoading )
+            DefaultButton(
             text: "continue",
-            press: () {
+            press: () async {
+              FocusScope.of(context).unfocus();
               bool hasError = false ;
               if ( birthDate == null ) {
                 addError(error: kBirthDateEmptyError);
@@ -158,10 +168,21 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> with CanShowM
 
               if (_formKey.currentState.validate() && !hasError) {
                 _formKey.currentState.save();
-                startPhoneAuth();
+                setState(() {
+                  isLoading = true ;
+                });
+                await startPhoneAuth();
               }
+              // setState(() {
+              //   isLoading = false ;
+              // });
             },
           ),
+          if ( isLoading )
+            SpinKitDoubleBounce(
+              color: kPrimaryColor,
+              size: SizeConfig.screenWidth * 0.15,
+            ),
         ],
       ),
     );
@@ -175,19 +196,46 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> with CanShowM
         phoneNo: '+962${phoneNumber.substring(1)}',
         onCodeSent: () {
           print('onCodeSent Get Phone');
+          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          //   content: Text('onCodeSent'),
+          //   duration: Duration(seconds: 5),
+          // ));
+          setState(() {
+            isLoading = false;
+          });
           Navigator.pushNamed(context, OtpScreen.routeName,arguments: ScreenArguments(email: widget.arguments.email,password: widget.arguments.password, addressGeoPoint: widget.arguments.addressGeoPoint,address: address,fName: firstName,lName: lastName, birthDate: birthDate , gender: gender ,phoneNo: '+962${phoneNumber.substring(1)}'));
+
         },
         onFailed: () {
           print('onFailed Get Phone');
           debugPrint('Fail to send.\n ${phoneAuthDataProvider.message}');
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(phoneAuthDataProvider.message),
+            duration: Duration(seconds: 5),
+          ));
+          setState(() {
+            isLoading = false;
+          });
         },
         onError: () {
           print('onError Get Phone');
           debugPrint('Error while sending.\n ${phoneAuthDataProvider.message}');
-        });
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(phoneAuthDataProvider.message),
+            duration: Duration(seconds: 5),
+          ));
+          setState(() {
+            isLoading = false;
+          });
+        },
+        onAutoRetrievalTimeout: (){
+          setState(() {
+            isLoading = false;
+          });
+        },
+    );
     if (!validPhone) {
       phoneAuthDataProvider.loading = false;
-      print("Oops! Number seems inValid");
       return;
     }
   }
