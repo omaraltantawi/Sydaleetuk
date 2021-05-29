@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/data_models/Pharmacist.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:provider/provider.dart';
@@ -12,14 +13,14 @@ import 'medicine_screen.dart';
 
 List<Widget> medicines;
 
-class MedicineList extends StatefulWidget {
+class MedicineList extends StatefulWidget  {
   static const String routeName = 'MedicineList';
 
   @override
   _MedicineListState createState() => _MedicineListState();
 }
 
-class _MedicineListState extends State<MedicineList> {
+class _MedicineListState extends State<MedicineList> with CanShowMessages{
   User loggedInUser;
   Pharmacist phar;
 
@@ -67,33 +68,32 @@ class _MedicineListState extends State<MedicineList> {
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> scanBarcodeNormal() async {
+  Future<String> scanBarcodeNormal() async {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.BARCODE);
       print(barcodeScanRes);
+      return barcodeScanRes;
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
+      return null;
     }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _scanBarcode = barcodeScanRes;
-    });
+    //
+    // // If the widget was removed from the tree while the asynchronous platform
+    // // message was in flight, we want to discard the reply rather than calling
+    // // setState to update our non-existent appearance.
+    // if (!mounted) return;
+    //
+    // setState(() {
+    //   _scanBarcode = barcodeScanRes;
+    // });
   }
-
 
   @override
   Widget build(BuildContext context) {
     loggedInUser = Provider.of<FireBaseAuth>(context, listen: false).loggedUser;
-
-
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -110,11 +110,30 @@ class _MedicineListState extends State<MedicineList> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextButton(
-                            onPressed: () {
-                              scanBarcodeNormal();
-                              setState(() {
-                                print(_scanBarcode);
-                              });
+                            onPressed: () async {
+                              String barcode = await scanBarcodeNormal();
+                              bool cond = await Provider.of<FireBaseAuth>(context,listen: false).checkMedicineExistenceByBarcode(barcode: barcode);
+                              if ( !cond ){
+                                QuestionMessage answer = await showQuestionDialog(
+                                context: context,
+                                msgTitle: 'Add Medicine',
+                                msgText: [
+                                  'Medicine is not exist in the official medicines.',
+                                  'Do you want to add it manually?'
+                                ],
+                                buttonText: '');
+                                if (answer == QuestionMessage.YES) {
+                                  Navigator.pushNamed(context, AddMedicine.routeName);
+                                }
+                              }else {
+                                bool condPhar = await Provider.of<FireBaseAuth>(context,listen: false).checkPharmacyMedicineExistenceByBarcode(barcode: barcode);
+                                if ( !condPhar ){
+                                  await Provider.of<FireBaseAuth>(context,listen: false).addMedicineToPharmacyFromOfficialByBarcode(barCode: barcode);
+                                  await showMessageDialog(context: context, msgTitle: 'Add Medicine', msgText: ['Medicine added successfully to your pharmacy.'], buttonText: 'OK');
+                                }else {
+                                  await showMessageDialog(context: context, msgTitle: 'Warning', msgText: ['Medicine already exists in your pharmacy.'], buttonText: 'OK');
+                                }
+                              }
                             },
                             child: Container(
                               width: 150,

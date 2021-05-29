@@ -41,7 +41,7 @@ class Body extends StatelessWidget {
     String userId = auth.userId;
     return SafeArea(
       child: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('Order').where('userId',isEqualTo:userId ).snapshots(),
+        stream: FirebaseFirestore.instance.collection('Order').where('userId',isEqualTo:userId ).orderBy('OrderNo').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
 
           List<Widget> widgets = [];

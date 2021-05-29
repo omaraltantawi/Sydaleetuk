@@ -163,11 +163,7 @@ class ProductProvider with ChangeNotifier {
     var medicine = await _fireStore.collection('PHARMACY').doc(selectedProduct.pharmacy.pharmacyId).collection('MEDICINE').doc(selectedProduct.id).get();
     prod.prescriptionRequired = medicine.data()['PrescriptionRequired'];
     // print(prod.prescriptionRequired);
-    Map<String,dynamic> dosagePills = medicine.data()['DosagePills'];
-    dosagePills.forEach((key, value) {
-      var d = int.parse(key);
-      prod.dosagePills.addAll({d:value});
-    });
+
     selectedProduct = prod.clone();
   }
 

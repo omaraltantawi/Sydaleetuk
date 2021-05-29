@@ -1405,8 +1405,8 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
   Future<bool> checkPharmacyMedicineExistence(
       {@required String medicineName}) async {
     try {
-      print('Start checkPharmacyUserExistence ');
-      var querySnapshot = await _fireStore.collection('MEDICINE').get();
+      print('Start checkPharmacyMedicineExistence ');
+      var querySnapshot = await _fireStore.collection('PHARMACY').doc(_pharmacist.pharmacy.pharmacyId).collection('MEDICINE').get();
       var medicine = querySnapshot.docs.where((element) =>
       element['name'].toString().toLowerCase() ==
           medicineName.toLowerCase());
@@ -1416,7 +1416,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
       }
       return false;
     } catch (e) {
-      print('Error from checkPharmacyUserExistence Method $e');
+      print('Error from checkPharmacyMedicineExistence Method $e');
       throw e;
     }
   }
@@ -1465,7 +1465,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
       {@required String barcode}) async {
     try {
       print('Start checkPharmacyUserExistence ');
-      var querySnapshot = await _fireStore.collection('MEDICINE').get();
+      var querySnapshot = await _fireStore.doc(_pharmacist.pharmacy.pharmacyId).collection('MEDICINE').get();
       var medicine = querySnapshot.docs.where((element) =>
           element['barCode'].toString().toLowerCase() == barcode.toLowerCase());
 
@@ -1569,6 +1569,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
           'PrescriptionRequired': prescription,
           'DosagePills': dosagePills,
           'dosageUnit': dosageUnit,
+          'description': description,
           'pillsUnit': pillsUnit,
           'OFFICIAL_MEDICINE_Id': medicine.first.id,
         });
@@ -1600,6 +1601,59 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
       var medicine = querySnapshot.docs.where((element) =>
           element['name'].toString().toLowerCase() ==
           medicineName.toLowerCase());
+
+      if (medicine != null && medicine.length > 0) {
+        String medicineName = medicine.first.data()['name'];
+        String barCode = medicine.first.data()['barCode'];
+        var _price = medicine.first.data()['price'];
+        double price;
+        if (_price.runtimeType == int) {
+          price = double.parse(_price.toString());
+        } else
+          price = _price;
+        bool prescription = medicine.first.data()['PrescriptionRequired'];
+
+        Map<int, int> _dosagePills = {};
+        Map<String, dynamic> dosagePills = medicine.first.data()['DosagePills'];
+        dosagePills.forEach((key, value) {
+          var d = int.parse(key);
+          _dosagePills.addAll({d: value});
+        });
+        String description = medicine.first.data()['description'];
+        List<String> image = medicine.first.data()['imageURLs'];
+        String dosageUnit= medicine.first.data()['dosageUnit'];
+        String pillsUnit= medicine.first.data()['pillsUnit'];
+        var ret = await _fireStore
+            .collection('PHARMACY')
+            .doc(_pharmacist.pharmacy.pharmacyId)
+            .collection('MEDICINE')
+            .add({
+          'name': medicineName,
+          'imageURLs': image,
+          'barCode': barCode,
+          'price': price,
+          'PrescriptionRequired': prescription,
+          'DosagePills': _dosagePills,
+          'description': description,
+          'dosageUnit': dosageUnit,
+          'pillsUnit': pillsUnit,
+          'OFFICIAL_MEDICINE_Id': medicine.first.id,
+        });
+      }
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> addMedicineToPharmacyFromOfficialByBarcode({
+    String barCode,
+  }) async {
+    try {
+      var querySnapshot =
+          await _fireStore.collection('OFFICIAL_MEDICINE').get();
+      var medicine = querySnapshot.docs.where((element) =>
+          element['barCode'].toString() == barCode);
 
       if (medicine != null && medicine.length > 0) {
         String medicineName = medicine.first.data()['name'];

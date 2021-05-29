@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/components/default_button.dart';
+import 'package:graduationproject/components/orderButton.dart';
 ///////////////////////////delete comment down ///////////////////////////////
 // import 'package:graduationproject/components/orderButton.dart';
 ///////////////////////////delete comment up ///////////////////////////////
@@ -97,6 +100,7 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
     super.initState();
 
     getPharmacist();
+    orderDosagePills();
   }
 
   Future<void> getPharmacist() async {
@@ -107,9 +111,24 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
     });
   }
 
-  Map<int, int> dosagePills = {10: 10, 20: 20, 30: 30};
-  String dosageUnit='mg', pillsUnit='15';
+  Map<int, int> dosagePills = {};
+  String dosageUnit='mg', pillsUnit='pills';
+  orderDosagePills() {
+    List<Map<int, int>> listData = [];
+    dosagePills
+        .forEach((key, value) => listData.add({key: value}));
+    print('before Sort $dosagePills');
+    listData.sort((a, b) => a.keys.first.compareTo(b.keys.first));
+    setState(() {
+      dosagePills = Map.fromIterable(listData,
+          key: (e) => e.keys.first, value: (e) => e.values.first);
+    });
+    print('After Sort $dosagePills');
+  }
 
+  final _formKey = GlobalKey<FormState>();
+  bool isDosageValid = true ;
+  bool isLoading = false ;
   @override
   Widget build(BuildContext context) {
     loggedInUser = Provider.of<FireBaseAuth>(context, listen: false).loggedUser;
@@ -135,451 +154,535 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
           padding: EdgeInsets.only(left: 10,right: 10,top: 0,bottom: 30),
-          child: Column(
-            children: [
-              Container(
-                height: getProportionateScreenHeight(200),
-                child: imagesFiles != null && imagesFiles.length > 0
-                    ? Stack(
-                        children: [
-                          SizedBox(
-                            width: SizeConfig.screenWidth * 0.90,
-                            height: SizeConfig.screenHeight * 0.20,
-                            child: PageView.builder(
-                              itemCount: imagesFiles.length,
-                              itemBuilder: (context, index) => Padding(
-                                padding: EdgeInsets.only(
-                                  left: getProportionateScreenWidth(45),
-                                  right: getProportionateScreenWidth(45),
-                                  top: getProportionateScreenHeight(15),
-                                  bottom: getProportionateScreenHeight(15),
-                                ),
-                                child: Container(
-                                  decoration: new BoxDecoration(
-                                    image: new DecorationImage(
-                                      image: new FileImage(imagesFiles[index]),
-                                      fit: BoxFit.fill,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Container(
+                  height: getProportionateScreenHeight(200),
+                  child: imagesFiles != null && imagesFiles.length > 0
+                      ? Stack(
+                          children: [
+                            SizedBox(
+                              width: SizeConfig.screenWidth * 0.90,
+                              height: SizeConfig.screenHeight * 0.20,
+                              child: PageView.builder(
+                                itemCount: imagesFiles.length,
+                                itemBuilder: (context, index) => Padding(
+                                  padding: EdgeInsets.only(
+                                    left: getProportionateScreenWidth(45),
+                                    right: getProportionateScreenWidth(45),
+                                    top: getProportionateScreenHeight(15),
+                                    bottom: getProportionateScreenHeight(15),
+                                  ),
+                                  child: Container(
+                                    decoration: new BoxDecoration(
+                                      image: new DecorationImage(
+                                        image: new FileImage(imagesFiles[index]),
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
                                   ),
+                                  // Image.file(
+                                  //     imagesFiles[index],
+                                  //     alignment: AlignmentDirectional.center,
+                                  //     // fit: BoxFit.fill,
+                                  //     height: getProportionateScreenHeight(120),
+                                  // ),
+                                  // Image.network(
+                                  //   widget.selectedProduct.imageUrls[index],
+                                  //   alignment: AlignmentDirectional.center,
+                                  //   fit: BoxFit.fill,
+                                  //   height: getProportionateScreenHeight(120),
+                                  // ),
                                 ),
-                                // Image.file(
-                                //     imagesFiles[index],
-                                //     alignment: AlignmentDirectional.center,
-                                //     // fit: BoxFit.fill,
-                                //     height: getProportionateScreenHeight(120),
-                                // ),
-                                // Image.network(
-                                //   widget.selectedProduct.imageUrls[index],
-                                //   alignment: AlignmentDirectional.center,
-                                //   fit: BoxFit.fill,
-                                //   height: getProportionateScreenHeight(120),
-                                // ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: IconButton(
+                                onPressed: () async {
+                                  await pickImage();
+                                },
+                                icon: Icon(Icons.add_a_photo),
+                              ),
+                            )
+                          ],
+                        )
+                      : SizedBox(
+                          height: SizeConfig.screenHeight * 0.20,
+                          width: SizeConfig.screenWidth * 0.84,
+                          child: Container(
+                            height: SizeConfig.screenHeight * 0.20,
+                            width: SizeConfig.screenWidth * 0.90,
+                            constraints: BoxConstraints(
+                              minHeight: SizeConfig.screenHeight * 0.20,
+                              maxHeight: SizeConfig.screenHeight * 0.20,
+                            ),
+                            child: InkWell(
+                              onTap: () async {
+                                await pickImage();
+                              },
+                              child: Center(
+                                child: Text('Click me + to add a medicine images'),
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: IconButton(
-                              onPressed: () async {
-                                await pickImage();
-                              },
-                              icon: Icon(Icons.add_a_photo),
-                            ),
-                          )
-                        ],
-                      )
-                    : SizedBox(
-                        height: SizeConfig.screenHeight * 0.20,
-                        width: SizeConfig.screenWidth * 0.84,
-                        child: Container(
-                          height: SizeConfig.screenHeight * 0.20,
-                          width: SizeConfig.screenWidth * 0.90,
-                          constraints: BoxConstraints(
-                            minHeight: SizeConfig.screenHeight * 0.20,
-                            maxHeight: SizeConfig.screenHeight * 0.20,
-                          ),
-                          child: InkWell(
-                            onTap: () async {
-                              await pickImage();
-                            },
-                            child: Center(
-                              child: Text('Click me + to add a medicine'),
-                            ),
-                          ),
                         ),
-                      ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    medicineName = value;
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: 'Medicine Name',
-                  hintText: 'Enter medicine name',
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    barCode = value;
-                  });
-                },
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'bar code',
-                  hintText: 'bar code',
+                SizedBox(
+                  height: 20,
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    price = value;
-                  });
-                },
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Price',
-                  hintText: '3.5',
-                  suffixText: 'JOD',
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    prescription = !prescription;
-                  });
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey, width: 1.7),
-                    borderRadius: BorderRadius.circular(50),
+                TextFormField(
+                  onChanged: (value) {
+                    setState(() {
+                      medicineName = value;
+                    });
+                  },
+                  validator: (value){
+                    if ( value == null || value == '' ){
+                      return 'Enter a valid Medicine Name';
+                    }
+                    return null ;
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Medicine Name',
+                    hintText: 'Enter medicine name',
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 15),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  onChanged: (value) {
+                    setState(() {
+                      barCode = value;
+                    });
+                  },
+                  validator: (value){
+                    int val = int.tryParse(value);
+                    if ( val == null ||  val < 0 ){
+                      return 'Enter a valid Bar code.';
+                    }
+                    return null ;
+                  },
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Bar code',
+                    hintText: 'Enter the Bar code',
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  onChanged: (value) {
+                    setState(() {
+                      price = value;
+                    });
+                  },
+                  validator: (value){
+                    double val = double.tryParse(value);
+                    if ( val == null ||  val < 0 ){
+                      return 'Enter a valid price';
+                    }
+                    return null ;
+                  },
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))
+                  ],
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Price',
+                    hintText: 'Enter the price',
+                    suffixText: 'JOD',
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      prescription = !prescription;
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey, width: 1.7),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Need prescription? ',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                            Text(
+                              prescription?'Yes':'No',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Switch(
+                          value: prescription,
+                          onChanged: (value) {
+                            setState(() {
+                              prescription = value;
+                            });
+                          },
+                          activeTrackColor: Color(0xFF42adac),
+                          activeColor: Color(0xFF42bbbb),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  onChanged: (value) {
+                    setState(() {
+                      description = value;
+                    });
+                  },
+                  maxLines: 5,
+                  minLines: 1,
+                  keyboardType: TextInputType.multiline,
+                  decoration: InputDecoration(
+                    labelText: 'Medicine Description',
+                    hintText: 'Description',
+                  ),
+                ),
+                Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Need prescription? ',
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                          Text(
-                            prescription?'Yes':'No',
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ],
+                      Container(
+                        child: Text(
+                          'Dosage - Pills',
+                          style: textBodyStyle,
+                        ),
                       ),
-                      Switch(
-                        value: prescription,
-                        onChanged: (value) {
-                          setState(() {
-                            prescription = value;
-                          });
+                      OrderIconButton(
+                        iconData: Icons.add,
+                        press: () async {
+                          FocusScope.of(context).unfocus();
+                          int _pills = 0 ; 
+                          int _dosage = 0 ;
+                          bool isCancel = false ;
+                          await showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                title: Text('Dosage - pills'),
+                                contentPadding: EdgeInsets.all(10.0),
+                                content: Container(
+                                  padding:
+                                  EdgeInsets.symmetric(horizontal: 10.0),
+                                  constraints: BoxConstraints(
+                                    maxHeight:
+                                    getProportionateScreenHeight(190),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height:getProportionateScreenHeight(5.0),
+                                      ),
+                                      Divider(color: Colors.black),
+                                      SizedBox(
+                                        height:getProportionateScreenHeight(10.0),
+                                      ),
+                                      TextField(
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _dosage = int.tryParse(value);
+                                          });
+                                        },
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: <TextInputFormatter>[
+                                          FilteringTextInputFormatter.digitsOnly
+                                        ],
+                                        decoration: InputDecoration(
+                                          labelText: 'Dosage',
+                                          hintText: 'Dosage',
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height:getProportionateScreenHeight(10.0),
+                                      ),
+                                      TextField(
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _pills = int.tryParse(value);
+                                          });
+                                        },
+                                        inputFormatters: <TextInputFormatter>[
+                                          FilteringTextInputFormatter.digitsOnly
+                                        ],
+                                        keyboardType: TextInputType.number,
+                                        decoration: InputDecoration(
+                                          labelText: 'Number of pills',
+                                          hintText: 'Number of pills',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                actions: [
+                                  Divider(color: Colors.black),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: ElevatedButton(
+                                          child: Text('Submit'),
+                                          onPressed: () {
+                                            setState(() {
+                                              Navigator.pop(context);
+                                            });
+                                          },
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Color(0xFF099F9D)),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: ElevatedButton(
+                                          child: Text('Cancel'),
+                                          onPressed: () {
+                                            isCancel= true;
+                                            Navigator.pop(context);
+                                          },
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Color(0xFF099F9D)),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ));
+                          if ( !isCancel ){
+                            if ( dosagePills.containsKey(_dosage) ){
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text('Dosage already exists.'),
+                                duration: Duration(seconds: 5),
+                              ));
+                              return ;
+                            }
+                            dosagePills.addAll({_dosage:_pills});
+                            orderDosagePills();
+                          }
                         },
-                        activeTrackColor: Color(0xFF42adac),
-                        activeColor: Color(0xFF42bbbb),
                       ),
                     ],
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    description = value;
-                  });
-                },
-                maxLines: 5,
-                minLines: 1,
-                keyboardType: TextInputType.multiline,
-                decoration: InputDecoration(
-                  labelText: 'Medicine Description',
-                  hintText: 'Description',
+                Container(
+                  width: double.infinity,
+                  alignment: AlignmentDirectional.center,
+                  height: SizeConfig.screenHeight * 0.08,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: dosagePills.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          width: SizeConfig.screenWidth * 0.55,
+                          child: DosagePillsButton(
+                            press: (index) {
+                              setState(() {
+                                dosagePills.remove(dosagePills.keys.elementAt(index));
+                              });
+                              print(index);
+                            },
+                            text:
+                                '${dosagePills.keys.elementAt(index).toString()} $dosageUnit - ${dosagePills.values.elementAt(index).toString()} $pillsUnit',
+                            index: index,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-              // Container(
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       Container(
-              //         child: Text(
-              //           'Dosage - Pills',
-              //           style: textBodyStyle,
-              //         ),
-              //       ),
-              //       OrderIconButton(
-              //         iconData: Icons.add,
-              //         press: () {
-              //           showDialog(
-              //               context: context,
-              //               builder: (_) => AlertDialog(
-              //                 title: Text('Dosage - pills'),
-              //                 contentPadding: EdgeInsets.all(10.0),
-              //                 actions: [
-              //                   Container(
-              //                     padding:
-              //                     EdgeInsets.symmetric(horizontal: 20.0),
-              //                     constraints: BoxConstraints(
-              //                       maxHeight:
-              //                       getProportionateScreenHeight(200),
-              //                     ),
-              //                     child: Column(
-              //                       children: [
-              //
-              //                       ],
-              //                     ),
-              //                   ),
-              //                   Divider(color: Colors.black),
-              //                   Row(
-              //                     mainAxisAlignment: MainAxisAlignment.center,
-              //                     children: [
-              //                       Padding(
-              //                         padding: EdgeInsets.all(8.0),
-              //                         child: ElevatedButton(
-              //                           child: Text('Submit'),
-              //                           onPressed: () {
-              //                             setState(() {
-              //                               Navigator.pop(context);
-              //                             });
-              //                           },
-              //                           style: ButtonStyle(
-              //                             backgroundColor:
-              //                             MaterialStateProperty.all(
-              //                                 Color(0xFF099F9D)),
-              //                           ),
-              //                         ),
-              //                       ),
-              //                       SizedBox(
-              //                         width: 10,
-              //                       ),
-              //                       Padding(
-              //                         padding: EdgeInsets.all(8.0),
-              //                         child: ElevatedButton(
-              //                           child: Text('Cancel'),
-              //                           onPressed: () {
-              //                             Navigator.pop(context);
-              //                           },
-              //                           style: ButtonStyle(
-              //                             backgroundColor:
-              //                             MaterialStateProperty.all(
-              //                                 Color(0xFF099F9D)),
-              //                           ),
-              //                         ),
-              //                       ),
-              //                     ],
-              //                   ),
-              //                 ],
-              //               ));
-              //         },
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              // Container(
-              //   width: double.infinity,
-              //   alignment: AlignmentDirectional.center,
-              //   height: SizeConfig.screenHeight * 0.08,
-              //   child: ListView.builder(
-              //     shrinkWrap: true,
-              //     scrollDirection: Axis.horizontal,
-              //     itemCount: dosagePills.length,
-              //     itemBuilder: (context, index) {
-              //       return Padding(
-              //         padding: EdgeInsets.all(8.0),
-              //         child: SizedBox(
-              //           width: SizeConfig.screenWidth * 0.55,
-              //           child: DosagePillsButton(
-              //             press: (index) {
-              //             },
-              //             text:
-              //                 '${dosagePills.keys.elementAt(index).toString()} $dosageUnit - ${dosagePills.values.elementAt(index).toString()} $pillsUnit',
-              //             index: index,
-              //           ),
-              //         ),
-              //       );
-              //     },
-              //   ),
-              // ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Expanded(
-                    //   child: ElevatedButton(
-                    //     onPressed: () {
-                    //       Navigator.pop(context);
-                    //     },
-                    //     child: Text('Cancel'),
-                    //   ),
-                    // ),
-
-                    Expanded(
-                      child: DefaultButton(
-                        text: 'Cancel',
-                        press: () {
-                          ////////////////edit me//////////////////////////////
-                          Navigator.pop(context); ////////////////edit me
-                        },
+                if ( !isDosageValid )
+                  Container(
+                  alignment: AlignmentDirectional.centerStart,
+                  padding: EdgeInsets.only(left: getProportionateScreenWidth(30)),
+                  child: Text(
+                    'Enter at least one dosage.',
+                    style: TextStyle(
+                      color: Colors.red
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                if ( !isLoading )
+                  Container(
+                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Expanded(
+                      //   child: ElevatedButton(
+                      //     onPressed: () {
+                      //       Navigator.pop(context);
+                      //     },
+                      //     child: Text('Cancel'),
+                      //   ),
+                      // ),
+                      Expanded(
+                        child: DefaultButton(
+                          text: 'Cancel',
+                          press: () {
+                            Navigator.pop(context);
+                          },
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    // Expanded(
-                    //   child: ElevatedButton(
-                    //     onPressed: () async {
-                    //       bool off = await Provider.of<FireBaseAuth>(context,
-                    //               listen: false)
-                    //           .checkMedicineExistence(medicineName: medicineName);
-                    //       print ( off );
-                    //       if (off) {
-                    //         QuestionMessage answer = await showQuestionDialog(
-                    //             context: context,
-                    //             msgTitle: 'Add Medicine',
-                    //             msgText: [
-                    //               'Medicine is already exist in our Official Medicines.',
-                    //               'Do you want to add it with official data?'
-                    //             ],
-                    //             buttonText: '');
-                    //         if (answer == QuestionMessage.YES) {
-                    //           Provider.of<FireBaseAuth>(context, listen: false)
-                    //               .addMedicineToPharmacyFromOfficial(
-                    //                   medicineName: medicineName);
-                    //         } else {
-                    //           double _price = 0;
-                    //           _price = double.tryParse(price);
-                    //           image = await getImageFilesFromAssets();
-                    //           Provider.of<FireBaseAuth>(context, listen: false)
-                    //               .addMedicineToPharmacy(
-                    //                   medicineName: medicineName,
-                    //                   prescription: prescription == 'True',
-                    //                   barCode: barCode,
-                    //                   description: description,
-                    //                   image: image,
-                    //                   price: _price,
-                    //                   dosagePills: {});
-                    //         }
-                    //       } else {
-                    //         double _price = 0;
-                    //         _price = double.tryParse(price);
-                    //         image = await getImageFilesFromAssets();
-                    //         print ( 'getfiles' );
-                    //         await Provider.of<FireBaseAuth>(context, listen: false)
-                    //             .addMedicineToPharmacyAndOfficial(
-                    //             medicineName: medicineName,
-                    //             prescription: prescription == 'True',
-                    //             barCode: barCode,
-                    //             description: description,
-                    //             image: image,
-                    //             price: _price,
-                    //             dosagePills: {});
-                    //       }
-                    //     },
-                    //     child: Text('Submit'),
-                    //   ),
-                    // ),
-                    Expanded(
-                      child: DefaultButton(
-                        text: 'Submit',
-                        press: () async {
-                          bool off = await Provider.of<FireBaseAuth>(context,
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: DefaultButton(
+                          text: 'Submit',
+                          press: () async {
+                            FocusScope.of(context).unfocus();
+                            if ( dosagePills.length == 0 ){
+                              setState(() {
+                                isDosageValid = false;
+                              });
+                            }else{
+                              setState(() {
+                                isDosageValid = true;
+                              });
+                            }
+                            if ( _formKey.currentState.validate() ) {
+                              bool cond = await Provider.of<FireBaseAuth>(
+                                  context,
                                   listen: false)
-                              .checkMedicineExistence(
-                                  medicineName: medicineName);
-                          print(off);
-                          ///////////////////////////delete comment down ///////////////////////////////
-                          // Map<String, int> _map = {};
-                          // dosagePills.forEach((key, value) {
-                          //   _map.addAll({key.toString(): value});
-                          // });
-                          ///////////////////////////delete comment up ///////////////////////////////
-                          if (off) {
-                            QuestionMessage answer = await showQuestionDialog(
-                                context: context,
-                                msgTitle: 'Add Medicine',
-                                msgText: [
-                                  'Medicine is already exist in our Official Medicines.',
-                                  'Do you want to add it with official data?'
-                                ],
-                                buttonText: '');
-                            if (answer == QuestionMessage.YES) {
-                              Provider.of<FireBaseAuth>(context, listen: false)
-                                  .addMedicineToPharmacyFromOfficial(
-                                      medicineName: medicineName);
-                            } else {
-                              double _price = 0;
-                              _price = double.tryParse(price);
-                              // image = await getImageFilesFromAssets();
-
-                              Provider.of<FireBaseAuth>(context, listen: false)
-                                  .addMedicineToPharmacy(
+                                  .checkPharmacyMedicineExistence(medicineName: medicineName);
+                              print(cond);
+                              if ( !cond ) {
+                                setState(() {
+                                  isLoading = true ;
+                                });
+                                bool off = await Provider.of<FireBaseAuth>(
+                                    context,
+                                    listen: false)
+                                    .checkMedicineExistence(
+                                    medicineName: medicineName);
+                                print(off);
+                                Map<String, int> _map = {};
+                                dosagePills.forEach((key, value) {
+                                  _map.addAll({key.toString(): value});
+                                });
+                                if (off) {
+                                  QuestionMessage answer = await showQuestionDialog(
+                                      context: context,
+                                      msgTitle: 'Add Medicine',
+                                      msgText: [
+                                        'Medicine is already exist in our Official Medicines.',
+                                        'Do you want to add it with official data?'
+                                      ],
+                                      buttonText: '');
+                                  if (answer == QuestionMessage.YES) {
+                                    await Provider.of<FireBaseAuth>(
+                                        context, listen: false)
+                                        .addMedicineToPharmacyFromOfficial(
+                                        medicineName: medicineName);
+                                    setState(() {
+                                      isLoading = false ;
+                                    });
+                                    await showMessageDialog(context: context, msgTitle: 'Add Medicine', msgText: ['Medicine added successfully to your pharmacy.'], buttonText: 'OK');
+                                    Navigator.of(context).pop();
+                                  } else {
+                                    double _price = 0;
+                                    _price = double.tryParse(price);
+                                    // image = await getImageFilesFromAssets();
+                                    print(_map);
+                                    await Provider.of<FireBaseAuth>(
+                                        context, listen: false)
+                                        .addMedicineToPharmacy(
                                       medicineName: medicineName,
                                       prescription: prescription,
                                       barCode: barCode,
                                       description: description,
-                                      image: image,
+                                      image: imagesFiles,
                                       price: _price,
-                                ///////////////////////////delete comment down ///////////////////////////////
-                                      // dosagePills: _map,
-                                      // dosageUnit: dosageUnit,
-                                      // pillsUnit: pillsUnit
-                                ///////////////////////////delete comment up ///////////////////////////////
-                              );
+                                      dosagePills: _map,
+                                      dosageUnit: dosageUnit,
+                                      pillsUnit: pillsUnit,
+                                    );
+                                    setState(() {
+                                      isLoading = false ;
+                                    });
+                                    await showMessageDialog(context: context, msgTitle: 'Add Medicine', msgText: ['Medicine added successfully to your pharmacy.'], buttonText: 'OK');
+                                    Navigator.of(context).pop();
+                                  }
+                                } else {
+                                  double _price = 0;
+                                  _price = double.tryParse(price);
+                                  await Provider.of<FireBaseAuth>(context,
+                                      listen: false)
+                                      .addMedicineToPharmacyAndOfficial(
+                                      medicineName: medicineName,
+                                      prescription: prescription,
+                                      barCode: barCode,
+                                      description: description,
+                                      image: imagesFiles,
+                                      price: _price,
+                                      dosagePills: _map,
+                                      dosageUnit: dosageUnit,
+                                      pillsUnit: pillsUnit
+                                  );
+                                  setState(() {
+                                    isLoading = false ;
+                                  });
+                                  await showMessageDialog(context: context, msgTitle: 'Add Medicine', msgText: ['Medicine added successfully to your pharmacy.'], buttonText: 'OK');
+                                  Navigator.of(context).pop();
+                                }
+                              }else{
+                                await showMessageDialog(context: context, msgTitle: 'Warning', msgText: ['Medicine already exists in your pharmacy.'], buttonText: 'OK');
+                              }
                             }
-                          } else {
-                            double _price = 0;
-                            _price = double.tryParse(price);
-                            // image = await getImageFilesFromAssets();
-                            print('getfiles');
-                            await Provider.of<FireBaseAuth>(context,
-                                    listen: false)
-                                .addMedicineToPharmacyAndOfficial(
-                                    medicineName: medicineName,
-                                    prescription: prescription,
-                                    barCode: barCode,
-                                    description: description,
-                                    image: image,
-                                    price: _price,
-                              ///////////////////////////delete comment down ///////////////////////////////
-                                    // dosagePills: _map,
-                                    // dosageUnit: dosageUnit,
-                                    // pillsUnit: pillsUnit
-                              ///////////////////////////delete comment up ///////////////////////////////
-                            );
-                          }
-                        },
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                if ( isLoading )
+                  SpinKitDoubleBounce(
+                    color: kPrimaryColor,
+                    size: SizeConfig.screenWidth * 0.15,
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -637,7 +740,7 @@ class DosagePillsButton extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: press(index),
+            onTap: ()=>press(index),
             child: Container(
               alignment: Alignment.centerRight,
               height: getProportionateScreenHeight(56),
