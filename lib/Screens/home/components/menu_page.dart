@@ -36,15 +36,13 @@ class Menu_Page extends StatelessWidget {
                           context),
                       buildCard('Face Mask', '3.99\JOD', 'assets/images/gloves.jpg',true,
                           context),
-                      buildCard('Face Mask', '3.99\JOD', 'assets/images/gloves.jpg',false,
+                      buildCard('Face Mask', '3.99\JOD', 'assets/images/demo1.jpg',false,
                           context),
-                      buildCard('Face Mask', '3.99\JOD', 'assets/images/gloves.jpg',true,
+                      buildCard('Face Mask', '3.99\JOD', 'assets/images/demo2.jpg',true,
                           context),
-                      buildCard('Face Mask', '3.99\JOD', 'assets/images/gloves.jpg',false,
+                      buildCard('Face Mask', '3.99\JOD', 'assets/images/demo3.jpg',false,
                           context),
-                      buildCard('Face Mask', '3.99\JOD', 'assets/images/gloves.jpg',true,
-                          context),
-                      buildCard('Teeth Brush', '3.99\JOD', 'assets/images/gloves.jpg',false,
+                      buildCard('Face Mask', '3.99\JOD', 'assets/images/demo4.jpg',true,
                           context)
 
 
