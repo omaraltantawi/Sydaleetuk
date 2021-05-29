@@ -1463,8 +1463,10 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     String barCode,
     double price,
     bool prescription,
-    Map<int, int> dosagePills,
+    Map<String, int> dosagePills,
     String description,
+    String dosageUnit,
+    String pillsUnit,
   }) async {
     try {
       print('Start Method addMedicineToPharmacyAndOfficial');
@@ -1475,6 +1477,8 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
         'PrescriptionRequired': prescription,
         'DosagePills': dosagePills,
         'description': description,
+        'dosageUnit': dosageUnit,
+        'pillsUnit': pillsUnit,
       });
       print('Added to official');
       var ret = await _fireStore
@@ -1488,6 +1492,8 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
         'PrescriptionRequired': prescription,
         'DosagePills': dosagePills,
         'description': description,
+        'dosageUnit': dosageUnit,
+        'pillsUnit': pillsUnit,
         'OFFICIAL_MEDICINE_Id': ret2.id,
       });
       print('Added to pharmacy ${_pharmacist.pharmacy.pharmacyId} MEDICINE');
@@ -1517,8 +1523,10 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     String barCode,
     double price,
     bool prescription,
-    Map<int, int> dosagePills,
+    Map<String, int> dosagePills,
     String description,
+    String dosageUnit,
+    String pillsUnit,
   }) async {
     try {
       var querySnapshot =
@@ -1538,7 +1546,8 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
           'price': price,
           'PrescriptionRequired': prescription,
           'DosagePills': dosagePills,
-          'description': description,
+          'dosageUnit': dosageUnit,
+          'pillsUnit': pillsUnit,
           'OFFICIAL_MEDICINE_Id': medicine.first.id,
         });
         List<String> imageUrls = [];
@@ -1589,6 +1598,8 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
         });
         String description = medicine.first.data()['description'];
         List<String> image = medicine.first.data()['ImageUrls'];
+        String dosageUnit= medicine.first.data()['dosageUnit'];
+        String pillsUnit= medicine.first.data()['pillsUnit'];
         var ret = await _fireStore
             .collection('PHARMACY')
             .doc(_pharmacist.pharmacy.pharmacyId)
@@ -1601,6 +1612,8 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
           'PrescriptionRequired': prescription,
           'DosagePills': _dosagePills,
           'description': description,
+          'dosageUnit': dosageUnit,
+          'pillsUnit': pillsUnit,
           'OFFICIAL_MEDICINE_Id': medicine.first.id,
         });
       }

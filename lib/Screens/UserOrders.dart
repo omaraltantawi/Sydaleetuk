@@ -1,18 +1,14 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:graduationproject/Screens/OrderInfoScreen.dart';
 import 'package:graduationproject/Screens/SelectProduct.dart';
-import 'package:graduationproject/Screens/order.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/components/default_button.dart';
 import 'package:graduationproject/components/orderButton.dart';
 import 'package:graduationproject/constants.dart';
 import 'package:graduationproject/data_models/OrderClass.dart';
-import 'package:graduationproject/data_models/Patient.dart';
 import 'package:graduationproject/data_models/Pharmacy.dart';
 import 'package:graduationproject/data_models/Product.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
@@ -102,7 +98,7 @@ class Body extends StatelessWidget {
                 _order.pharmacy.distance = p;
               } else
                 _order.pharmacy.distance = distance;
-              _order.products = [] ;
+              _order.products = [];
               _order.orderNo = order.data()['OrderNo'];
               _order.noOfProducts = order.data()['NoOfProducts'];
               _order.orderId = order.id;
@@ -179,7 +175,6 @@ class Body extends StatelessWidget {
           }
 
           return ListView(
-
             padding: EdgeInsets.symmetric(
               horizontal: 10.0,
               vertical: 10.0,

@@ -7,8 +7,8 @@ class Order {
   List<Product> products =[] ;
   DateTime orderTime ;
   bool isFromCart =false;
-  String orderId , status , pharNote ;
+  String orderId , status , pharNote , userName , userHealthState ;
   bool isRejectFromPrescription ;
-  int orderNo , noOfProducts;
+  int orderNo , noOfProducts , userAge;
   double totalPrice;
 }

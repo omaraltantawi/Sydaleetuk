@@ -1,9 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:graduationproject/Screens/home/components/section_title.dart';
-import 'package:graduationproject/Screens/home/home_screen.dart';
-import 'package:graduationproject/Screens/order_success/components/arguments.dart';
-import 'package:graduationproject/Screens/order_success/order_success_screen.dart';
 import 'package:graduationproject/ServiceClasses/utilityClass.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/constants.dart';
