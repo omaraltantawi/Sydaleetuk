@@ -113,6 +113,10 @@ class _MedicineListState extends State<MedicineList> with CanShowMessages{
                             onPressed: () async {
                               String barcode = await scanBarcodeNormal();
                               bool cond = await Provider.of<FireBaseAuth>(context,listen: false).checkMedicineExistenceByBarcode(barcode: barcode);
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text('Barcode : $barcode'),
+                                duration: Duration(seconds: 15),
+                              ));
                               if ( !cond ){
                                 QuestionMessage answer = await showQuestionDialog(
                                 context: context,
