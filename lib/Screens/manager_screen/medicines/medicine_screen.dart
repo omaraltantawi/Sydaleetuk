@@ -19,8 +19,6 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
       price: '3.4',
       type: 'pills',
       size: '30',
-      EXPDate: DateTime(2022, 11).toString(),
-      MFGDate: DateTime(2022, 11).toString(),
       description:
           'Aspirin is used to reduce fever and relieve mild to moderate pain from conditions such as muscle aches, toothaches, common cold, and headaches. It may also be used to reduce pain and swelling in conditions such as arthritis.',
       image: [

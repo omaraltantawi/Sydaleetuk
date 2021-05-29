@@ -9,6 +9,7 @@ import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
 
+
 class AddMedicine extends StatefulWidget {
   static const String routeName = 'AddMedicine';
 
@@ -17,11 +18,13 @@ class AddMedicine extends StatefulWidget {
 }
 
 class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
+
+  
   List<File> image = [];
   String medicineName;
   String barCode;
   String price;
-  String prescription;
+  bool prescription;
   String pills;
   String description;
 
@@ -101,6 +104,7 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
     loggedInUser = Provider.of<FireBaseAuth>(context, listen: false).loggedUser;
     return Scaffold(
       appBar: AppBar(
+
         title: Text(
           'New Medicine',
           style: TextStyle(
@@ -108,7 +112,7 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
             color: Colors.white,
           ),
         ),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Color(0xFF42adac),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -126,11 +130,12 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                 await pickImage();
               },
               child: Container(
-                height: 150,
+                constraints: BoxConstraints(
+                  minHeight: 150,
+                ),
                 width: double.infinity,
-                color: Colors.green,
                 child: Center(
-                  child: Text('Medicine Images'),
+                  child: Text('Click me + to add a medicine'),
                 ),
               ),
             ),
@@ -157,6 +162,7 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                   barCode = value;
                 });
               },
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'bar code',
                 hintText: 'bar code',
@@ -181,29 +187,39 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
             SizedBox(
               height: 20,
             ),
-            TextField(
-              onChanged: (value) {
+            GestureDetector(
+              onTap: (){
                 setState(() {
-                  prescription = value;
+                  prescription=!prescription;
                 });
               },
-              decoration: InputDecoration(
-                labelText: 'Need prescription',
-                hintText: 'True Or False',
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            TextField(
-              onChanged: (value) {
-                setState(() {
-                  pills = value;
-                });
-              },
-              decoration: InputDecoration(
-                labelText: 'pills',
-                hintText: 'The Number of pills',
+              child: Container(
+
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey,width: 1.7),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Need prescription? ',style: TextStyle(
+                      fontSize: 20,
+                    ),
+                    ),
+                    Switch(
+                      value: prescription,
+                      onChanged: (value) {
+                        setState(() {
+                         prescription = value;
+                        });
+                      },
+                      activeTrackColor: Color(0xFF42adac),
+                      activeColor: Color(0xFF42bbbb),
+                    ),
+                  ],
+                ),
+
               ),
             ),
             SizedBox(
@@ -216,12 +232,19 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                 });
               },
               maxLines: 5,
+              minLines: 1,
               keyboardType: TextInputType.multiline,
               decoration: InputDecoration(
                 labelText: 'Medicine Description',
                 hintText: 'Description',
               ),
             ),
+            // Container(
+            //   child:
+            //     ListView.builder(itemBuilder: (context,index){
+            //
+            //     })
+            // ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 30),
               child: Row(

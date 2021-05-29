@@ -4,8 +4,6 @@ class Medicine {
   List<Image> image;
   String name;
   String barCode;
-  String EXPDate;
-  String MFGDate;
   String price;
   String size;
   String type;
@@ -13,14 +11,14 @@ class Medicine {
   String description;
 
   Medicine(
-      {@required this.name,
-      @required this.barCode,
+      {this.name,
+      this.barCode,
       this.type,
       this.description,
       this.size,
-      this.EXPDate,
-      this.MFGDate,
-      @required this.price,
+      this.price,
       this.prescription,
       this.image});
+
+
 }
