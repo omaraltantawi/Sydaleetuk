@@ -398,8 +398,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
       } else
         return null;
     } catch (e) {
-      print('Error from Get Method $e');
-      throw e;
+      // print('Error from Get Method $e');
     }
   }
 
@@ -847,6 +846,20 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
           .update({fieldName: fieldValue});
     } catch (e) {
       print('error Method updateCollectionField \n$e');
+      throw e;
+    }
+  }
+
+  Future<void> updateCollectionFieldWithRef(
+      {@required DocumentReference ref,
+      @required String fieldName,
+      @required dynamic fieldValue,}) async {
+    try {
+      print('Start updateCollectionFieldWithRef.');
+
+     ref.update({fieldName: fieldValue});
+    } catch (e) {
+      print('error Method updateCollectionFieldWithRef \n$e');
       throw e;
     }
   }
@@ -1700,6 +1713,18 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
       return false;
     }
     return true;
+  }
+
+
+  Future<void> removePharmacyMedicine(
+      {@required String medicineId}) async {
+    try {
+      print('Start removePharmacyMedicine ');
+      await _fireStore.collection('PHARMACY').doc(_pharmacist.pharmacy.pharmacyId).collection('MEDICINE').doc(medicineId).delete();
+    } catch (e) {
+      print('Error from removePharmacyMedicine Method $e');
+      throw e;
+    }
   }
 
 }

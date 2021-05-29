@@ -310,7 +310,14 @@ class _MedicineListState extends State<MedicineList> with CanShowMessages {
                   Product product = Product();
                   product.id = medicine.id;
                   product.name = medicine.data()['name'];
+                  Map<String,dynamic> map = medicine.data()['DosagePills'];
+                  map.forEach((key, value) {
+                    int k = int.tryParse(key);
+                    product.dosagePills.addAll({k:value});
+                  });
                   product.dosageUnit = medicine.data()['dosageUnit'];
+                  product.prescriptionRequired = medicine.data()['PrescriptionRequired'];
+                  product.description = medicine.data()['description'];
                   product.pillsUnit = medicine.data()['pillsUnit'];
                   var productImageUrl = medicine.data()['imageURLs'];
                   print(productImageUrl.length );
