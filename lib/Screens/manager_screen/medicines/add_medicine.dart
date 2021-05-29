@@ -345,7 +345,7 @@ class _Body extends State<Body> with CanShowMessages {
                         Row(
                           children: [
                             Text(
-                              'Need prescription? ',
+                              'Prescription ?',
                               style: TextStyle(
                                 fontSize: 20,
                               ),

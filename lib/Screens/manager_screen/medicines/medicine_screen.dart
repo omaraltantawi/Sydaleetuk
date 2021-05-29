@@ -632,11 +632,11 @@ class _BodyState extends State<Body> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'prescription: ',
+                  'Prescription Required:',
                   style: _textStyle,
                 ),
                 Text(
-                  widget.product.prescriptionRequired ? 'Required' : 'Not required',
+                  widget.product.prescriptionRequired ? 'Yes' : 'No',
                   style: _textStyle1,
                 ),
                 Switch(
