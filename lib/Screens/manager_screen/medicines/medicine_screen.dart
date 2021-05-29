@@ -2,18 +2,33 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:graduationproject/data_models/Product.dart';
 import 'package:graduationproject/size_config.dart';
 
 import 'medicine.dart';
 
-class MedicineScreenManager extends StatefulWidget {
+class MedicineScreenManager extends StatelessWidget {
   static const String routeName = 'MedicineScreenManager';
+  const MedicineScreenManager ({Key key}) : super(key: key);
 
   @override
-  State<MedicineScreenManager> createState() => _MedicineScreenManagerState();
+  Widget build(BuildContext context) {
+    Product product = ModalRoute.of(context).settings.arguments as Product;
+    return Body(product: product,);
+  }
+}
+//
+
+class Body extends StatefulWidget {
+  final Product product ;
+  Body({this.product});
+  @override
+  State<Body> createState() => _BodyState();
 }
 
-class _MedicineScreenManagerState extends State<MedicineScreenManager> {
+class _BodyState extends State<Body> {
+
+
   Medicine medicine = Medicine(
       name: 'Vitamin C man zinc tupedu',
       barCode: '2013546136',
