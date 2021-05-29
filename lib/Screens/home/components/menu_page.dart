@@ -30,21 +30,21 @@ class Menu_Page extends StatelessWidget {
                     mainAxisSpacing: 0.0,
                     childAspectRatio: 0.8,
                     children: <Widget>[
-                      _buildCard('Panadol', '3.99\JOD', 'assets/images/cream.png',
+                      buildCard('Panadol', '3.99\JOD', 'assets/images/cream.png',true,
                            context),
-                      _buildCard('Tramadol', '3.99\JOD', 'assets/images/Tramadol.jpg',
+                      buildCard('Tramadol', '3.99\JOD', 'assets/images/Tramadol.jpg',false,
                           context),
-                      _buildCard('Face Mask', '3.99\JOD', 'assets/images/gloves.jpg',
+                      buildCard('Face Mask', '3.99\JOD', 'assets/images/gloves.jpg',true,
                           context),
-                      _buildCard('Face Mask', '3.99\JOD', 'assets/images/gloves.jpg',
+                      buildCard('Face Mask', '3.99\JOD', 'assets/images/gloves.jpg',false,
                           context),
-                      _buildCard('Face Mask', '3.99\JOD', 'assets/images/gloves.jpg',
+                      buildCard('Face Mask', '3.99\JOD', 'assets/images/gloves.jpg',true,
                           context),
-                      _buildCard('Face Mask', '3.99\JOD', 'assets/images/gloves.jpg',
+                      buildCard('Face Mask', '3.99\JOD', 'assets/images/gloves.jpg',false,
                           context),
-                      _buildCard('Face Mask', '3.99\JOD', 'assets/images/gloves.jpg',
+                      buildCard('Face Mask', '3.99\JOD', 'assets/images/gloves.jpg',true,
                           context),
-                      _buildCard('Teeth Brush', '3.99\JOD', 'assets/images/gloves.jpg',
+                      buildCard('Teeth Brush', '3.99\JOD', 'assets/images/gloves.jpg',false,
                           context)
 
 
@@ -58,11 +58,16 @@ class Menu_Page extends StatelessWidget {
     );
   }
 
-  Widget _buildCard(String name, String price, String imgPath, context) {
+  Widget buildCard(String name, String price, String imgPath,bool prescription, context) {
     return Padding(
-        padding: EdgeInsets.only(top: 10.0, bottom:30.0, left: 10.0, right: 10.0),
+        padding: EdgeInsets.only(top: 10.0, bottom:25.0, left: 10.0, right: 10.0),
         child: InkWell(
-            onTap: () {},
+            onTap: () {//Navigator.of(context).push(
+                //MaterialPageRoute(builder: (context) => medDetail(
+                  //  assetPath: imgPath,
+                    //medPrice:price,
+                    //,edName: name)));
+      },
 
             child: Container(
                 decoration: BoxDecoration(
@@ -97,6 +102,16 @@ class Menu_Page extends StatelessWidget {
                           color: Color(0xFF48B3B2),
                           fontFamily: 'Muli',
                           fontSize: 20)),
+                  Padding(
+                      padding: EdgeInsets.only(right: 6.0),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            prescription
+                                ? Text("(Prescription Required)")
+                                : Text(""),
+
+                          ])),
 
 
                 ]))));

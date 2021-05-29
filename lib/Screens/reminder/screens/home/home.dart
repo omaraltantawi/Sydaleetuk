@@ -1,4 +1,4 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
+
 import 'package:animated_widgets/animated_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -132,28 +132,12 @@ class _HomeState extends State<Home> {
                 dailyPills.isEmpty
                     ? SizedBox(
                         width: double.infinity,
-                        height: 100,
-                  child: AnimatedTextKit(
+                        height: 300,
 
+                  child:  Image.asset(
 
+                  "assets/images/empty.png",
 
-                    animatedTexts: [
-                    TypewriterAnimatedText(
-                    'Empty..!',
-                    textStyle: const TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                      textAlign: TextAlign.center,
-
-                    speed: const Duration(milliseconds: 200),
-                  ),
-                    ],
-
-                totalRepeatCount: 100,
-                pause: const Duration(milliseconds: 1000),
-            displayFullTextOnTap: true,
-            stopPauseOnTap: true,
 
           )
 

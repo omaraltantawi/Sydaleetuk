@@ -11,7 +11,7 @@ class RequestScreen extends StatelessWidget {
           'Request Medicines',
           style: TextStyle(fontSize: 25, color: Colors.white),
         ),
-        backgroundColor: Color(0xFF42adac),
+        backgroundColor: Color(0xFF42ADAC),
         leading: TextButton(
           child: Icon(
             Icons.arrow_back,
@@ -258,8 +258,11 @@ class RequestScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
+    style: ElevatedButton.styleFrom(
+    primary: Color(0xFF42ADAC)),
                       onPressed: () {},
                       child: Container(
+
                         padding: EdgeInsets.all(10.0),
                         child: Text('Cancel all'),
                       ),
@@ -268,6 +271,8 @@ class RequestScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: Color(0xFF42ADAC)),
                       onPressed: () {},
                       child: Container(
                         padding: EdgeInsets.all(10.0),
