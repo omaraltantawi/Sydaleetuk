@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:graduationproject/Screens/manager_screen/employee/employee_screen.dart';
 import 'package:graduationproject/size_config.dart';
 import 'add_employee.dart';
-import 'employee_screen.dart';
+import 'employee.dart';
 
 class EmployeeList extends StatelessWidget {
   static const String routeName = 'EmployeeList';
@@ -30,85 +31,113 @@ class EmployeeList extends StatelessWidget {
             Icons.arrow_back,
             color: Colors.white,
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pop(context);
+            employeeLists.clear();
+          }
         ),
       ),
-      body: ListView(
-        children: [
-          EmployeeTile(
-            number: '1',
-            fName: 'Mohammad',
-            lName: 'AlHrout',
-            phoneNumber: '0789992753',
-            image: Image.network(
-                'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
-          ),
-          EmployeeTile(
-            number: '1',
-            fName: 'Mohammad',
-            lName: 'AlHrout',
-            phoneNumber: '0789992753',
-            image: Image.network(
-                'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
-          ),
-          EmployeeTile(
-            number: '1',
-            fName: 'Mohammad',
-            lName: 'AlHrout',
-            phoneNumber: '0789992753',
-            image: Image.network(
-                'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
-          ),
-          EmployeeTile(
-            number: '1',
-            fName: 'Mohammad',
-            lName: 'AlHrout',
-            phoneNumber: '0789992753',
-            image: Image.network(
-                'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
-          ),
-        ],
-      ),
+      body: HaveEmployees(),
     );
   }
 }
 
-class EmployeeTile extends StatelessWidget {
-  final String number;
-  final String fName;
-  final String lName;
-  final String phoneNumber;
-  final Image image;
+List<Employee> employeeData = [
+  Employee(
+    fullName: 'Mohammad AlHrout',
+    email: 'hrout55@gmail.com',
+    phone: '+962789456784',
+    profilePic: Image.network(
+      'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      height: getProportionateScreenHeight(100),
+    ),
+  ),
+  Employee(
+    fullName: 'Ahmad AlHrout',
+    email: 'hrout55@gmail.com',
+    phone: '+962789456784',
+    profilePic: Image.network(
+      'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      height: getProportionateScreenHeight(100),
+    ),
+  ),
+  Employee(
+    fullName: 'Noor AlHrout',
+    email: 'hrout55@gmail.com',
+    phone: '+962789456784',
+    profilePic: Image.network(
+      'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      height: getProportionateScreenHeight(100),
+    ),
+  ),
+  Employee(
+    fullName: 'Muna AlHrout',
+    email: 'hrout55@gmail.com',
+    phone: '+962789456784',
+    profilePic: Image.network(
+      'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+      height: getProportionateScreenHeight(100),
+    ),
+  ),
+];
 
-  EmployeeTile({this.number, this.fName, this.lName, this.phoneNumber, this.image});
+List<Widget> employeeLists = [];
 
+class HaveEmployees extends StatefulWidget {
+  @override
+  State<HaveEmployees> createState() => _HaveEmployeesState();
+}
+
+class _HaveEmployeesState extends State<HaveEmployees> {
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              '1. ',
-              style: TextStyle(fontSize: getProportionateScreenWidth(25)),
+    for(int i = 0 ; i<employeeData.length;i++){
+      employeeLists.add(GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, EmployeeScreen.routeName);
+        },
+        child: Container(
+          width: getProportionateScreenWidth(double.infinity),
+          decoration: BoxDecoration(
+            border: Border.all(color: Color(0xFF099F9D), width: 2),
+            borderRadius: BorderRadius.circular(
+              getProportionateScreenWidth(10),
             ),
-            Container(
-              height: getProportionateScreenHeight(100),
-
-              width: getProportionateScreenHeight(100),
-              child: image,
-            ),
-            Expanded(
-              child: Text('$fName $lName',
-              style: TextStyle(fontSize: getProportionateScreenWidth(25)),),
-            ),
-          ],
+          ),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: employeeData[i].profilePic,
+              ),
+              SizedBox(
+                width: getProportionateScreenWidth(15),
+              ),
+              Expanded(
+                  child: Text(employeeData[i].fullName,
+                    style:
+                    TextStyle(fontSize: getProportionateScreenWidth(25)),
+                  )),
+            ],
+          ),
+        ),
+      ));
+      employeeLists.add(SizedBox(
+        height: getProportionateScreenHeight(15),
+      ));
+    }
+    return Container(
+      padding: EdgeInsets.only(
+        left: getProportionateScreenWidth(20),
+        right: getProportionateScreenWidth(20),
+        top: getProportionateScreenHeight(20),
+        bottom: getProportionateScreenHeight(50),
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          children: employeeLists,
         ),
       ),
-      onTap: () {
-        Navigator.pushNamed(context, EmployeeScreen.routeName);
-      },
     );
   }
 }

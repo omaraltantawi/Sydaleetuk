@@ -64,6 +64,7 @@ class _MedicineListState extends State<MedicineList> with CanShowMessages{
 
     setState(() {
       _scanBarcode = barcodeScanRes;
+      print(_scanBarcode);
     });
   }
 
