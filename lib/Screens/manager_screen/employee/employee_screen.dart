@@ -1,11 +1,12 @@
 
 import 'package:flutter/material.dart';
+import 'package:graduationproject/size_config.dart';
 
 import 'employee.dart';
 
 class EmployeeScreen extends StatelessWidget {
   static const String routeName = 'EmployeeScreen';
-  Employee _employee = Employee(
+  final Employee _employee = Employee(
     fName: 'Mohammad',
     lName: 'AlHrout',
     email: 'hrout55@gmail.com',
@@ -13,11 +14,11 @@ class EmployeeScreen extends StatelessWidget {
     profilePic: Image.network(
         'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
   );
-  TextStyle _textStyle1 = TextStyle(
+  final TextStyle _textStyle1 = TextStyle(
     color: Colors.black,
     fontSize: 25,
   );
-  TextStyle _textStyle = TextStyle(
+  final TextStyle _textStyle = TextStyle(
     color: Color(0xFF099F9D),
     fontSize: 25,
   );
@@ -78,12 +79,14 @@ class EmployeeScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(
-                height: 10,
+                height: getProportionateScreenHeight(20),
               ),
               Container(
-                height: 50,
+                height: getProportionateScreenHeight(50),
+
+                width: double.infinity,
                 child: ElevatedButton(
-                  child: Text('Delete this User'),
+                  child: Text('Delete this User',style: TextStyle(fontSize: getProportionateScreenHeight(20)),),
                   onPressed: () {},
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.red),

@@ -5,6 +5,7 @@ import 'package:graduationproject/Screens/manager_screen/order/order_list.dart';
 import 'package:graduationproject/Screens/manager_screen/requests_medicines/request_screen.dart';
 import 'package:graduationproject/data_models/Pharmacist.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
+import 'package:graduationproject/size_config.dart';
 import 'package:provider/provider.dart';
 import 'employee/employee_list.dart';
 import 'medicines/medicine_list.dart';
@@ -112,7 +113,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
       appBar: AppBar(
         title: Text(
         phar.pharmacy.name,
-          style: TextStyle(color: Colors.white, fontSize: 25),
+          style: TextStyle(color: Colors.white, fontSize: getProportionateScreenWidth(25)),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFF42adac),
@@ -145,37 +146,37 @@ class _ManagerScreenState extends State<ManagerScreen> {
                       'Welcome ${phar.fName} to your pharmacy',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: getProportionateScreenWidth(15),
                       ),
                     ),
                   ),
                   color: Color(0xFF099F9D),
                   width: double.infinity,
-                  height: 50,
+                  height: getProportionateScreenHeight(50),
                 ),
                 SizedBox(
-                  height: 30,
+                  height: getProportionateScreenHeight(30),
                 ),
                 MainButtons(
                   title: 'Medicine List',
                   page: MedicineList.routeName,
                 ),
                 SizedBox(
-                  height: 30,
+                  height: getProportionateScreenHeight(30),
                 ),
                 MainButtons(
                   title: 'Order List',
                   page: OrderList.routeName,
                 ),
                 SizedBox(
-                  height: 30,
+                  height: getProportionateScreenHeight(30),
                 ),
                 MainButtons(
                   title: 'Employee List',
                   page: EmployeeList.routeName,
                 ),
                 SizedBox(
-                  height: 30,
+                  height: getProportionateScreenHeight(30),
                 ),
                 MainButtons(
                   title: 'Requests Medicines',
@@ -199,14 +200,14 @@ class MainButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 75,
-      width: 325,
+      height: getProportionateScreenHeight(75),
+      width: getProportionateScreenWidth(300),
       child: TextButton(
         child: Text(
           title,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 25,
+            fontSize: getProportionateScreenWidth(23),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -219,7 +220,7 @@ class MainButtons extends StatelessWidget {
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25.0),
                     side: BorderSide(
-                      color: Colors.white,
+                      color: Colors.blueGrey,
                       width: 2,
                     )))),
       ),

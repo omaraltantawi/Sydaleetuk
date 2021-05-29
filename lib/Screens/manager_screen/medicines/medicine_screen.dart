@@ -101,8 +101,6 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                       IconButton(
                         icon: Icon(Icons.edit,color: Colors.grey,),
                         onPressed: () {
-                          TextEditingController _controller =
-                              TextEditingController(text: medicine.barCode);
                           showDialog(
                               context: context,
                               builder: (_) => AlertDialog(
@@ -243,16 +241,6 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                           ),
                                         ),
                                       ),
-                                      Center(
-                                        child: ElevatedButton(
-                                            onPressed: () {},
-                                            child: Text('add new image +'),
-                                            style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      background),
-                                            )),
-                                      ),
                                       Divider(color: Colors.black),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
@@ -262,11 +250,6 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                             child: ElevatedButton(
                                               child: Text('Submit'),
                                               onPressed: () {
-                                                setState(() {
-                                                  medicine.barCode =
-                                                      _controller.text;
-                                                  Navigator.pop(context);
-                                                });
                                               },
                                               style: ButtonStyle(
                                                 backgroundColor:
@@ -610,7 +593,6 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                             title: Text('Change description'),
                             actions: [
                               Container(
-                                height: 300,
                                 child: TextField(
                                   decoration: InputDecoration(
                                     hintText: 'Enter new description',
@@ -618,6 +600,7 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                   ),
                                   controller: _controller,
                                   maxLines: 10,
+                                  minLines: 1,
                                 ),
                               ),
                               Row(

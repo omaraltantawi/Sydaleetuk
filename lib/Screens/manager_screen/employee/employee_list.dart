@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:graduationproject/size_config.dart';
 import 'add_employee.dart';
 import 'employee_screen.dart';
-
-List employee=[];
 
 class EmployeeList extends StatelessWidget {
   static const String routeName = 'EmployeeList';
@@ -36,17 +35,37 @@ class EmployeeList extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          ListTile(
-            title: Text('1. Employee Name 1'),
-            onTap: (){
-              Navigator.pushNamed(context, EmployeeScreen.routeName);
-            },
+          Employee(
+            number: '1',
+            fName: 'Mohammad',
+            lName: 'AlHrout',
+            phoneNumber: '0789992753',
+            image: Image.network(
+                'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
           ),
-          ListTile(
-            title: Text('2. Employee Name 2'),
+          Employee(
+            number: '1',
+            fName: 'Mohammad',
+            lName: 'AlHrout',
+            phoneNumber: '0789992753',
+            image: Image.network(
+                'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
           ),
-          ListTile(
-            title: Text('3. Employee Name 3'),
+          Employee(
+            number: '1',
+            fName: 'Mohammad',
+            lName: 'AlHrout',
+            phoneNumber: '0789992753',
+            image: Image.network(
+                'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
+          ),
+          Employee(
+            number: '1',
+            fName: 'Mohammad',
+            lName: 'AlHrout',
+            phoneNumber: '0789992753',
+            image: Image.network(
+                'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
           ),
         ],
       ),
@@ -54,8 +73,47 @@ class EmployeeList extends StatelessWidget {
   }
 }
 
-class NoEmployees extends StatelessWidget {
+class Employee extends StatelessWidget {
+  final String number;
+  final String fName;
+  final String lName;
+  final String phoneNumber;
+  final Image image;
 
+  Employee({this.number, this.fName, this.lName, this.phoneNumber, this.image});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              '1. ',
+              style: TextStyle(fontSize: getProportionateScreenWidth(25)),
+            ),
+            Container(
+              height: getProportionateScreenHeight(100),
+
+              width: getProportionateScreenHeight(100),
+              child: image,
+            ),
+            Expanded(
+              child: Text('$fName $lName',
+              style: TextStyle(fontSize: getProportionateScreenWidth(25)),),
+            ),
+          ],
+        ),
+      ),
+      onTap: () {
+        Navigator.pushNamed(context, EmployeeScreen.routeName);
+      },
+    );
+  }
+}
+
+class NoEmployees extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -67,7 +125,8 @@ class NoEmployees extends StatelessWidget {
             fontSize: 30.0,
           ),
           textAlign: TextAlign.center,
-        ),Text(
+        ),
+        Text(
           'Press on + to add an employee',
           style: TextStyle(
             fontSize: 30.0,

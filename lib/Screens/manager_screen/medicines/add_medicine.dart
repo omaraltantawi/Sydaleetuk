@@ -13,7 +13,6 @@ import 'package:graduationproject/size_config.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
 
-
 class AddMedicine extends StatefulWidget {
   static const String routeName = 'AddMedicine';
 
@@ -22,8 +21,6 @@ class AddMedicine extends StatefulWidget {
 }
 
 class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
-
-  
   List<File> image = [];
   String medicineName;
   String barCode;
@@ -35,9 +32,9 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
   User loggedInUser;
   Pharmacist phar;
 
-
   List<Asset> images = [];
   List<File> imagesFiles = [];
+
   Future<void> pickImage() async {
     List<Asset> resultList = [];
     try {
@@ -49,13 +46,13 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
           actionBarTitle: "Sydaleetuk",
         ),
       );
+      images = resultList;
       List<File> _imagesFiles = [];
       _imagesFiles = await getImageFilesFromAssets();
       setState(() {
-        images = resultList;
         imagesFiles = _imagesFiles;
       });
-    }on NoImagesSelectedException catch (e){
+    } on NoImagesSelectedException catch (e) {
       print(e);
       setState(() {
         images = [];
@@ -108,15 +105,14 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
     });
   }
 
-  Map<int,int> dosagePills ={10:10,20:20,30:30};
-  String dosageUnit , pillsUnit ;
+  Map<int, int> dosagePills = {10: 10, 20: 20, 30: 30};
+  String dosageUnit='mg', pillsUnit='15';
 
   @override
   Widget build(BuildContext context) {
     loggedInUser = Provider.of<FireBaseAuth>(context, listen: false).loggedUser;
     return Scaffold(
       appBar: AppBar(
-
         title: Text(
           'New Medicine',
           style: TextStyle(
@@ -136,64 +132,80 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
+          padding: EdgeInsets.only(left: 10,right: 10,top: 0,bottom: 30),
           child: Column(
             children: [
-              imagesFiles != null && imagesFiles.length > 0 ?
-              SizedBox(
-                width: SizeConfig.screenWidth * 0.90,
-                height: SizeConfig.screenHeight * 0.20,
-                child: PageView.builder(
-                  itemCount: imagesFiles.length,
-                  itemBuilder: (context, index) => Padding(
-                    padding: EdgeInsets.only(
-                      left: getProportionateScreenWidth(45),
-                      right: getProportionateScreenWidth(45),
-                      top: getProportionateScreenHeight(15),
-                      bottom: getProportionateScreenHeight(15),
-                    ),
-                    child: Container(
-                      decoration: new BoxDecoration(
-                        image: new DecorationImage(
-                          colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.6), BlendMode.dstATop),
-                          image: new FileImage(imagesFiles[index]),
-                          fit: BoxFit.fill,
+              Container(
+                height: getProportionateScreenHeight(200),
+                child: imagesFiles != null && imagesFiles.length > 0
+                    ? Stack(
+                        children: [
+                          SizedBox(
+                            width: SizeConfig.screenWidth * 0.90,
+                            height: SizeConfig.screenHeight * 0.20,
+                            child: PageView.builder(
+                              itemCount: imagesFiles.length,
+                              itemBuilder: (context, index) => Padding(
+                                padding: EdgeInsets.only(
+                                  left: getProportionateScreenWidth(45),
+                                  right: getProportionateScreenWidth(45),
+                                  top: getProportionateScreenHeight(15),
+                                  bottom: getProportionateScreenHeight(15),
+                                ),
+                                child: Container(
+                                  decoration: new BoxDecoration(
+                                    image: new DecorationImage(
+                                      image: new FileImage(imagesFiles[index]),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                                // Image.file(
+                                //     imagesFiles[index],
+                                //     alignment: AlignmentDirectional.center,
+                                //     // fit: BoxFit.fill,
+                                //     height: getProportionateScreenHeight(120),
+                                // ),
+                                // Image.network(
+                                //   widget.selectedProduct.imageUrls[index],
+                                //   alignment: AlignmentDirectional.center,
+                                //   fit: BoxFit.fill,
+                                //   height: getProportionateScreenHeight(120),
+                                // ),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: IconButton(
+                              onPressed: () async {
+                                await pickImage();
+                              },
+                              icon: Icon(Icons.add_a_photo),
+                            ),
+                          )
+                        ],
+                      )
+                    : SizedBox(
+                        height: SizeConfig.screenHeight * 0.20,
+                        width: SizeConfig.screenWidth * 0.84,
+                        child: Container(
+                          height: SizeConfig.screenHeight * 0.20,
+                          width: SizeConfig.screenWidth * 0.90,
+                          constraints: BoxConstraints(
+                            minHeight: SizeConfig.screenHeight * 0.20,
+                            maxHeight: SizeConfig.screenHeight * 0.20,
+                          ),
+                          child: InkWell(
+                            onTap: () async {
+                              await pickImage();
+                            },
+                            child: Center(
+                              child: Text('Click me + to add a medicine'),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                    // Image.file(
-                    //     imagesFiles[index],
-                    //     alignment: AlignmentDirectional.center,
-                    //     // fit: BoxFit.fill,
-                    //     height: getProportionateScreenHeight(120),
-                    // ),
-                    // Image.network(
-                    //   widget.selectedProduct.imageUrls[index],
-                    //   alignment: AlignmentDirectional.center,
-                    //   fit: BoxFit.fill,
-                    //   height: getProportionateScreenHeight(120),
-                    // ),
-                  ),
-                ),
-              ):
-              SizedBox(
-                height: SizeConfig.screenHeight * 0.20,
-                width: SizeConfig.screenWidth * 0.84,
-                child: Container(
-                  height: SizeConfig.screenHeight * 0.20,
-                  width: SizeConfig.screenWidth * 0.90,
-                  constraints: BoxConstraints(
-                    minHeight: SizeConfig.screenHeight * 0.20,
-                    maxHeight: SizeConfig.screenHeight * 0.20,
-                  ),
-                  child: InkWell(
-                    onTap: () async {
-                      await pickImage();
-                    },
-                    child: Center(
-                      child: Text('Click me + to add a medicine'),
-                    ),
-                  ),
-                ),
               ),
               SizedBox(
                 height: 20,
@@ -244,30 +256,31 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                 height: 20,
               ),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   setState(() {
-                    prescription=!prescription;
+                    prescription = !prescription;
                   });
                 },
                 child: Container(
-
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey,width: 1.7),
+                    border: Border.all(color: Colors.grey, width: 1.7),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Need prescription? ',style: TextStyle(
-                        fontSize: 20,
-                      ),
+                      Text(
+                        'Need prescription? ',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
                       ),
                       Switch(
                         value: prescription,
                         onChanged: (value) {
                           setState(() {
-                           prescription = value;
+                            prescription = value;
                           });
                         },
                         activeTrackColor: Color(0xFF42adac),
@@ -275,7 +288,6 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                       ),
                     ],
                   ),
-
                 ),
               ),
               SizedBox(
@@ -307,8 +319,67 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                     ),
                     OrderIconButton(
                       iconData: Icons.add,
-                      press: (){
+                      press: () {
+                        showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: Text('Dosage - pills'),
+                              contentPadding: EdgeInsets.all(10.0),
+                              actions: [
+                                Container(
+                                  padding:
+                                  EdgeInsets.symmetric(horizontal: 20.0),
+                                  constraints: BoxConstraints(
+                                    maxHeight:
+                                    getProportionateScreenHeight(200),
+                                  ),
+                                  child: Column(
+                                    children: [
 
+                                    ],
+                                  ),
+                                ),
+                                Divider(color: Colors.black),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: ElevatedButton(
+                                        child: Text('Submit'),
+                                        onPressed: () {
+                                          setState(() {
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Color(0xFF099F9D)),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: ElevatedButton(
+                                        child: Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Color(0xFF099F9D)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ));
                       },
                     ),
                   ],
@@ -326,12 +397,12 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                     return Padding(
                       padding: EdgeInsets.all(8.0),
                       child: SizedBox(
-                        width: SizeConfig.screenWidth*0.55,
+                        width: SizeConfig.screenWidth * 0.55,
                         child: DosagePillsButton(
-                          press: (index){
-
+                          press: (index) {
                           },
-                          text: '${dosagePills.keys.elementAt(index).toString()} $dosageUnit - ${dosagePills.values.elementAt(index).toString()} $pillsUnit',
+                          text:
+                              '${dosagePills.keys.elementAt(index).toString()} $dosageUnit - ${dosagePills.values.elementAt(index).toString()} $pillsUnit',
                           index: index,
                         ),
                       ),
@@ -425,12 +496,13 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                         text: 'Submit',
                         press: () async {
                           bool off = await Provider.of<FireBaseAuth>(context,
-                              listen: false)
-                              .checkMedicineExistence(medicineName: medicineName);
-                          print ( off );
-                          Map<String,int> _map = {};
+                                  listen: false)
+                              .checkMedicineExistence(
+                                  medicineName: medicineName);
+                          print(off);
+                          Map<String, int> _map = {};
                           dosagePills.forEach((key, value) {
-                            _map.addAll({key.toString():value});
+                            _map.addAll({key.toString(): value});
                           });
                           if (off) {
                             QuestionMessage answer = await showQuestionDialog(
@@ -444,7 +516,7 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                             if (answer == QuestionMessage.YES) {
                               Provider.of<FireBaseAuth>(context, listen: false)
                                   .addMedicineToPharmacyFromOfficial(
-                                  medicineName: medicineName);
+                                      medicineName: medicineName);
                             } else {
                               double _price = 0;
                               _price = double.tryParse(price);
@@ -452,28 +524,33 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
 
                               Provider.of<FireBaseAuth>(context, listen: false)
                                   .addMedicineToPharmacy(
-                                  medicineName: medicineName,
-                                  prescription: prescription,
-                                  barCode: barCode,
-                                  description: description,
-                                  image: image,
-                                  price: _price,
-                                  dosagePills: _map,dosageUnit: dosageUnit,pillsUnit: pillsUnit);
+                                      medicineName: medicineName,
+                                      prescription: prescription,
+                                      barCode: barCode,
+                                      description: description,
+                                      image: image,
+                                      price: _price,
+                                      dosagePills: _map,
+                                      dosageUnit: dosageUnit,
+                                      pillsUnit: pillsUnit);
                             }
                           } else {
                             double _price = 0;
                             _price = double.tryParse(price);
                             // image = await getImageFilesFromAssets();
-                            print ( 'getfiles' );
-                            await Provider.of<FireBaseAuth>(context, listen: false)
+                            print('getfiles');
+                            await Provider.of<FireBaseAuth>(context,
+                                    listen: false)
                                 .addMedicineToPharmacyAndOfficial(
-                                medicineName: medicineName,
-                                prescription: prescription,
-                                barCode: barCode,
-                                description: description,
-                                image: image,
-                                price: _price,
-                                dosagePills: _map,dosageUnit: dosageUnit,pillsUnit: pillsUnit);
+                                    medicineName: medicineName,
+                                    prescription: prescription,
+                                    barCode: barCode,
+                                    description: description,
+                                    image: image,
+                                    price: _price,
+                                    dosagePills: _map,
+                                    dosageUnit: dosageUnit,
+                                    pillsUnit: pillsUnit);
                           }
                         },
                       ),
@@ -489,41 +566,44 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
   }
 }
 
-
 class DosagePillsButton extends StatelessWidget {
   const DosagePillsButton(
       {Key key,
-        this.text,
-        this.press,
-        this.index,
-        this.width = double.infinity,
-        this.height = 50,
-        this.isRed = false})
+      this.text,
+      this.press,
+      this.index,
+      this.width = double.infinity,
+      this.height = 50,
+      this.isRed = false})
       : super(key: key);
   final String text;
   final Function(int) press;
   final double width, height;
   final bool isRed;
   final int index;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(10)),
+      padding:
+          EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(10)),
       margin: EdgeInsets.all(3),
       alignment: Alignment.center,
       width: double.infinity,
       height: height,
       decoration: BoxDecoration(
         // borderRadius: BorderRadius.all(Radius.circular(8.0)),
-        gradient: !isRed ? kPrimaryGradientColor : LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.red[900],
-            Colors.red[900],
-            kPrimaryColor,
-          ],
-        ),
+        gradient: !isRed
+            ? kPrimaryGradientColor
+            : LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.red[900],
+                  Colors.red[900],
+                  kPrimaryColor,
+                ],
+              ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -544,7 +624,11 @@ class DosagePillsButton extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(Icons.remove_circle_outline, size: getProportionateScreenWidth(25.0),color: Colors.red ,),
+                  Icon(
+                    Icons.remove_circle_outline,
+                    size: getProportionateScreenWidth(25.0),
+                    color: Colors.red,
+                  ),
                 ],
               ),
             ),
