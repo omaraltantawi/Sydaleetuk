@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:graduationproject/data_models/Pharmacy.dart';
 
 class Product{
-  String id , name , company , dosageUnit = "mg" , pillsUnit = "pills" ,pharNote , prescriptionUrl , description;
+  String id , name , company , dosageUnit = "mg" , barcode , pillsUnit = "pills" ,pharNote , prescriptionUrl , description;
   double price ,distance;
   int selectedDosage ,quantity , selectedPills , productNo;
   Pharmacy pharmacy;
@@ -35,6 +35,7 @@ class Product{
     product.dosagePills = dosagePills ;
     product.prescriptionRequired = prescriptionRequired ;
     product.isRejectFromPrescription = isRejectFromPrescription;
+    product.barcode = barcode;
     return product;
   }
 

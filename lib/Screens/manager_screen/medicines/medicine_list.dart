@@ -9,6 +9,7 @@ import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/components/default_button.dart';
 import 'package:graduationproject/constants.dart';
 import 'package:graduationproject/data_models/Pharmacist.dart';
+import 'package:graduationproject/data_models/Product.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:graduationproject/size_config.dart';
 import 'package:provider/provider.dart';
@@ -303,18 +304,33 @@ class _MedicineListState extends State<MedicineList> with CanShowMessages {
                   );
                 }
 
-                final medicies = snapshot.data.docs;
+                final medicines = snapshot.data.docs;
                 int i = 0;
-                for (var medicine in medicies) {
-                  String name = medicine.data()['name'];
-                  double price = medicine.data()['price'];
-                  String barCode = medicine.data()['barCode'];
+                for (var medicine in medicines) {
+                  Product product = Product();
+                  product.id = medicine.id;
+                  product.name = medicine.data()['name'];
+                  product.dosageUnit = medicine.data()['dosageUnit'];
+                  product.pillsUnit = medicine.data()['pillsUnit'];
+                  var productImageUrl = medicine.data()['imageURLs'];
+                  print(productImageUrl.length );
+                  if ( productImageUrl == null || productImageUrl.length == 0 ){
+                    product.imageUrls = [];
+                  }else {
+                    for( var image in productImageUrl ){
+                      product.imageUrls.add(image.toString());
+                    }
+                  }
+                  product.barcode = medicine.data()['barCode'];
+                  var price = medicine.data()['price'];
+                  if (price.runtimeType == int) {
+                    double p = double.parse(price.toString());
+                    product.price = p;
+                  } else
+                    product.price = price;
                   widgets.add(
-                    Medicine(
-                      number: ++i,
-                      barCode: barCode,
-                      price: price.toStringAsFixed(2),
-                      name: name,
+                    MedicineWidget(
+                      product: product,
                     ),
                   );
                   widgets.add(
@@ -550,6 +566,94 @@ class _MedicineListState extends State<MedicineList> with CanShowMessages {
 //     );
 //   }
 // }
+
+class MedicineWidget extends StatelessWidget {
+  final Product product;
+  const MedicineWidget({Key key,this.product}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return  Material(
+      color: Colors.white,
+      type: MaterialType.canvas,
+      child: Padding(
+        padding: EdgeInsets.all(getProportionateScreenWidth(5.0)),
+        child: InkWell(
+          onTap: (){
+            Navigator.of(context).pushNamed(MedicineScreenManager.routeName,arguments: product);
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: getProportionateScreenWidth(5.0),horizontal: getProportionateScreenWidth(10.0)),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 3,
+                  blurRadius: 7,
+                  offset: Offset(0, 3), // changes position of shadow
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                product.imageUrls[0] != null && product.imageUrls[0] != ''
+                    ? Image.network(
+                  product.imageUrls[0],
+                  height: getProportionateScreenHeight(140),
+                )
+                    : Image.asset(
+                  "assets/images/syrup.png",
+                  height: getProportionateScreenHeight(140),
+                ),
+                SizedBox(
+                  width: getProportionateScreenWidth(10),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product.name != null && product.name != '' ? product.name : '' ,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: getProportionateScreenWidth(18.0),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(10),
+                    ),
+                    Text(
+                      product.barcode ,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: getProportionateScreenWidth(18.0),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(10),
+                    ),
+                    Text(
+                      "${product.price.toStringAsFixed(2)} JOD",
+                      style: TextStyle(
+                          color: kPrimaryColor,
+                          fontSize: getProportionateScreenWidth(18.0),
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 
 class Medicine extends StatelessWidget {
   final int number;
