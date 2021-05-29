@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../size_config.dart';
-
 import 'home_header.dart';
-import 'popular_product.dart';
-import 'recommended_products.dart';
+import 'menu_page.dart';
 
 class Body extends StatelessWidget {
   @override
@@ -14,10 +12,8 @@ class Body extends StatelessWidget {
           children: [
             SizedBox(height: getProportionateScreenHeight(30)),
             HomeHeader(),
-            SizedBox(height: getProportionateScreenHeight(10)),
-            RecommendedProducts(),
             SizedBox(height: getProportionateScreenWidth(30)),
-            PopularProducts(),
+            Menu_Page(),
             SizedBox(height: getProportionateScreenWidth(30)),
           ],
         ),
