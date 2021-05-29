@@ -1118,10 +1118,14 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
         'pharmacyAddress': orders.pharmacy.addressGeo,
         'pharmacyPhoneNo': orders.pharmacy.phoneNo,
         'distance': orders.pharmacy.distance,
+        'UserPhoneNo': _patient.phoneNo,
+        'userLocation': _patient.addressGeoPoint,
         'userId': _patient.userId,
         'userName': '${_patient.fName} ${_patient.lName}',
         'userHealthState': _patient.healthState,
         'userAge': _patient.age,
+        'UserPhoneNo': _patient.phoneNo,
+        'userLocation': _patient.addressGeoPoint,
         'orderTime': orders.orderTime,
         'OrderNo': ordersNo,
         'Status': 'Pending',
@@ -1338,7 +1342,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     }
   }
 
-  void setOrderStatus(String orderId, String newStatus) async {
+  Future<void> setOrderStatus(String orderId, String newStatus) async {
     try {
       print('Start Method setOrderStatus');
       await updateCollectionField(
@@ -1615,7 +1619,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
           _dosagePills.addAll({d: value});
         });
         String description = medicine.first.data()['description'];
-        List<String> image = medicine.first.data()['ImageUrls'];
+        List<String> image = medicine.first.data()['imageURLs'];
         String dosageUnit= medicine.first.data()['dosageUnit'];
         String pillsUnit= medicine.first.data()['pillsUnit'];
         var ret = await _fireStore
@@ -1624,7 +1628,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
             .collection('MEDICINE')
             .add({
           'name': medicineName,
-          'ImageUrls': image,
+          'imageURLs': image,
           'barCode': barCode,
           'price': price,
           'PrescriptionRequired': prescription,

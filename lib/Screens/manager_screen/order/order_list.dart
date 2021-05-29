@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:graduationproject/Screens/OrderInfoScreen.dart';
+import 'package:graduationproject/Screens/manager_screen/order/PharmacyOrderInfoScreen.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/components/orderButton.dart';
 import 'package:graduationproject/constants.dart';
@@ -12,6 +13,7 @@ import 'package:graduationproject/data_models/Pharmacy.dart';
 import 'package:graduationproject/data_models/Product.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:graduationproject/size_config.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 //
 // class OrderList extends StatelessWidget {
@@ -127,8 +129,10 @@ class Body extends StatelessWidget {
             _order.pharmacy.addressGeo = order.data()['pharmacyAddress'] ;
             _order.pharmacy.phoneNo = order.data()['pharmacyPhoneNo'] ;
             _order.userName = order.data()['userName'] ;
+            _order.UserPhoneNo = order.data()['UserPhoneNo'] ;
             _order.userAge = order.data()['userAge'] ;
             _order.userHealthState = order.data()['userHealthState'] ;
+            _order.userLocation = order.data()['userLocation'] ;
             var distance = order.data()['distance'];
             if (distance.runtimeType == int) {
               double p = double.parse(distance.toString());
@@ -238,6 +242,7 @@ class PharmacyOrderWidget extends StatelessWidget with CanShowMessages {
               product.productNo = int.tryParse(productNo);
               var prescriptionUrl = _order.data()['prescriptionUrl'];
               product.prescriptionRequired = prescriptionUrl != null && prescriptionUrl!= '';
+              product.prescriptionUrl = prescriptionUrl;
               var productImageUrl = _order.data()['productImageUrl'];
               product.imageUrls = [productImageUrl];
               var price = _order.data()['price'];
@@ -261,7 +266,7 @@ class PharmacyOrderWidget extends StatelessWidget with CanShowMessages {
                   left: 5.0, bottom: 5.0, right: 5.0, top: 5.0),
               child: InkWell(
                 onTap: (){
-                  Navigator.of(context).pushNamed(OrderInfoScreen.routeName,arguments: order);
+                  Navigator.of(context).pushNamed(PharmacyOrderInfoScreen.routeName,arguments: order);
                 },
                 child: Container(
                   padding: EdgeInsets.only(
@@ -333,7 +338,7 @@ class PharmacyOrderWidget extends StatelessWidget with CanShowMessages {
                                 fontWeight: FontWeight.w200),
                           ),
                           Text(
-                            'Time: '+order.userName,
+                            'Time: '+DateFormat("hh:mm a dd/MM/yyyy").format(order.orderTime),
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: getProportionateScreenHeight(17),
@@ -359,6 +364,16 @@ class PharmacyOrderWidget extends StatelessWidget with CanShowMessages {
                                 color: kPrimaryColor,
                                 fontSize: getProportionateScreenHeight(17),
                                 fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(
+                            height: 50,
+                            width: SizeConfig.screenWidth * 0.35,
+                            child: OrderButton(
+                              width: SizeConfig.screenWidth * 0.35,
+                              height: 40,
+                              press: null,
+                              text: order.status,
+                            ),
                           ),
                         ],
                       ),
