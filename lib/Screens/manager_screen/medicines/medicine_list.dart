@@ -76,6 +76,9 @@ class _MedicineListState extends State<MedicineList> with CanShowMessages{
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.BARCODE);
       print(barcodeScanRes);
+      if ( barcodeScanRes == '-1' ){
+        return null;
+      }
       return barcodeScanRes;
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
