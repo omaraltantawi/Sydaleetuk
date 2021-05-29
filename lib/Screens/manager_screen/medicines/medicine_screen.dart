@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:graduationproject/size_config.dart';
 
 import 'medicine.dart';
 
@@ -69,7 +70,7 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
+            Stack(
               children: [
                 Container(
                   height: 350,
@@ -77,9 +78,226 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                     scrollDirection: Axis.horizontal,
                     children: [
                       medicine.image[0],
+                      SizedBox(
+                        width: 10,
+                      ),
                       medicine.image[1],
+                      SizedBox(
+                        width: 10,
+                      ),
                       medicine.image[2],
+                      SizedBox(
+                        width: 10,
+                      ),
                       medicine.image[3],
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text('edit Image'),
+                      IconButton(
+                        icon: Icon(Icons.edit,color: Colors.grey,),
+                        onPressed: () {
+                          TextEditingController _controller =
+                              TextEditingController(text: medicine.barCode);
+                          showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                    title: Text('Change image'),
+                                    contentPadding: EdgeInsets.all(10.0),
+                                    actions: [
+                                      Container(
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 20.0),
+                                        constraints: BoxConstraints(
+                                          maxHeight:
+                                              getProportionateScreenHeight(300),
+                                        ),
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Text('1. '),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Container(
+                                                        height:
+                                                            getProportionateScreenHeight(
+                                                                100),
+                                                        width:
+                                                            getProportionateScreenWidth(
+                                                                100),
+                                                        child: medicine.image[0],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.remove_circle,
+                                                      color: Colors.red,
+                                                    ),
+                                                    onPressed: () {},
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Text('2. '),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Container(
+                                                        height:
+                                                            getProportionateScreenHeight(
+                                                                100),
+                                                        width:
+                                                            getProportionateScreenWidth(
+                                                                100),
+                                                        child: medicine.image[1],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.remove_circle,
+                                                      color: Colors.red,
+                                                    ),
+                                                    onPressed: () {},
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Text('3. '),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Container(
+                                                        height:
+                                                            getProportionateScreenHeight(
+                                                                100),
+                                                        width:
+                                                            getProportionateScreenWidth(
+                                                                100),
+                                                        child: medicine.image[2],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.remove_circle,
+                                                      color: Colors.red,
+                                                    ),
+                                                    onPressed: () {},
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Text('4. '),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Container(
+                                                        height:
+                                                            getProportionateScreenHeight(
+                                                                100),
+                                                        width:
+                                                            getProportionateScreenWidth(
+                                                                100),
+                                                        child: medicine.image[3],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.remove_circle,
+                                                      color: Colors.red,
+                                                    ),
+                                                    onPressed: () {},
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: ElevatedButton(
+                                            onPressed: () {},
+                                            child: Text('add new image +'),
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      background),
+                                            )),
+                                      ),
+                                      Divider(color: Colors.black),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: ElevatedButton(
+                                              child: Text('Submit'),
+                                              onPressed: () {
+                                                setState(() {
+                                                  medicine.barCode =
+                                                      _controller.text;
+                                                  Navigator.pop(context);
+                                                });
+                                              },
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        background),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: ElevatedButton(
+                                              child: Text('Cancel'),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        background),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ));
+                        },
+                      ),
                     ],
                   ),
                 ),
