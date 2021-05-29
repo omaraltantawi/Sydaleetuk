@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../size_config.dart';
 
@@ -8,66 +9,69 @@ class Menu_Page extends StatelessWidget {
       children: [
         Padding(
           padding:
-          EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
-          child: Text("Products",style: TextStyle(
-    fontSize: getProportionateScreenWidth(17),
-    color: Colors.grey, ),
-        ),),
-
-           ListView(
-             scrollDirection: Axis.vertical,
-             shrinkWrap: true,
-            children: <Widget>[
-              SizedBox(height: 10.0),
-              Container(
-
-                  width: MediaQuery.of(context).size.width-390,
-                  height: MediaQuery.of(context).size.height-260,
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    primary: false,
-                    crossAxisSpacing: 20.0,
-                    mainAxisSpacing: 0.0,
-                    childAspectRatio: 0.8,
-                    children: <Widget>[
-                      buildCard('Panadol', '3.99\JOD', 'assets/images/cream.png',true,
-                           context),
-                      buildCard('Tramadol', '3.99\JOD', 'assets/images/Tramadol.jpg',false,
-                          context),
-                      buildCard('Face Mask', '3.99\JOD', 'assets/images/gloves.jpg',true,
-                          context),
-                      buildCard('Face Mask', '3.99\JOD', 'assets/images/demo1.jpg',false,
-                          context),
-                      buildCard('Face Mask', '3.99\JOD', 'assets/images/demo2.jpg',true,
-                          context),
-                      buildCard('Face Mask', '3.99\JOD', 'assets/images/demo3.jpg',false,
-                          context),
-                      buildCard('Face Mask', '3.99\JOD', 'assets/images/demo4.jpg',true,
-                          context)
-
-
-                    ],
-                  )),
-
-            ],
+              EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
+          child: Text(
+            "Products",
+            style: TextStyle(
+              fontSize: getProportionateScreenWidth(17),
+              color: Colors.grey,
+            ),
           ),
+        ),
+        ListView(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          children: <Widget>[
+            SizedBox(height: 10.0),
+            Container(
 
+                width: MediaQuery.of(context).size.width - 390,
+                height: MediaQuery.of(context).size.height - 260,
+                child: GridView.count(
+                  scrollDirection: Axis.vertical,
+                  crossAxisCount: 2,
+                  primary: false,
+                  crossAxisSpacing: 1.0,
+                  mainAxisSpacing: 0.0,
+                  childAspectRatio: 0.8,
+                  children: <Widget>[
+                    buildCard('Panadol', '3.99\JOD', 'assets/images/cream.png',
+                        true, context),
+                    buildCard('Tramadol', '3.99\JOD',
+                        'assets/images/Tramadol.jpg', false, context),
+                    buildCard('Face Mask', '3.99\JOD',
+                        'assets/images/gloves.jpg', true, context),
+                    buildCard('Face Mask', '3.99\JOD',
+                        'assets/images/demo1.jpg', false, context),
+                    buildCard('Face Mask', '3.99\JOD',
+                        'assets/images/demo2.jpg', true, context),
+                    buildCard('Face Mask', '3.99\JOD',
+                        'assets/images/demo3.jpg', false, context),
+                    buildCard('Face Mask', '3.99\JOD',
+                        'assets/images/demo4.jpg', true, context)
+                  ],
+                )),
+          ],
+        ),
       ],
     );
   }
 
-  Widget buildCard(String name, String price, String imgPath,bool prescription, context) {
+  Widget buildCard(
+      String name, String price, String imgPath, bool prescription, context) {
     return Padding(
-        padding: EdgeInsets.only(top: 10.0, bottom:25.0, left: 10.0, right: 10.0),
+        padding:
+            EdgeInsets.only(top: 10.0, bottom: 25.0, left: 10.0, right: 10.0),
         child: InkWell(
-            onTap: () {//Navigator.of(context).push(
-                //MaterialPageRoute(builder: (context) => medDetail(
-                  //  assetPath: imgPath,
-                    //medPrice:price,
-                    //,edName: name)));
-      },
-
+            onTap: () {
+              //Navigator.of(context).push(
+              //MaterialPageRoute(builder: (context) => medDetail(
+              //  assetPath: imgPath,
+              //medPrice:price,
+              //,edName: name)));
+            },
             child: Container(
+
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.0),
                     boxShadow: [
@@ -78,10 +82,10 @@ class Menu_Page extends StatelessWidget {
                     ],
                     color: Colors.white),
                 child: Column(children: [
-
                   Hero(
                       tag: imgPath,
                       child: Container(
+
                           height: 100,
                           width: 100,
                           decoration: BoxDecoration(
@@ -89,7 +93,6 @@ class Menu_Page extends StatelessWidget {
                                   image: AssetImage(imgPath),
                                   fit: BoxFit.contain)))),
                   SizedBox(height: 5.0),
-
                   Text(name,
                       style: TextStyle(
                           color: Color(0xFF575E67),
@@ -108,10 +111,7 @@ class Menu_Page extends StatelessWidget {
                             prescription
                                 ? Text("(Prescription Required)")
                                 : Text(""),
-
                           ])),
-
-
                 ]))));
   }
 }

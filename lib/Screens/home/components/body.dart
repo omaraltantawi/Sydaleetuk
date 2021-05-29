@@ -12,7 +12,7 @@ class Body extends StatelessWidget {
           children: [
             SizedBox(height: getProportionateScreenHeight(30)),
             HomeHeader(),
-            SizedBox(height: getProportionateScreenWidth(30)),
+            SizedBox(height: getProportionateScreenWidth(20)),
             Menu_Page(),
             SizedBox(height: getProportionateScreenWidth(30)),
           ],
