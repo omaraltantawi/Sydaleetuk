@@ -9,6 +9,7 @@ import 'package:graduationproject/Screens/employee_screen/medicine/add_medicine.
 import 'package:graduationproject/Screens/employee_screen/medicine/medicine_list.dart';
 import 'package:graduationproject/Screens/employee_screen/medicine/medicine_screen.dart';
 import 'package:graduationproject/Screens/manager_screen/medicines/medicine_screen.dart';
+import 'package:graduationproject/Screens/manager_screen/order/PharmacyOrderInfoScreen.dart';
 import 'package:graduationproject/Screens/manager_screen/pharmacy/pharmacy_screen.dart';
 import 'package:graduationproject/Screens/manager_screen/profile/profile_screen_pharmacist.dart';
 import 'package:graduationproject/Screens/manager_screen/requests_medicines/request_screen.dart';
@@ -81,4 +82,5 @@ final Map<String, WidgetBuilder> routes = {
   EmployeeMedicineList.routeName:(context) => EmployeeMedicineList(),
   EmployeeMedicineScreen.routeName:(context) => EmployeeMedicineScreen(),
   EmployeeAddMedicine.routeName:(context) => EmployeeAddMedicine(),
+  PharmacyOrderInfoScreen.routeName:(context) => PharmacyOrderInfoScreen(),
 };

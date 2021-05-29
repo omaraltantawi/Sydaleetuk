@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/components/default_button.dart';
-import 'package:graduationproject/components/orderButton.dart';
+///////////////////////////delete comment down ///////////////////////////////
+// import 'package:graduationproject/components/orderButton.dart';
+///////////////////////////delete comment up ///////////////////////////////
 import 'package:graduationproject/constants.dart';
 import 'package:graduationproject/data_models/Pharmacist.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
@@ -25,7 +27,7 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
   String medicineName;
   String barCode;
   String price;
-  bool prescription = true;
+  bool prescription = false;
   String pills;
   String description;
 
@@ -270,11 +272,21 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Need prescription? ',
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            'Need prescription? ',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                          Text(
+                            prescription?'Yes':'No',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
                       ),
                       Switch(
                         value: prescription,
@@ -307,109 +319,109 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                   hintText: 'Description',
                 ),
               ),
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      child: Text(
-                        'Dosage - Pills',
-                        style: textBodyStyle,
-                      ),
-                    ),
-                    OrderIconButton(
-                      iconData: Icons.add,
-                      press: () {
-                        showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              title: Text('Dosage - pills'),
-                              contentPadding: EdgeInsets.all(10.0),
-                              actions: [
-                                Container(
-                                  padding:
-                                  EdgeInsets.symmetric(horizontal: 20.0),
-                                  constraints: BoxConstraints(
-                                    maxHeight:
-                                    getProportionateScreenHeight(200),
-                                  ),
-                                  child: Column(
-                                    children: [
-
-                                    ],
-                                  ),
-                                ),
-                                Divider(color: Colors.black),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: ElevatedButton(
-                                        child: Text('Submit'),
-                                        onPressed: () {
-                                          setState(() {
-                                            Navigator.pop(context);
-                                          });
-                                        },
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Color(0xFF099F9D)),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: ElevatedButton(
-                                        child: Text('Cancel'),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Color(0xFF099F9D)),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ));
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                alignment: AlignmentDirectional.center,
-                height: SizeConfig.screenHeight * 0.08,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: dosagePills.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: SizeConfig.screenWidth * 0.55,
-                        child: DosagePillsButton(
-                          press: (index) {
-                          },
-                          text:
-                              '${dosagePills.keys.elementAt(index).toString()} $dosageUnit - ${dosagePills.values.elementAt(index).toString()} $pillsUnit',
-                          index: index,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+              // Container(
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       Container(
+              //         child: Text(
+              //           'Dosage - Pills',
+              //           style: textBodyStyle,
+              //         ),
+              //       ),
+              //       OrderIconButton(
+              //         iconData: Icons.add,
+              //         press: () {
+              //           showDialog(
+              //               context: context,
+              //               builder: (_) => AlertDialog(
+              //                 title: Text('Dosage - pills'),
+              //                 contentPadding: EdgeInsets.all(10.0),
+              //                 actions: [
+              //                   Container(
+              //                     padding:
+              //                     EdgeInsets.symmetric(horizontal: 20.0),
+              //                     constraints: BoxConstraints(
+              //                       maxHeight:
+              //                       getProportionateScreenHeight(200),
+              //                     ),
+              //                     child: Column(
+              //                       children: [
+              //
+              //                       ],
+              //                     ),
+              //                   ),
+              //                   Divider(color: Colors.black),
+              //                   Row(
+              //                     mainAxisAlignment: MainAxisAlignment.center,
+              //                     children: [
+              //                       Padding(
+              //                         padding: EdgeInsets.all(8.0),
+              //                         child: ElevatedButton(
+              //                           child: Text('Submit'),
+              //                           onPressed: () {
+              //                             setState(() {
+              //                               Navigator.pop(context);
+              //                             });
+              //                           },
+              //                           style: ButtonStyle(
+              //                             backgroundColor:
+              //                             MaterialStateProperty.all(
+              //                                 Color(0xFF099F9D)),
+              //                           ),
+              //                         ),
+              //                       ),
+              //                       SizedBox(
+              //                         width: 10,
+              //                       ),
+              //                       Padding(
+              //                         padding: EdgeInsets.all(8.0),
+              //                         child: ElevatedButton(
+              //                           child: Text('Cancel'),
+              //                           onPressed: () {
+              //                             Navigator.pop(context);
+              //                           },
+              //                           style: ButtonStyle(
+              //                             backgroundColor:
+              //                             MaterialStateProperty.all(
+              //                                 Color(0xFF099F9D)),
+              //                           ),
+              //                         ),
+              //                       ),
+              //                     ],
+              //                   ),
+              //                 ],
+              //               ));
+              //         },
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // Container(
+              //   width: double.infinity,
+              //   alignment: AlignmentDirectional.center,
+              //   height: SizeConfig.screenHeight * 0.08,
+              //   child: ListView.builder(
+              //     shrinkWrap: true,
+              //     scrollDirection: Axis.horizontal,
+              //     itemCount: dosagePills.length,
+              //     itemBuilder: (context, index) {
+              //       return Padding(
+              //         padding: EdgeInsets.all(8.0),
+              //         child: SizedBox(
+              //           width: SizeConfig.screenWidth * 0.55,
+              //           child: DosagePillsButton(
+              //             press: (index) {
+              //             },
+              //             text:
+              //                 '${dosagePills.keys.elementAt(index).toString()} $dosageUnit - ${dosagePills.values.elementAt(index).toString()} $pillsUnit',
+              //             index: index,
+              //           ),
+              //         ),
+              //       );
+              //     },
+              //   ),
+              // ),
               SizedBox(
                 height: 20,
               ),
@@ -431,7 +443,8 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                       child: DefaultButton(
                         text: 'Cancel',
                         press: () {
-                          Navigator.pop(context);
+                          ////////////////edit me//////////////////////////////
+                          Navigator.pop(context); ////////////////edit me
                         },
                       ),
                     ),
@@ -500,10 +513,12 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                               .checkMedicineExistence(
                                   medicineName: medicineName);
                           print(off);
-                          Map<String, int> _map = {};
-                          dosagePills.forEach((key, value) {
-                            _map.addAll({key.toString(): value});
-                          });
+                          ///////////////////////////delete comment down ///////////////////////////////
+                          // Map<String, int> _map = {};
+                          // dosagePills.forEach((key, value) {
+                          //   _map.addAll({key.toString(): value});
+                          // });
+                          ///////////////////////////delete comment up ///////////////////////////////
                           if (off) {
                             QuestionMessage answer = await showQuestionDialog(
                                 context: context,
@@ -530,9 +545,12 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                                       description: description,
                                       image: image,
                                       price: _price,
-                                      dosagePills: _map,
-                                      dosageUnit: dosageUnit,
-                                      pillsUnit: pillsUnit);
+                                ///////////////////////////delete comment down ///////////////////////////////
+                                      // dosagePills: _map,
+                                      // dosageUnit: dosageUnit,
+                                      // pillsUnit: pillsUnit
+                                ///////////////////////////delete comment up ///////////////////////////////
+                              );
                             }
                           } else {
                             double _price = 0;
@@ -548,9 +566,12 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                                     description: description,
                                     image: image,
                                     price: _price,
-                                    dosagePills: _map,
-                                    dosageUnit: dosageUnit,
-                                    pillsUnit: pillsUnit);
+                              ///////////////////////////delete comment down ///////////////////////////////
+                                    // dosagePills: _map,
+                                    // dosageUnit: dosageUnit,
+                                    // pillsUnit: pillsUnit
+                              ///////////////////////////delete comment up ///////////////////////////////
+                            );
                           }
                         },
                       ),

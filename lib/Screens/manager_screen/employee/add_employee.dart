@@ -1,4 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:graduationproject/components/default_button.dart';
+import 'package:graduationproject/size_config.dart';
+
+import 'employee.dart';
 
 class AddEmployee extends StatefulWidget {
   static const String routeName = 'AddEmployee';
@@ -7,6 +12,10 @@ class AddEmployee extends StatefulWidget {
   _AddEmployeeState createState() => _AddEmployeeState();
 }
 
+Color mainColor = Color(0xFF099F9D);
+
+
+Employee employee = Employee();
 class _AddEmployeeState extends State<AddEmployee> {
   @override
   Widget build(BuildContext context) {
@@ -19,7 +28,7 @@ class _AddEmployeeState extends State<AddEmployee> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: Color(0xFF099F9D),
+        backgroundColor: mainColor,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -28,87 +37,97 @@ class _AddEmployeeState extends State<AddEmployee> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: ListView(
-        children: [
-          Container(
-            height: 150,
-            width: double.infinity,
-            color: Colors.green,
-            child: Center(
-              child: Text('Employee Images'),
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: 'Employee Name',
-                hintText: 'Enter employee name',
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 15.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              GestureDetector(
+                child: Icon(
+                  Icons.account_circle,
+                  color: mainColor,
+                  size: getProportionateScreenWidth(150),
+                ),
+                onTap: (){},
               ),
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: 'phone number',
-                hintText: 'Enter the phone Number of the employee',
+              SizedBox(
+                height: getProportionateScreenHeight(20),
               ),
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: 'Email',
-                hintText: 'Enter the Email of the employee',
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Cancel'),
-
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Color(0xFF099F9D)),
-                    ),
+              Container(
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Full Name',
+                    labelText: 'Name',
                   ),
-
+                  onChanged: (value){
+                    setState(() {
+                      employee.fullName = value;
+                    });
+                  },
                 ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Submit'),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Color(0xFF099F9D)),
-                    ),
+              ),
+              SizedBox(
+                height: getProportionateScreenHeight(20),
+              ),
+              Container(
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'email@email.com',
+                    labelText: 'Email',
                   ),
+                  onChanged: (value){
+                    setState(() {
+                      employee.email = value;
+                    });
+                  },
                 ),
-              ],
-            ),
+              ),
+              SizedBox(
+                height: getProportionateScreenHeight(20),
+              ),
+              Container(
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'phone number',
+                    labelText: 'phone',
+                    prefixText: '+962 ',
+                  ),
+                  onChanged: (value){
+                    setState(() {
+                      employee.phone = value;
+                    });
+                  },
+                ),
+              ),
+              SizedBox(
+                height: getProportionateScreenHeight(20),
+              ),
+              Container(
+                width: getProportionateScreenWidth(double.infinity),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: DefaultButton(
+                        text: 'Cancel',
+                        press: (){},
+                      ),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Expanded(
+                      child: DefaultButton(
+                        text: 'Submit',
+                        press: (){},
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

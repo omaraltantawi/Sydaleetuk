@@ -88,6 +88,7 @@ class _MedicineListState extends State<MedicineList> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     loggedInUser = Provider.of<FireBaseAuth>(context, listen: false).loggedUser;
@@ -214,18 +215,6 @@ class Data extends StatelessWidget {
 }
 List<Widget> listMedicines() {
   medicines = [
-    Medicine(
-      name: 'Panadol',
-      number: 1,
-      barCode: 1234567890,
-      price: 3.6666.toString(),
-    ),
-    Medicine(
-      name: 'Vitamin C man zinc tupedu',
-      number: 2,
-      barCode: 1234567890,
-      price: 301.66615646.toString(),
-    ),
   ];
 
   return medicines;

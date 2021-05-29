@@ -7,8 +7,7 @@ import 'employee.dart';
 class EmployeeScreen extends StatelessWidget {
   static const String routeName = 'EmployeeScreen';
   final Employee _employee = Employee(
-    fName: 'Mohammad',
-    lName: 'AlHrout',
+    fullName: 'Mohammad AlHrout',
     email: 'hrout55@gmail.com',
     phone: '0789992753',
     profilePic: Image.network(
@@ -28,7 +27,7 @@ class EmployeeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '${_employee.fName} ${_employee.lName}',
+          '${_employee.fullName}',
           style: TextStyle(
             fontSize: 25,
             color: Colors.white,
@@ -57,7 +56,7 @@ class EmployeeScreen extends StatelessWidget {
               Row(
                 children: [
                   Text('Name: ',style: _textStyle,),
-                  Expanded(child: Text('${_employee.fName} ${_employee.lName}',style: _textStyle1,)),
+                  Expanded(child: Text('${_employee.fullName}',style: _textStyle1,)),
                 ],
               ),
               SizedBox(

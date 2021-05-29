@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:graduationproject/constants.dart';
 import 'package:graduationproject/data_models/User.dart';
 import 'package:graduationproject/providers/ProductProvider.dart';
+import 'package:graduationproject/size_config.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MessageDialog {
@@ -44,6 +45,41 @@ class MessageDialog {
           actions: <Widget>[
             TextButton(
               child: Text(buttonText),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+ Future<void> _showImageDialog(
+      {@required BuildContext context,
+      @required String imageUrl,}) async {
+    return showDialog<void>(
+
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title:Row(children: <Widget>[
+            Image.asset('assets/images/splash_2.png',
+                width: 50, height: 50, fit: BoxFit.contain),
+            SizedBox(
+              width: 10.0,
+            ),
+            Text('Prescription')
+          ]),
+          content: Container(
+            width: SizeConfig.screenWidth*0.5,
+            height: SizeConfig.screenHeight*0.5,
+            child: Image.network(imageUrl),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -118,7 +154,7 @@ class MessageDialog {
                 text = value;
             },
             controller: _textFieldController,
-            maxLines: 5,
+            maxLines: 10,
             keyboardType: TextInputType.multiline,
             decoration: InputDecoration(
               labelText: textFieldLabelText,
@@ -395,6 +431,14 @@ mixin CanShowMessages {
         msgTitle: msgTitle,
         msgText: msgText,
         buttonText: buttonText);
+  }
+
+  Future<void> showImageDialog(
+      {@required BuildContext context,
+      @required String imageUrl,}) async {
+    await _messageDialog._showImageDialog(
+        context: context,
+        imageUrl: imageUrl);
   }
 
   Future<QuestionMessage> showQuestionDialog(
