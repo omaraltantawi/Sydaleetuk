@@ -26,13 +26,12 @@ class RequestScreen extends StatelessWidget {
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 15.0),
             child: ListView(
               children: [
                 Container(
-                  padding: EdgeInsets.all(8.0),
-                  width: double.infinity,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +42,7 @@ class RequestScreen extends StatelessWidget {
                                 color: Colors.grey.shade800, fontSize: 25),
                           ),
                           Text(
-                            'BarCode',
+                            'BarCode: 12345678',
                             style: TextStyle(
                                 color: Colors.grey.shade800, fontSize: 15),
                           ),
@@ -54,33 +53,39 @@ class RequestScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.check_circle,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.green,
+                      TextButton(
+                        onPressed: () {
+
+                        },
+                        child:Icon(
+                          Icons.check_circle,
+                          color: Colors.white,
+                        ),
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(CircleBorder() ),
+                          backgroundColor: MaterialStateProperty.all(Colors.green),
                         ),
                       ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.close,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.red,
+                      TextButton(
+                        onPressed: () {
+
+                        },
+                        child:Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ),
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(CircleBorder() ),
+                          backgroundColor: MaterialStateProperty.all(Colors.red),
                         ),
                       ),
                     ],
                   ),
                 ),
+                SizedBox(height: 15,),
                 Container(
-                  padding: EdgeInsets.all(8.0),
-                  width: double.infinity,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,7 +96,7 @@ class RequestScreen extends StatelessWidget {
                                 color: Colors.grey.shade800, fontSize: 25),
                           ),
                           Text(
-                            'BarCode',
+                            'BarCode: 12345678',
                             style: TextStyle(
                                 color: Colors.grey.shade800, fontSize: 15),
                           ),
@@ -102,33 +107,39 @@ class RequestScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.check_circle,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.green,
+                      TextButton(
+                        onPressed: () {
+
+                        },
+                        child:Icon(
+                          Icons.check_circle,
+                          color: Colors.white,
+                        ),
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(CircleBorder() ),
+                          backgroundColor: MaterialStateProperty.all(Colors.green),
                         ),
                       ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.close,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.red,
+                      TextButton(
+                        onPressed: () {
+
+                        },
+                        child:Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ),
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(CircleBorder() ),
+                          backgroundColor: MaterialStateProperty.all(Colors.red),
                         ),
                       ),
                     ],
                   ),
                 ),
+                SizedBox(height: 15,),
                 Container(
-                  padding: EdgeInsets.all(8.0),
-                  width: double.infinity,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,7 +150,7 @@ class RequestScreen extends StatelessWidget {
                                 color: Colors.grey.shade800, fontSize: 25),
                           ),
                           Text(
-                            'BarCode',
+                            'BarCode: 12345678',
                             style: TextStyle(
                                 color: Colors.grey.shade800, fontSize: 15),
                           ),
@@ -150,33 +161,39 @@ class RequestScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.check_circle,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.green,
+                      TextButton(
+                        onPressed: () {
+
+                        },
+                        child:Icon(
+                          Icons.check_circle,
+                          color: Colors.white,
+                        ),
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(CircleBorder() ),
+                          backgroundColor: MaterialStateProperty.all(Colors.green),
                         ),
                       ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.close,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.red,
+                      TextButton(
+                        onPressed: () {
+
+                        },
+                        child:Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ),
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(CircleBorder() ),
+                          backgroundColor: MaterialStateProperty.all(Colors.red),
                         ),
                       ),
                     ],
                   ),
                 ),
+                SizedBox(height: 15,),
                 Container(
-                  padding: EdgeInsets.all(8.0),
-                  width: double.infinity,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,7 +204,7 @@ class RequestScreen extends StatelessWidget {
                                 color: Colors.grey.shade800, fontSize: 25),
                           ),
                           Text(
-                            'BarCode',
+                            'BarCode: 12345678',
                             style: TextStyle(
                                 color: Colors.grey.shade800, fontSize: 15),
                           ),
@@ -198,461 +215,36 @@ class RequestScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.check_circle,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.green,
+                      TextButton(
+                        onPressed: () {
+
+                        },
+                        child:Icon(
+                          Icons.check_circle,
+                          color: Colors.white,
+                        ),
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(CircleBorder() ),
+                          backgroundColor: MaterialStateProperty.all(Colors.green),
                         ),
                       ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.close,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.red,
+                      TextButton(
+                        onPressed: () {
+
+                        },
+                        child:Icon(
+                          Icons.close,
+                          color: Colors.white,
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Medicine Name',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 25),
-                          ),
-                          Text(
-                            'BarCode',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                          Text(
-                            'Request by: EmployeeName',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.check_circle,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.green,
-                        ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.close,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.red,
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(CircleBorder() ),
+                          backgroundColor: MaterialStateProperty.all(Colors.red),
                         ),
                       ),
                     ],
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Medicine Name',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 25),
-                          ),
-                          Text(
-                            'BarCode',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                          Text(
-                            'Request by: EmployeeName',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.check_circle,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.green,
-                        ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.close,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Medicine Name',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 25),
-                          ),
-                          Text(
-                            'BarCode',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                          Text(
-                            'Request by: EmployeeName',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.check_circle,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.green,
-                        ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.close,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Medicine Name',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 25),
-                          ),
-                          Text(
-                            'BarCode',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                          Text(
-                            'Request by: EmployeeName',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.check_circle,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.green,
-                        ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.close,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Medicine Name',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 25),
-                          ),
-                          Text(
-                            'BarCode',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                          Text(
-                            'Request by: EmployeeName',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.check_circle,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.green,
-                        ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.close,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Medicine Name',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 25),
-                          ),
-                          Text(
-                            'BarCode',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                          Text(
-                            'Request by: EmployeeName',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.check_circle,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.green,
-                        ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.close,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Medicine Name',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 25),
-                          ),
-                          Text(
-                            'BarCode',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                          Text(
-                            'Request by: EmployeeName',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.check_circle,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.green,
-                        ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.close,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Medicine Name',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 25),
-                          ),
-                          Text(
-                            'BarCode',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                          Text(
-                            'Request by: EmployeeName',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.check_circle,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.green,
-                        ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.close,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(8.0),
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Medicine Name',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 25),
-                          ),
-                          Text(
-                            'BarCode',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                          Text(
-                            'Request by: EmployeeName',
-                            style: TextStyle(
-                                color: Colors.grey.shade800, fontSize: 15),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.check_circle,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.green,
-                        ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.close,
-                          ),
-                          onPressed: () {},
-                          iconSize: 75,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                SizedBox(height: 15,),
               ],
             ),
           ),

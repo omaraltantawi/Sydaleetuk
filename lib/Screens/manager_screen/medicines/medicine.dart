@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class Medicine {
-  Image image;
+  List<Image> image;
   String name;
   String barCode;
   String EXPDate;

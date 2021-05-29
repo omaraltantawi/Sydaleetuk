@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'medicine.dart';
@@ -21,14 +23,26 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
       MFGDate: DateTime(2022, 11).toString(),
       description:
           'Aspirin is used to reduce fever and relieve mild to moderate pain from conditions such as muscle aches, toothaches, common cold, and headaches. It may also be used to reduce pain and swelling in conditions such as arthritis.',
-      image: Image.network(
-          'https://kaifanonline.com/ecdata/stores/GRYBA173/image/cache/data/products/1602084178_aspirin-protect-595x738.png'),
+      image: [
+        Image.network(
+            'https://kaifanonline.com/ecdata/stores/GRYBA173/image/cache/data/products/1602084178_aspirin-protect-595x738.png'),
+        Image.network(
+            'https://kaifanonline.com/ecdata/stores/GRYBA173/image/cache/data/products/1602084178_aspirin-protect-595x738.png'),
+        Image.network(
+            'https://kaifanonline.com/ecdata/stores/GRYBA173/image/cache/data/products/1602084178_aspirin-protect-595x738.png'),
+        Image.network(
+            'https://kaifanonline.com/ecdata/stores/GRYBA173/image/cache/data/products/1602084178_aspirin-protect-595x738.png'),
+      ],
       prescription: false);
 
   Color background = Color(0xFF099F9D);
-  TextStyle _textStyle = TextStyle(
+  TextStyle _textStyle1 = TextStyle(
     color: Colors.black,
-    fontSize: 15,
+    fontSize: 25,
+  );
+  TextStyle _textStyle = TextStyle(
+    color: Color(0xFF099F9D),
+    fontSize: 25,
   );
 
   @override
@@ -52,285 +66,343 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.only(top: 2.0, left: 2.0, right: 2.0, bottom: 20.0),
+        padding:
+            EdgeInsets.only(top: 2.0, left: 20.0, right: 20.0, bottom: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 150,
-              width: double.infinity,
-              child: Center(
-                child: medicine.image,
-              ),
+            Column(
+              children: [
+                Container(
+                  height: 350,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      medicine.image[0],
+                      medicine.image[1],
+                      medicine.image[2],
+                      medicine.image[3],
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    child: Text(
-                      'Name: ${medicine.name}',
-                      overflow: TextOverflow.fade,
-                      style: _textStyle,
-                    ),
-                    width: MediaQuery.of(context).size.width - 100,
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () {
-                      TextEditingController _controller =
-                          TextEditingController(text: medicine.name);
-                      showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                                title: Text('Change name'),
-                                actions: [
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      hintText: 'Enter new name',
-                                      labelText: 'New name',
-                                    ),
-                                    controller: _controller,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: ElevatedButton(
-                                          child: Text('Submit'),
-                                          onPressed: () {
-                                            setState(() {
-                                              medicine.name = _controller.text;
-                                              Navigator.pop(context);
-                                            });
-                                          },
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    background),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: ElevatedButton(
-                                          child: Text('Cancel'),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    background),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ));
-                    },
-                  ),
-                ],
-              ),
+            SizedBox(
+              height: 10,
             ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Barcode: ${medicine.barCode}',
-                    style: _textStyle,
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () {
-                      TextEditingController _controller =
-                          TextEditingController(text: medicine.barCode);
-                      showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                                title: Text('Change barCode'),
-                                actions: [
-                                  TextField(
-                                    decoration: InputDecoration(
-                                      hintText: 'Enter the new barcode',
-                                      labelText: 'New barcode',
-                                    ),
-                                    controller: _controller,
-                                    keyboardType: TextInputType.number,
-                                    maxLength: 20,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: ElevatedButton(
-                                          child: Text('Submit'),
-                                          onPressed: () {
-                                            setState(() {
-                                              medicine.barCode =
-                                                  _controller.text;
-                                              Navigator.pop(context);
-                                            });
-                                          },
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    background),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: ElevatedButton(
-                                          child: Text('Cancel'),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    background),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ));
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Price: ${medicine.price} JOD',
-                    style: _textStyle,
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () {
-                      TextEditingController _controller =
-                          TextEditingController(text: medicine.price);
-                      showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                                title: Text('Change price'),
-                                actions: [
-                                  TextField(
-                                    decoration: InputDecoration(
-                                        hintText: 'Enter the new price',
-                                        labelText: 'New price',
-                                        suffixText: 'JOD'),
-                                    controller: _controller,
-                                    keyboardType: TextInputType.number,
-                                    maxLength: 6,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: ElevatedButton(
-                                          child: Text('Submit'),
-                                          onPressed: () {
-                                            setState(() {
-                                              medicine.price = _controller.text;
-                                              Navigator.pop(context);
-                                            });
-                                          },
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    background),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: ElevatedButton(
-                                          child: Text('Cancel'),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    background),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ));
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
+            Row(
+              children: [
+                Expanded(
+                  child: Row(
                     children: [
                       Text(
-                        'Size: ${medicine.size}',
+                        'Name: ',
                         style: _textStyle,
                       ),
-                      SizedBox(width: 20,),
-                      Text(
-                        'Type: ${medicine.type}',
-                        style: _textStyle,
+                      Expanded(
+                        child: Text(
+                          '${medicine.name}',
+                          style: _textStyle1,
+                        ),
                       ),
                     ],
                   ),
-                  IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () {
-                      TextEditingController _controller =
-                      TextEditingController(text: medicine.price);
-                      showDialog(
+                ),
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    TextEditingController _controller =
+                        TextEditingController(text: medicine.name);
+                    showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                              title: Text('Change name'),
+                              actions: [
+                                TextField(
+                                  decoration: InputDecoration(
+                                    hintText: 'Enter new name',
+                                    labelText: 'New name',
+                                  ),
+                                  controller: _controller,
+                                  minLines: 1,
+                                  maxLines: 3,
+                                ),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: ElevatedButton(
+                                        child: Text('Submit'),
+                                        onPressed: () {
+                                          setState(() {
+                                            medicine.name = _controller.text;
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  background),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: ElevatedButton(
+                                        child: Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  background),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ));
+                  },
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Barcode: ',
+                  style: _textStyle,
+                ),
+                Text(
+                  medicine.barCode,
+                  style: _textStyle1,
+                ),
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    TextEditingController _controller =
+                        TextEditingController(text: medicine.barCode);
+                    showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                              title: Text('Change name'),
+                              actions: [
+                                TextField(
+                                  decoration: InputDecoration(
+                                    hintText: 'new bar code',
+                                    labelText: 'BarCode',
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  controller: _controller,
+                                  minLines: 1,
+                                  maxLines: 1,
+                                ),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: ElevatedButton(
+                                        child: Text('Submit'),
+                                        onPressed: () {
+                                          setState(() {
+                                            medicine.barCode = _controller.text;
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  background),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: ElevatedButton(
+                                        child: Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  background),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ));
+                  },
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Price: ',
+                  style: _textStyle,
+                ),
+                Text(
+                  medicine.price,
+                  style: _textStyle1,
+                ),
+                Text(
+                  ' JOD',
+                  style: _textStyle,
+                ),
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    TextEditingController _controller =
+                        TextEditingController(text: medicine.price);
+                    showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: Text('Change price'),
+                        actions: [
+                          TextField(
+                            decoration: InputDecoration(
+                                hintText: 'Enter the new price',
+                                labelText: 'New price',
+                                suffixText: 'JOD'),
+                            controller: _controller,
+                            keyboardType: TextInputType.number,
+                            maxLength: 6,
+                          ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  child: Text('Submit'),
+                                  onPressed: () {
+                                    setState(() {
+                                      medicine.price = _controller.text;
+                                      Navigator.pop(context);
+                                    });
+                                  },
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all(background),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  child: Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all(background),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'prescription: ',
+                  style: _textStyle,
+                ),
+                Text(
+                  medicine.prescription ? 'required' : 'not required',
+                  style: _textStyle1,
+                ),
+                Switch(
+                  value: medicine.prescription,
+                  onChanged: (value) {
+                    setState(() {
+                      medicine.prescription = value;
+                    });
+                  },
+                  activeTrackColor: Colors.lightGreenAccent,
+                  activeColor: Colors.green,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Text(
+                  'pillllsss: ',
+                  style: _textStyle,
+                ),
+                Text(
+                  medicine.prescription.toString(),
+                  style: _textStyle1,
+                )
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Description: ',
+                      style: _textStyle,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        TextEditingController _controller =
+                            TextEditingController(text: medicine.description);
+                        showDialog(
                           context: context,
                           builder: (_) => AlertDialog(
-                            title: Text('Change size and type'),
+                            title: Text('Change description'),
                             actions: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 120,
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                          hintText: 'Size',
-                                          labelText: 'Size',),
-                                      controller: _controller,
-                                      keyboardType: TextInputType.number,
-                                      maxLength: 6,
-                                    ),
+                              Container(
+                                height: 300,
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    hintText: 'Enter new description',
+                                    labelText: 'Edit description',
                                   ),
-                                ],
+                                  controller: _controller,
+                                  maxLines: 10,
+                                ),
                               ),
                               Row(
                                 children: [
@@ -340,14 +412,15 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                       child: Text('Submit'),
                                       onPressed: () {
                                         setState(() {
-                                          medicine.size = _controller.text;
+                                          medicine.description =
+                                              _controller.text;
                                           Navigator.pop(context);
                                         });
                                       },
                                       style: ButtonStyle(
                                         backgroundColor:
-                                        MaterialStateProperty.all(
-                                            background),
+                                            MaterialStateProperty.all(
+                                                background),
                                       ),
                                     ),
                                   ),
@@ -363,152 +436,47 @@ class _MedicineScreenManagerState extends State<MedicineScreenManager> {
                                       },
                                       style: ButtonStyle(
                                         backgroundColor:
-                                        MaterialStateProperty.all(
-                                            background),
+                                            MaterialStateProperty.all(
+                                                background),
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
                             ],
-                          ));
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'prescription : ${medicine.prescription ? 'need' : 'don\'t need'} ',
-                    style: _textStyle,
-                  ),
-                  Switch(
-                    value: medicine.prescription,
-                    onChanged: (value) {
-                      setState(() {
-                        medicine.prescription = value;
-                      });
-                    },
-                    activeTrackColor: Colors.lightGreenAccent,
-                    activeColor: Colors.green,
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Description:',
-                        style: _textStyle,
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          TextEditingController _controller =
-                              TextEditingController(text: medicine.description);
-                          showDialog(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                    title: Text('Change description'),
-                                    actions: [
-                                      Container(
-                                        height: 300,
-                                        child: TextField(
-                                          decoration: InputDecoration(
-                                            hintText: 'Enter new description',
-                                            labelText: 'Edit description',
-                                          ),
-                                          controller: _controller,
-                                          maxLines: 10,
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: ElevatedButton(
-                                              child: Text('Submit'),
-                                              onPressed: () {
-                                                setState(() {
-                                                  medicine.description =
-                                                      _controller.text;
-                                                  Navigator.pop(context);
-                                                });
-                                              },
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        background),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: ElevatedButton(
-                                              child: Text('Cancel'),
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        background),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ));
-                        },
-                      ),
-                    ],
-                  ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
                 Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Container(
-                    constraints: BoxConstraints(
-                      minHeight: 50.0,
-                      maxHeight: 150.0,
+                  constraints: BoxConstraints(
+                    minHeight: 50.0,
+                    maxHeight: 150.0,
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    border: Border.all(
+                      color: Colors.grey.shade700,
+                      width: 2,
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      border: Border.all(
-                        color: Colors.grey.shade700,
-                        width: 2,
-                      ),
-                    ),
-                    child: SingleChildScrollView(
-                      child: Text(
-                        medicine.description,
-                        style: TextStyle(fontSize: 17, color: Colors.grey[600]),
-                      ),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Text(
+                      medicine.description,
+                      style: TextStyle(fontSize: 17, color: Colors.grey[600]),
                     ),
                   ),
                 ),
               ],
             ),
+            SizedBox(
+              height: 10,
+            ),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15.0),
               child: ElevatedButton(
                 onPressed: () {},
                 child: Text('Delete'),
