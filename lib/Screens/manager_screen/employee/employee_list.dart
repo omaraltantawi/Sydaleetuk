@@ -35,7 +35,7 @@ class EmployeeList extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          Employee(
+          EmployeeTile(
             number: '1',
             fName: 'Mohammad',
             lName: 'AlHrout',
@@ -43,7 +43,7 @@ class EmployeeList extends StatelessWidget {
             image: Image.network(
                 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
           ),
-          Employee(
+          EmployeeTile(
             number: '1',
             fName: 'Mohammad',
             lName: 'AlHrout',
@@ -51,7 +51,7 @@ class EmployeeList extends StatelessWidget {
             image: Image.network(
                 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
           ),
-          Employee(
+          EmployeeTile(
             number: '1',
             fName: 'Mohammad',
             lName: 'AlHrout',
@@ -59,7 +59,7 @@ class EmployeeList extends StatelessWidget {
             image: Image.network(
                 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
           ),
-          Employee(
+          EmployeeTile(
             number: '1',
             fName: 'Mohammad',
             lName: 'AlHrout',
@@ -73,14 +73,14 @@ class EmployeeList extends StatelessWidget {
   }
 }
 
-class Employee extends StatelessWidget {
+class EmployeeTile extends StatelessWidget {
   final String number;
   final String fName;
   final String lName;
   final String phoneNumber;
   final Image image;
 
-  Employee({this.number, this.fName, this.lName, this.phoneNumber, this.image});
+  EmployeeTile({this.number, this.fName, this.lName, this.phoneNumber, this.image});
 
   @override
   Widget build(BuildContext context) {

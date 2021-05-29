@@ -13,7 +13,6 @@ import 'package:graduationproject/data_models/Pharmacist.dart';
 import 'package:graduationproject/data_models/Pharmacy.dart';
 import 'package:graduationproject/data_models/Product.dart';
 import 'package:graduationproject/data_models/User.dart';
-import 'package:graduationproject/ServiceClasses/Location.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -1304,7 +1303,6 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     } catch (e) {
       return false;
     }
-    return true;
   }
 
   Future<bool> deleteAllProductsFromCart() async {
@@ -1325,7 +1323,6 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     } catch (e) {
       return false;
     }
-    return true;
   }
 
   Future<bool> updateProductQuantityFromCart(
@@ -1407,7 +1404,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
       print('Start checkPharmacyUserExistence ');
       var querySnapshot = await _fireStore.collection('MEDICINE').get();
       var medicine = querySnapshot.docs.where((element) =>
-          element['name'].toString().toLowerCase() ==
+      element['name'].toString().toLowerCase() ==
           medicineName.toLowerCase());
 
       if (medicine != null && medicine.length > 0) {
@@ -1419,7 +1416,28 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
       throw e;
     }
   }
+  ///////////////////////////////////////////////////delete comment down ////////////////////////////////////////////////
 
+  // Future<List> getPharmacyMedicineExistence() async {
+  //   List<Medicine> medicines = [];
+  //   try {
+  //     print('Start getPharmacyMedicinesExistence ');
+  //     var querySnapshot = await _fireStore.collection('MEDICINE').get();
+  //     print(querySnapshot.docs.first);
+  //     var medicineData = querySnapshot.docs.toList();
+  //
+  //     print(medicineData);
+  //     if (medicineData != null && medicineData.length > 0) {
+  //       return medicineData.toList();
+  //     }
+  //     return [];
+  //   } catch (e) {
+  //     print('Error from checkPharmacyUserExistence Method $e');
+  //     throw e;
+  //   }
+
+
+///////////////////////////////////////////////////delete comment up ////////////////////////////////////////////////
   Future<bool> checkMedicineExistenceByBarcode(
       {@required String barcode}) async {
     try {
