@@ -67,11 +67,11 @@ class _BodyState extends State<Body> {
   Color background = Color(0xFF099F9D);
   TextStyle _textStyle1 = TextStyle(
     color: Colors.black,
-    fontSize: getProportionateScreenWidth(20),
+    fontSize: getProportionateScreenWidth(18),
   );
   TextStyle _textStyle = TextStyle(
     color: Color(0xFF099F9D),
-    fontSize: getProportionateScreenWidth(20),
+    fontSize: getProportionateScreenWidth(18),
   );
 
   orderDosagePills() {
@@ -108,7 +108,7 @@ class _BodyState extends State<Body> {
       ),
       body: SingleChildScrollView(
         padding:
-            EdgeInsets.only(top: getProportionateScreenHeight(2.0), left: getProportionateScreenWidth(20.0), right: getProportionateScreenWidth(20.0), bottom: getProportionateScreenHeight(20.0)),
+            EdgeInsets.only(top: getProportionateScreenHeight(2.0), left: getProportionateScreenWidth(15.0), right: getProportionateScreenWidth(15.0), bottom: getProportionateScreenHeight(15.0)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

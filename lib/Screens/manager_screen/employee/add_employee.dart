@@ -184,7 +184,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                           press: (){
                             if ( _formKey.currentState.validate() ){
                               _formKey.currentState.save();
-                              // generatePassword();
+                              generatePassword(true,true,true,true,10);
                               var phar = Provider.of<FireBaseAuth>(context,listen: false).pharmacist;
                               Provider.of<FireBaseAuth>(context,listen: false).addEmployeeUser(employee.email,'',employee.fName, employee.lName, employee.phone,'',phar.pharmacy.pharmacyId);
                             }
