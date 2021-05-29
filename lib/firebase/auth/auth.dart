@@ -1465,7 +1465,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
       {@required String barcode}) async {
     try {
       print('Start checkPharmacyUserExistence ');
-      var querySnapshot = await _fireStore.doc(_pharmacist.pharmacy.pharmacyId).collection('MEDICINE').get();
+      var querySnapshot = await _fireStore.collection('PHARMACY').doc(_pharmacist.pharmacy.pharmacyId).collection('MEDICINE').get();
       var medicine = querySnapshot.docs.where((element) =>
           element['barCode'].toString().toLowerCase() == barcode.toLowerCase());
 
@@ -1656,6 +1656,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
           element['barCode'].toString() == barCode);
 
       if (medicine != null && medicine.length > 0) {
+        print('Medicine Exists ');
         String medicineName = medicine.first.data()['name'];
         String barCode = medicine.first.data()['barCode'];
         var _price = medicine.first.data()['price'];
@@ -1666,16 +1667,17 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
           price = _price;
         bool prescription = medicine.first.data()['PrescriptionRequired'];
 
-        Map<int, int> _dosagePills = {};
+        // Map<String, int> _dosagePills = {};
         Map<String, dynamic> dosagePills = medicine.first.data()['DosagePills'];
-        dosagePills.forEach((key, value) {
-          var d = int.parse(key);
-          _dosagePills.addAll({d: value});
-        });
+        // dosagePills.forEach((key, value) {
+        //   _dosagePills.addAll({key: value});
+        // });
         String description = medicine.first.data()['description'];
         List<String> image = medicine.first.data()['imageURLs'];
         String dosageUnit= medicine.first.data()['dosageUnit'];
         String pillsUnit= medicine.first.data()['pillsUnit'];
+        if ( image == null )
+          image = [] ;
         var ret = await _fireStore
             .collection('PHARMACY')
             .doc(_pharmacist.pharmacy.pharmacyId)
@@ -1686,7 +1688,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
           'barCode': barCode,
           'price': price,
           'PrescriptionRequired': prescription,
-          'DosagePills': _dosagePills,
+          'DosagePills': dosagePills,
           'description': description,
           'dosageUnit': dosageUnit,
           'pillsUnit': pillsUnit,
@@ -1694,6 +1696,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
         });
       }
     } catch (e) {
+      print(e);
       return false;
     }
     return true;

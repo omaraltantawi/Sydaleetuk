@@ -18,14 +18,26 @@ import 'package:graduationproject/size_config.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
 
-class AddMedicine extends StatefulWidget {
+class AddMedicine extends StatelessWidget {
   static const String routeName = 'AddMedicine';
+  const AddMedicine({Key key}) : super(key: key);
 
   @override
-  _AddMedicineState createState() => _AddMedicineState();
+  Widget build(BuildContext context) {
+    String barCode = ModalRoute.of(context).settings.arguments as String;
+    return Body(barCode: barCode);
+  }
 }
 
-class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
+
+class Body extends StatefulWidget {
+  final String barCode;
+  Body({this.barCode});
+  @override
+  _Body createState() => _Body();
+}
+
+class _Body extends State<Body> with CanShowMessages {
   List<File> image = [];
   String medicineName;
   String barCode;
@@ -101,6 +113,14 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
 
     getPharmacist();
     orderDosagePills();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      addBarcode();
+    });
+  }
+
+  addBarcode(){
+    barcodeController.text = widget.barCode == null || widget.barCode == '' ? '' : widget.barCode ;
   }
 
   Future<void> getPharmacist() async {
@@ -129,6 +149,7 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
   final _formKey = GlobalKey<FormState>();
   bool isDosageValid = true ;
   bool isLoading = false ;
+  var barcodeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     loggedInUser = Provider.of<FireBaseAuth>(context, listen: false).loggedUser;
@@ -254,6 +275,8 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                   height: 20,
                 ),
                 TextFormField(
+                  controller: barcodeController,
+                  onSaved:(value)=> barCode = value ,
                   onChanged: (value) {
                     setState(() {
                       barCode = value;
@@ -582,6 +605,7 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
                               });
                             }
                             if ( _formKey.currentState.validate() ) {
+                              _formKey.currentState.save();
                               bool cond = await Provider.of<FireBaseAuth>(
                                   context,
                                   listen: false)

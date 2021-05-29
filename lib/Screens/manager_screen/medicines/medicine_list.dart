@@ -113,30 +113,55 @@ class _MedicineListState extends State<MedicineList> with CanShowMessages{
                           TextButton(
                             onPressed: () async {
                               String barcode = await scanBarcodeNormal();
-                              bool cond = await Provider.of<FireBaseAuth>(context,listen: false).checkMedicineExistenceByBarcode(barcode: barcode);
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text('Barcode : $barcode'),
-                                duration: Duration(seconds: 15),
-                              ));
-                              if ( !cond ){
-                                QuestionMessage answer = await showQuestionDialog(
-                                context: context,
-                                msgTitle: 'Add Medicine',
-                                msgText: [
-                                  'Medicine is not exist in the official medicines.',
-                                  'Do you want to add it manually?'
-                                ],
-                                buttonText: '');
-                                if (answer == QuestionMessage.YES) {
-                                  Navigator.pushNamed(context, AddMedicine.routeName);
-                                }
-                              }else {
-                                bool condPhar = await Provider.of<FireBaseAuth>(context,listen: false).checkPharmacyMedicineExistenceByBarcode(barcode: barcode);
-                                if ( !condPhar ){
-                                  await Provider.of<FireBaseAuth>(context,listen: false).addMedicineToPharmacyFromOfficialByBarcode(barCode: barcode);
-                                  await showMessageDialog(context: context, msgTitle: 'Add Medicine', msgText: ['Medicine added successfully to your pharmacy.'], buttonText: 'OK');
-                                }else {
-                                  await showMessageDialog(context: context, msgTitle: 'Warning', msgText: ['Medicine already exists in your pharmacy.'], buttonText: 'OK');
+                              if ( barcode != null && barcode != '' ) {
+                                bool cond = await Provider.of<FireBaseAuth>(
+                                    context, listen: false)
+                                    .checkMedicineExistenceByBarcode(
+                                    barcode: barcode);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Barcode : $barcode'),
+                                      duration: Duration(seconds: 15),
+                                    ));
+                                if (!cond) {
+                                  QuestionMessage answer = await showQuestionDialog(
+                                      context: context,
+                                      msgTitle: 'Add Medicine',
+                                      msgText: [
+                                        'Medicine is not exist in the official medicines.',
+                                        'Do you want to add it manually?'
+                                      ],
+                                      buttonText: '');
+                                  if (answer == QuestionMessage.YES) {
+                                    Navigator.pushNamed(
+                                        context, AddMedicine.routeName,arguments: barcode);
+                                  }
+                                } else {
+                                  bool condPhar = await Provider.of<
+                                      FireBaseAuth>(
+                                      context, listen: false)
+                                      .checkPharmacyMedicineExistenceByBarcode(
+                                      barcode: barcode);
+                                  print('-*************************** $condPhar');
+                                  if (!condPhar) {
+                                    await Provider.of<FireBaseAuth>(
+                                        context, listen: false)
+                                        .addMedicineToPharmacyFromOfficialByBarcode(
+                                        barCode: barcode);
+                                    await showMessageDialog(context: context,
+                                        msgTitle: 'Add Medicine',
+                                        msgText: [
+                                          'Medicine added successfully to your pharmacy.'
+                                        ],
+                                        buttonText: 'OK');
+                                  } else {
+                                    await showMessageDialog(context: context,
+                                        msgTitle: 'Warning',
+                                        msgText: [
+                                          'Medicine already exists in your pharmacy.'
+                                        ],
+                                        buttonText: 'OK');
+                                  }
                                 }
                               }
                             },
