@@ -63,18 +63,23 @@ class _HomeState extends State<Home> {
     final double deviceHeight =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
 
-    final Widget addButton = FloatingActionButton(
+    final Widget addButton = FloatingActionButton.extended(
       elevation: 2.0,
+      shape: StadiumBorder(
+          side: BorderSide(color: Color(0xFF65C1BF), width: 1)),
       onPressed: () async {
         //refresh the pills from database
         await Navigator.pushNamed(context, "/add_new_medicine")
             .then((_) => setData());
       },
-      child: Icon(
-        Icons.add,
-        color: Colors.white,
-        size: 24.0,
-      ),
+
+      label: const Text('Add New Reminder',
+          style: TextStyle(color: Colors.white)),
+      icon:
+      const Icon(Icons.access_alarm, color: Colors.white),
+      tooltip:
+      "Click here to add new reminder !",
+
       backgroundColor: Theme.of(context).primaryColor,
     );
 
