@@ -50,11 +50,12 @@ class OrderButton extends StatelessWidget {
 }
 
 class OrderIconButton extends StatelessWidget {
-  const OrderIconButton({Key key, this.press,this.iconData,this.text})
+  const OrderIconButton({Key key, this.press,this.iconData,this.text,this.color})
       : super(key: key);
   final Function press;
   final IconData iconData;
   final String text;
+  final Color color;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -68,7 +69,7 @@ class OrderIconButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Icon(iconData, size: 30.0,color: kPrimaryColor ,),
+            Icon(iconData, size: 30.0,color: color == null ? kPrimaryColor : color ,),
             if ( text != null && text != '' )
               Text(text,style: TextStyle(
                 color: kPrimaryColor
