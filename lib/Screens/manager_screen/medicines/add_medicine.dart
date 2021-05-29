@@ -245,6 +245,7 @@ class _AddMedicineState extends State<AddMedicine> with CanShowMessages {
             //
             //     })
             // ),
+            // Container(),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 30),
               child: Row(
