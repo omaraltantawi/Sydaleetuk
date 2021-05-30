@@ -267,8 +267,10 @@ class OrderWidget extends StatelessWidget with CanShowMessages {
                   children: [
                     order.products.length > 0 && order.products[0].imageUrls[0] != null && order.products[0].imageUrls[0] != ''
                         ? Image.network(
+
                           order.products[0].imageUrls[0],
                           height: getProportionateScreenHeight(140),
+                      width: SizeConfig.screenWidth*0.25,
                           )
                         : Image.asset(
                             "assets/images/syrup.png",
