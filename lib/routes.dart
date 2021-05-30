@@ -20,6 +20,7 @@ import 'Screens/SelectProduct.dart';
 import 'Screens/manager_screen/employee/add_employee.dart';
 import 'Screens/manager_screen/employee/employee_list.dart';
 import 'Screens/manager_screen/employee/employee_screen.dart';
+import 'Screens/manager_screen/managerSettings.dart';
 import 'Screens/manager_screen/manager_screen.dart';
 import 'Screens/manager_screen/medicines/add_medicine.dart';
 import 'Screens/manager_screen/medicines/medicine_list.dart';
@@ -83,4 +84,5 @@ final Map<String, WidgetBuilder> routes = {
   EmployeeMedicineScreen.routeName:(context) => EmployeeMedicineScreen(),
   EmployeeAddMedicine.routeName:(context) => EmployeeAddMedicine(),
   PharmacyOrderInfoScreen.routeName:(context) => PharmacyOrderInfoScreen(),
+  ManagerSettingsScreen.routeName:(context) => ManagerSettingsScreen(),
 };

@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:graduationproject/Screens/manager_screen/employee/add_employee.dart';
+import 'package:graduationproject/Screens/manager_screen/managerSettings.dart';
 import 'package:graduationproject/Screens/manager_screen/pharmacy/pharmacy_screen.dart';
 import 'package:graduationproject/Screens/manager_screen/order/order_list.dart';
 import 'package:graduationproject/Screens/manager_screen/requests_medicines/request_screen.dart';
@@ -50,10 +52,13 @@ class _ManagerScreenState extends State<ManagerScreen> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.circle,
-                        size: 100.0,
-                        color: Colors.white,
+                      GestureDetector(
+                        child: Icon(
+                          Icons.account_circle,
+                          color: Colors.white,
+                          size: getProportionateScreenWidth(100),
+                        ),
+                        onTap: null,
                       ),
                       SizedBox(
                         width: 10,
@@ -61,7 +66,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
                       Column(
                         children: [
                           Text(
-                            'phar.fName',
+                            phar.fName,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -69,7 +74,7 @@ class _ManagerScreenState extends State<ManagerScreen> {
                           ),
 
                           Text(
-                            'phar.lName',
+                            phar.lName,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -83,23 +88,18 @@ class _ManagerScreenState extends State<ManagerScreen> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.message),
-              title: Text('Pharmacy'),
-              onTap: (){
-                Navigator.pushNamed(context, PharmacyScreen.routeName);
-              },
-            ),
-            ListTile(
               leading: Icon(Icons.account_circle),
               title: Text('Profile'),
               onTap: (){
                 Navigator.pushNamed(context, ProfileScreenPharmacist.routeName);
-                },
+              },
             ),
             ListTile(
               leading: Icon(Icons.settings),
               title: Text('Settings'),
-              onTap: (){},
+              onTap: (){
+                Navigator.pushNamed(context, ManagerSettingsScreen.routeName);
+              },
             ),
             ListTile(
               leading: Icon(Icons.logout),

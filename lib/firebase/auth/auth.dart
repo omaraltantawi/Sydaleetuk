@@ -327,6 +327,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
             if (userData != null) {
               print('after3');
               _pharmacist.experience = userData.first.data()['experience'];
+              _pharmacist.pharmacistId = userData.first.id;
               _pharmacist.pharmacy = Pharmacy();
               _pharmacist.pharmacy.pharmacyId =
                   userData.first.data()['pharmacyId'];
@@ -368,6 +369,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
                 .where((element) => element['id'] == _pharmacist.userId);
             if (userData != null) {
               _pharmacist.experience = userData.first.data()['experience'];
+              _pharmacist.pharmacistId = userData.first.id;
               _pharmacist.pharmacy = Pharmacy();
               _pharmacist.pharmacy.pharmacyId =
                   userData.first.data()['pharmacyId'];
@@ -498,6 +500,35 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
       }
       await _fireStore.collection('PATIENT').doc(_patient.patientId).delete();
       await _fireStore.collection('USER').doc(_patient.userId).delete();
+      await deleteUser();
+    } catch (e) {
+      print('error Method deleteUserAccount \n$e');
+      throw e;
+    }
+  }
+
+  Future<void> deletePharmacyAccount({@required String oldPass}) async {
+    try {
+      print('Start deleteUserAccount.');
+      print('Old Pass is $oldPass');
+      AuthCredential authCredential = EmailAuthProvider.credential(
+          email: loggedUser.email, password: oldPass);
+      print('AuthCredential in reset func. is $authCredential');
+
+      await auth.currentUser.reauthenticateWithCredential(authCredential);
+      if ( loggedUserType == UserType.PharmacyUser ) {
+        await _fireStore.collection('PHARMACY').doc(
+            _pharmacist.pharmacy.pharmacyId).delete();
+        await _fireStore.collection('PHARMACIST')
+            .doc(_pharmacist.pharmacistId)
+            .delete();
+        await _fireStore.collection('USER').doc(_pharmacist.userId).delete();
+      }else {
+        await _fireStore.collection('PHARMACIST')
+            .doc(_pharmacist.pharmacistId)
+            .delete();
+        await _fireStore.collection('USER').doc(_pharmacist.userId).delete();
+      }
       await deleteUser();
     } catch (e) {
       print('error Method deleteUserAccount \n$e');
@@ -1062,6 +1093,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
         'pharmacyPhoneNo': orders.pharmacy.phoneNo,
         'distance': orders.pharmacy.distance,
         'userId': _patient.userId,
+        'UserPhoneNo': _patient.phoneNo,
         'userName': '${_patient.fName} ${_patient.lName}',
         'userHealthState': _patient.healthState,
         'userAge': _patient.age,

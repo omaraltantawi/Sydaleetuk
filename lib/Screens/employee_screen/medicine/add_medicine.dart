@@ -636,12 +636,16 @@ class _Body extends State<Body> with CanShowMessages {
                                       await Provider.of<FireBaseAuth>(
                                           context, listen: false)
                                           .addMedicineToPharmacyFromOfficial(
-                                          medicineName: medicineName);
+                                          medicineName: medicineName,isApproved: false,);
                                       setState(() {
                                         isLoading = false ;
                                       });
                                       await showMessageDialog(context: context, msgTitle: 'Add Medicine', msgText: ['Medicine added successfully to your pharmacy.'], buttonText: 'OK');
-                                      Navigator.of(context).pop();
+                                      Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        EmployeeMedicineList.routeName,
+                                        ModalRoute.withName(MainEmployeeScreen.routeName),
+                                      );
                                     } else {
                                       double _price = 0;
                                       _price = double.tryParse(price);
@@ -657,6 +661,7 @@ class _Body extends State<Body> with CanShowMessages {
                                         image: imagesFiles,
                                         price: _price,
                                         dosagePills: _map,
+                                        isApproved: false,
                                         dosageUnit: dosageUnit,
                                         pillsUnit: pillsUnit,
                                       );
@@ -664,7 +669,11 @@ class _Body extends State<Body> with CanShowMessages {
                                         isLoading = false ;
                                       });
                                       await showMessageDialog(context: context, msgTitle: 'Add Medicine', msgText: ['Medicine added successfully to your pharmacy.'], buttonText: 'OK');
-                                      Navigator.of(context).pop();
+                                      Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        EmployeeMedicineList.routeName,
+                                        ModalRoute.withName(MainEmployeeScreen.routeName),
+                                      );
                                     }
                                   } else {
                                     double _price = 0;
@@ -673,6 +682,7 @@ class _Body extends State<Body> with CanShowMessages {
                                         listen: false)
                                         .addMedicineToPharmacyAndOfficial(
                                         medicineName: medicineName,
+                                        isApproved: false,
                                         prescription: prescription,
                                         barCode: barCode,
                                         description: description,
@@ -685,7 +695,7 @@ class _Body extends State<Body> with CanShowMessages {
                                     setState(() {
                                       isLoading = false ;
                                     });
-                                    await showMessageDialog(context: context, msgTitle: 'Add Medicine', msgText: ['Medicine added successfully to your pharmacy.'], buttonText: 'OK');
+                                    await showMessageDialog(context: context, msgTitle: 'Add Medicine', msgText: ['Medicine request sent successfully to your pharmacy.'], buttonText: 'OK');
                                     Navigator.pushNamedAndRemoveUntil(
                                       context,
                                       EmployeeMedicineList.routeName,

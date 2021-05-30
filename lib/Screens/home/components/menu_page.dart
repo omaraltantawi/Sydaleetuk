@@ -28,9 +28,8 @@ class Menu_Page extends StatelessWidget {
           children: <Widget>[
             SizedBox(height: 10.0),
             Container(
-
-                width: MediaQuery.of(context).size.width - 390,
-                height: MediaQuery.of(context).size.height - 260,
+                width: MediaQuery.of(context).size.width ,
+                height: MediaQuery.of(context).size.height ,
                 child: GridView.count(
                   scrollDirection: Axis.vertical,
                   crossAxisCount: 2,

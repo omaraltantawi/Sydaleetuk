@@ -309,6 +309,9 @@ class _MedicineListState extends State<MedicineList> with CanShowMessages {
                 final medicines = snapshot.data.docs;
                 int i = 0;
                 for (var medicine in medicines) {
+                  bool isApp = medicine.data()['isApproved'];
+                  if ( isApp != null && !isApp )
+                    continue;
                   Product product = Product();
                   product.id = medicine.id;
                   product.name = medicine.data()['name'];
@@ -322,13 +325,12 @@ class _MedicineListState extends State<MedicineList> with CanShowMessages {
                   product.description = medicine.data()['description'];
                   product.pillsUnit = medicine.data()['pillsUnit'];
                   var productImageUrl = medicine.data()['imageURLs'];
-                  print(productImageUrl.length );
-                  if ( productImageUrl == null || productImageUrl.length == 0 ){
-                    product.imageUrls = [];
-                  }else {
+                  if ( productImageUrl != null && productImageUrl.length > 0 ){
                     for( var image in productImageUrl ){
                       product.imageUrls.add(image.toString());
                     }
+                  }else {
+                    product.imageUrls = [];
                   }
                   product.barcode = medicine.data()['barCode'];
                   var price = medicine.data()['price'];

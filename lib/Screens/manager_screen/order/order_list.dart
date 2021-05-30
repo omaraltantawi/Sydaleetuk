@@ -296,12 +296,13 @@ class PharmacyOrderWidget extends StatelessWidget with CanShowMessages {
                       order.products.length > 0 && order.products[0].imageUrls[0] != null && order.products[0].imageUrls[0] != ''
                           ? Image.network(
                         order.products[0].imageUrls[0],
-                        height: getProportionateScreenHeight(140),
+                        height: getProportionateScreenHeight(100),
                         width: SizeConfig.screenWidth*0.25,
                       )
                           : Image.asset(
                         "assets/images/syrup.png",
-                        height: getProportionateScreenHeight(140),
+                        height: getProportionateScreenHeight(100),
+                        width: SizeConfig.screenWidth*0.22,
                       ),
                       SizedBox(
                         width: getProportionateScreenWidth(10),
@@ -361,6 +362,7 @@ class PharmacyOrderWidget extends StatelessWidget with CanShowMessages {
                           //       fontSize: 18.0,
                           //       fontWeight: FontWeight.w200),
                           // ),
+                          if ( order.totalPrice != null )
                           Text(
                             "${order.totalPrice.toStringAsFixed(2)} JOD",
                             style: TextStyle(

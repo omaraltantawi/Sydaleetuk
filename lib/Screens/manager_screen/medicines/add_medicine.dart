@@ -644,7 +644,11 @@ class _Body extends State<Body> with CanShowMessages {
                                       isLoading = false ;
                                     });
                                     await showMessageDialog(context: context, msgTitle: 'Add Medicine', msgText: ['Medicine added successfully to your pharmacy.'], buttonText: 'OK');
-                                    Navigator.of(context).pop();
+                                    Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      MedicineList.routeName,
+                                      ModalRoute.withName(ManagerScreen.routeName),
+                                    );
                                   } else {
                                     double _price = 0;
                                     _price = double.tryParse(price);
@@ -667,7 +671,11 @@ class _Body extends State<Body> with CanShowMessages {
                                       isLoading = false ;
                                     });
                                     await showMessageDialog(context: context, msgTitle: 'Add Medicine', msgText: ['Medicine added successfully to your pharmacy.'], buttonText: 'OK');
-                                    Navigator.of(context).pop();
+                                    Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      MedicineList.routeName,
+                                      ModalRoute.withName(ManagerScreen.routeName),
+                                    );
                                   }
                                 } else {
                                   double _price = 0;

@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:graduationproject/Screens/manager_screen/managerSettings.dart';
 import 'package:graduationproject/Screens/manager_screen/pharmacy/pharmacy_screen.dart';
 import 'package:graduationproject/Screens/manager_screen/profile/profile_screen_pharmacist.dart';
 import 'package:graduationproject/Screens/manager_screen/order/order_list.dart';
 import 'package:graduationproject/Screens/splash/splash_screen.dart';
 import 'package:graduationproject/data_models/Pharmacist.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
+import 'package:graduationproject/size_config.dart';
 import 'package:provider/provider.dart';
 import 'medicine/medicine_list.dart';
 
@@ -49,10 +51,13 @@ class _MainEmployeeScreenState extends State<MainEmployeeScreen> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.circle,
-                        size: 100.0,
-                        color: Colors.white,
+                      GestureDetector(
+                        child: Icon(
+                          Icons.account_circle,
+                          color: Colors.white,
+                          size: getProportionateScreenWidth(100),
+                        ),
+                        onTap: null,
                       ),
                       SizedBox(
                         width: 10,
@@ -60,14 +65,14 @@ class _MainEmployeeScreenState extends State<MainEmployeeScreen> {
                       Column(
                         children: [
                           Text(
-                            'phar.fName',
+                            phar.fName,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
                             ),
                           ),
                           Text(
-                            'phar.lName',
+                            phar.lName,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -81,13 +86,6 @@ class _MainEmployeeScreenState extends State<MainEmployeeScreen> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.message),
-              title: Text('Pharmacy'),
-              onTap: (){
-                Navigator.pushNamed(context, PharmacyScreen.routeName);
-              },
-            ),
-            ListTile(
               leading: Icon(Icons.account_circle),
               title: Text('Profile'),
               onTap: (){
@@ -97,7 +95,9 @@ class _MainEmployeeScreenState extends State<MainEmployeeScreen> {
             ListTile(
               leading: Icon(Icons.settings),
               title: Text('Settings'),
-              onTap: (){},
+              onTap: (){
+                Navigator.pushNamed(context, ManagerSettingsScreen.routeName);
+              },
             ),
             ListTile(
               leading: Icon(Icons.logout),
