@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:graduationproject/data_models/Pharmacist.dart';
 import 'package:graduationproject/size_config.dart';
 
 import 'employee.dart';
@@ -16,20 +16,21 @@ class EmployeeScreen extends StatelessWidget {
 
   final TextStyle _textStyle1 = TextStyle(
     color: Colors.black,
-    fontSize: 25,
+    fontSize: getProportionateScreenWidth(18),
   );
   final TextStyle _textStyle = TextStyle(
     color: Color(0xFF099F9D),
-    fontSize: 25,
+    fontSize: getProportionateScreenWidth(18),
   );
 
   @override
   Widget build(BuildContext context) {
-
+    Pharmacist pharmacist =
+        ModalRoute.of(context).settings.arguments as Pharmacist;
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '${_employee.fullName}',
+          '${pharmacist.fName} ${pharmacist.lName}',
           style: TextStyle(
             fontSize: 25,
             color: Colors.white,
@@ -44,58 +45,96 @@ class EmployeeScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(bottom: 20),
-        child: SingleChildScrollView(
-          padding:EdgeInsets.only(top: 2.0, left: 10.0, right: 10.0, bottom: 30.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _employee.profilePic,
-              SizedBox(
-                height: 10,
+      body: SingleChildScrollView(
+        padding:
+            EdgeInsets.all(getProportionateScreenWidth(10)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: getProportionateScreenHeight(10),
+            ),
+            Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: pharmacist.imageUrl != '' && pharmacist.imageUrl != null
+                    ? Image.network(
+                        pharmacist.imageUrl,
+                        width: SizeConfig.screenWidth * 0.75,
+                      )
+                    : Image.asset(
+                        'assets/images/dimage.jpg',
+                        width: SizeConfig.screenWidth * 0.75,
+                      ),
               ),
-              Row(
-                children: [
-                  Text('Name: ',style: _textStyle,),
-                  Expanded(child: Text('${_employee.fullName}',style: _textStyle1,)),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  Text('Phone Number: ',style: _textStyle,),
-                  Expanded(child: Text(_employee.phone,style: _textStyle1,)),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  Text('Email: ',style: _textStyle,),
-                  Expanded(child: Text('${_employee.email}',style: _textStyle1,)),
-                ],
-              ),
-              SizedBox(
-                height: getProportionateScreenHeight(20),
-              ),
-              Container(
-                height: getProportionateScreenHeight(50),
-
-                width: double.infinity,
-                child: ElevatedButton(
-                  child: Text('Delete this User',style: TextStyle(fontSize: getProportionateScreenHeight(20)),),
-                  onPressed: () {},
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.red),
-                  ),
+            ),
+            SizedBox(
+              height: getProportionateScreenHeight(20),
+            ),
+            Row(
+              children: [
+                Text(
+                  'Name: ',
+                  style: _textStyle,
+                ),
+                Expanded(
+                    child: Text(
+                  '${pharmacist.fName} ${pharmacist.lName}',
+                  style: _textStyle1,
+                )),
+              ],
+            ),
+            SizedBox(
+              height: getProportionateScreenHeight(10),
+            ),
+            Row(
+              children: [
+                Text(
+                  'Phone Number: ',
+                  style: _textStyle,
+                ),
+                Expanded(
+                    child: Text(
+                  '+962 ${pharmacist.phoneNo}',
+                  style: _textStyle1,
+                )),
+              ],
+            ),
+            SizedBox(
+              height: getProportionateScreenHeight(10),
+            ),
+            Row(
+              children: [
+                Text(
+                  'Email: ',
+                  style: _textStyle,
+                ),
+                Expanded(
+                    child: Text(
+                  '${pharmacist.email}',
+                  style: _textStyle1,
+                )),
+              ],
+            ),
+            SizedBox(
+              height: getProportionateScreenHeight(20),
+            ),
+            Container(
+              height: getProportionateScreenHeight(50),
+              width: double.infinity,
+              child: ElevatedButton(
+                child: Text(
+                  'Delete this User',
+                  style:
+                      TextStyle(fontSize: getProportionateScreenHeight(20)),
+                ),
+                onPressed: () {},
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.red),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

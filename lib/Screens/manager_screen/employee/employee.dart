@@ -8,8 +8,9 @@ class Employee{
   String lName;
   String fullName;
   String email;
+  String pass;
   String phone;
 
-  Employee({this.profilePic, this.fName, this.lName ,  this.fullName,this.email, this.phone});
+  Employee({this.profilePic, this.pass ,this.fName, this.lName ,  this.fullName,this.email, this.phone});
 
 }

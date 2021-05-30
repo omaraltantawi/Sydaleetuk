@@ -534,7 +534,7 @@ class _Body extends State<Body> with CanShowMessages {
                       return Padding(
                         padding: EdgeInsets.all(8.0),
                         child: SizedBox(
-                          width: SizeConfig.screenWidth * 0.60,
+                          width: SizeConfig.screenWidth * 0.70,
                           child: DosagePillsButton(
                             press: (index) {
                               setState(() {

@@ -606,7 +606,7 @@ class MedicineWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                product.imageUrls[0] != null && product.imageUrls[0] != ''
+                product.imageUrls != null&& product.imageUrls.length > 0 && product.imageUrls[0] != null && product.imageUrls[0] != ''
                     ? Image.network(
                   product.imageUrls[0],
                   height: getProportionateScreenHeight(100),

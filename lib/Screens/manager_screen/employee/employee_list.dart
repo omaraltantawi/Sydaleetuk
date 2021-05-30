@@ -136,14 +136,16 @@ class _HaveEmployeesState extends State<HaveEmployees> {
           }
           final List<Pharmacist> users = snapshot.data;
           for (var user in users) {
-            String name = user.fName + user.lName ;
+            String name = user.fName + ' '+ user.lName ;
+            print(user.imageUrl);
             widgets.add(
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, EmployeeScreen.routeName);
+                    Navigator.pushNamed(context, EmployeeScreen.routeName,arguments: user);
                   },
                   child: Container(
                     width: getProportionateScreenWidth(double.infinity),
+                    padding: EdgeInsets.all(getProportionateScreenWidth(8.0)),
                     decoration: BoxDecoration(
                       border: Border.all(color: Color(0xFF099F9D), width: 2),
                       borderRadius: BorderRadius.circular(
@@ -154,8 +156,8 @@ class _HaveEmployeesState extends State<HaveEmployees> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(100),
-                          child:user.imageUrl != '' && user.imageUrl != null ? Image.network(user.imageUrl) :
-                          Image.asset('assets/images/dimage.jpg'),
+                          child:user.imageUrl != '' && user.imageUrl != null ? Image.network(user.imageUrl,width: SizeConfig.screenWidth*0.25,) :
+                          Image.asset('assets/images/dimage.jpg',width: SizeConfig.screenWidth*0.25,),
                         ),
                         SizedBox(
                           width: getProportionateScreenWidth(15),
@@ -163,7 +165,7 @@ class _HaveEmployeesState extends State<HaveEmployees> {
                         Expanded(
                             child: Text(name,
                               style:
-                              TextStyle(fontSize: getProportionateScreenWidth(15)),
+                              TextStyle(fontSize: getProportionateScreenWidth(18),fontWeight: FontWeight.bold,),
                             )),
                       ],
                     ),
