@@ -1506,6 +1506,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     String description,
     String dosageUnit,
     String pillsUnit,
+    bool isApproved = true
   }) async {
     try {
       print('Start Method addMedicineToPharmacyAndOfficial');
@@ -1529,6 +1530,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
         'barCode': barCode,
         'price': price,
         'PrescriptionRequired': prescription,
+        'isApproved': isApproved,
         'DosagePills': dosagePills,
         'description': description,
         'dosageUnit': dosageUnit,
@@ -1566,6 +1568,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
     String description,
     String dosageUnit,
     String pillsUnit,
+    bool isApproved = true
   }) async {
     try {
       var querySnapshot =
@@ -1585,6 +1588,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
           'price': price,
           'PrescriptionRequired': prescription,
           'DosagePills': dosagePills,
+          'isApproved': isApproved,
           'dosageUnit': dosageUnit,
           'description': description,
           'pillsUnit': pillsUnit,
@@ -1610,7 +1614,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
   }
 
   Future<bool> addMedicineToPharmacyFromOfficial({
-    String medicineName,
+    String medicineName,bool isApproved = true
   }) async {
     try {
       var querySnapshot =
@@ -1649,6 +1653,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
           'imageURLs': image,
           'barCode': barCode,
           'price': price,
+          'isApproved': isApproved,
           'PrescriptionRequired': prescription,
           'DosagePills': _dosagePills,
           'description': description,
@@ -1664,7 +1669,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
   }
 
   Future<bool> addMedicineToPharmacyFromOfficialByBarcode({
-    String barCode,
+    String barCode,bool isApproved = true
   }) async {
     try {
       var querySnapshot =
@@ -1703,6 +1708,7 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
           'name': medicineName,
           'imageURLs': image,
           'barCode': barCode,
+          'isApproved': isApproved,
           'price': price,
           'PrescriptionRequired': prescription,
           'DosagePills': dosagePills,
