@@ -99,22 +99,11 @@ class _SignFormState extends State<SignForm> with CanShowMessages {
                     Navigator.pushNamedAndRemoveUntil(
                         context, HomeScreen.routeName, (route) => false);
                   else if (type == UserType.PharmacyUser) {
-                    // print('Logged Successfully');
-                    // print(Provider.of<FireBaseAuth>(context,listen:false).loggedUserType);
-                    // Pharmacist phar = await Provider.of<FireBaseAuth>(context,listen:false).currentUser;
-                    // print('${phar.userId} ${phar.pharmacy.name} ${phar.pharmacy.pharmacyId}');
-                    // Provider.of<FireBaseAuth>(context,listen: false).addEmployeeUser('Emp@Sydaleetuk.com','emp@12345','Employee','1','','Good','JnLHedMrmjqmyso4Zfzc');
-                    Navigator.pushNamed(context, ManagerScreen.routeName);
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, ManagerScreen.routeName, (route) => false);
                   } else if (type == UserType.EmployeeUser) {
-                    print('Logged Successfully');
-                    print(Provider.of<FireBaseAuth>(context, listen: false)
-                        .loggedUserType);
-                    Pharmacist phar =
-                        await Provider.of<FireBaseAuth>(context, listen: false)
-                            .currentUser;
-                    print(
-                        '${phar.userId} ${phar.pharmacy.name} ${phar.pharmacy.pharmacyId}');
-                    Navigator.pushNamed(context, MainEmployeeScreen.routeName);
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, MainEmployeeScreen.routeName, (route) => false);
                   }
                 } on FirebaseAuthException catch (e) {
                   print(e);

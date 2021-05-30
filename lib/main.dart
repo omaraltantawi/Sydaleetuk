@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:graduationproject/Screens/LoadAppScreen/load_screen.dart';
+import 'package:graduationproject/Screens/employee_screen/main_employee_screen.dart';
 import 'package:graduationproject/Screens/home/home_screen.dart';
 import 'package:graduationproject/Screens/manager_screen/manager_screen.dart';
 import 'package:graduationproject/data_models/User.dart';
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
     else if (type == UserType.PharmacyUser)
       return ManagerScreen.routeName;
     else if (type == UserType.EmployeeUser)
-      return ManagerScreen.routeName;
+      return MainEmployeeScreen.routeName;
     else
       return SplashScreen.routeName;
   }

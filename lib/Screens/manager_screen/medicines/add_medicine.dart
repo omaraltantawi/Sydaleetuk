@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:graduationproject/Screens/manager_screen/manager_screen.dart';
+import 'package:graduationproject/Screens/manager_screen/medicines/medicine_list.dart';
 import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/components/default_button.dart';
 import 'package:graduationproject/components/orderButton.dart';
@@ -28,7 +30,6 @@ class AddMedicine extends StatelessWidget {
     return Body(barCode: barCode);
   }
 }
-
 
 class Body extends StatefulWidget {
   final String barCode;
@@ -688,7 +689,11 @@ class _Body extends State<Body> with CanShowMessages {
                                     isLoading = false ;
                                   });
                                   await showMessageDialog(context: context, msgTitle: 'Add Medicine', msgText: ['Medicine added successfully to your pharmacy.'], buttonText: 'OK');
-                                  Navigator.of(context).pop();
+                                  Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    MedicineList.routeName,
+                                    ModalRoute.withName(ManagerScreen.routeName),
+                                  );
                                 }
                               }else{
                                 await showMessageDialog(context: context, msgTitle: 'Warning', msgText: ['Medicine already exists in your pharmacy.'], buttonText: 'OK');

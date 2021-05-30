@@ -167,6 +167,7 @@ class _MedicineListState extends State<MedicineList> with CanShowMessages {
                                           'Medicine added successfully to your pharmacy.'
                                         ],
                                         buttonText: 'OK');
+                                    Navigator.of(context).pop();
                                   } else {
                                     await showMessageDialog(
                                         context: context,
@@ -175,6 +176,7 @@ class _MedicineListState extends State<MedicineList> with CanShowMessages {
                                           'Medicine already exists in your pharmacy.'
                                         ],
                                         buttonText: 'OK');
+                                    Navigator.of(context).pop();
                                   }
                                 }
                               }
