@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:graduationproject/providers/ProductProvider.dart';
+import 'package:provider/provider.dart';
 import '../../../size_config.dart';
+import '../../SelectProduct.dart';
 
 class Menu_Page extends StatelessWidget {
   @override
@@ -11,6 +14,7 @@ class Menu_Page extends StatelessWidget {
           padding:
               EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
           child: Text(
+
             "Products",
             style: TextStyle(
               fontSize: getProportionateScreenWidth(17),
@@ -35,20 +39,14 @@ class Menu_Page extends StatelessWidget {
                   mainAxisSpacing: 0.0,
                   childAspectRatio: 0.8,
                   children: <Widget>[
-                    buildCard('Panadol', '3.99\JOD', 'assets/images/cream.png',
-                        true, context),
-                    buildCard('Tramadol', '3.99\JOD',
-                        'assets/images/Tramadol.jpg', false, context),
-                    buildCard('Face Mask', '3.99\JOD',
-                        'assets/images/gloves.jpg', true, context),
-                    buildCard('Face Mask', '3.99\JOD',
-                        'assets/images/demo1.jpg', false, context),
-                    buildCard('Face Mask', '3.99\JOD',
-                        'assets/images/demo2.jpg', true, context),
-                    buildCard('Face Mask', '3.99\JOD',
-                        'assets/images/demo3.jpg', false, context),
-                    buildCard('Face Mask', '3.99\JOD',
-                        'assets/images/demo4.jpg', true, context)
+                    buildCard('Panadol Extra', '2.50\JOD', 'https://i-cf5.gskstatic.com/content/dam/cf-consumer-healthcare/health-professionals/en_IE/pain-relief/new-pain-relief/Panadol-Extra-750x421.jpg?auto=format',
+                        false, context),
+                    buildCard('Tramadol', '5.00\JOD',
+                        'https://www.rxmedsondemand.com/wp-content/uploads/2021/03/Tramadol-100Mg.jpg', true, context),
+                    buildCard('Vitamin C', '6.5\JOD',
+                        'https://static2.mumzworld.com/media/catalog/product/n/p/np-129742-natures-aid-vitamin-c-500mg-50-tablets-1595411682.jpg', false, context),
+                    buildCard('Revanin', '0.60\JOD',
+                        'https://www.al-agzakhana.com/wp-content/uploads/2018/02/Revanin-Tablets.jpg', false, context),
                   ],
                 )),
           ],
@@ -63,7 +61,9 @@ class Menu_Page extends StatelessWidget {
         padding:
             EdgeInsets.only(top: 10.0, bottom: 25.0, left: 10.0, right: 10.0),
         child: InkWell(
-            onTap: () {
+            onTap: () async {
+              await Provider.of<ProductProvider>(context,listen: false).initiate(text: name);
+              Navigator.pushNamed(context, SelectProduct.routeName );
               //Navigator.of(context).push(
               //MaterialPageRoute(builder: (context) => medDetail(
               //  assetPath: imgPath,
@@ -90,7 +90,7 @@ class Menu_Page extends StatelessWidget {
                           width: 100,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: AssetImage(imgPath),
+                                  image: NetworkImage(imgPath),
                                   fit: BoxFit.contain)))),
                   SizedBox(height: 5.0),
                   Text(name,

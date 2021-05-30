@@ -148,8 +148,9 @@ class _BodyState extends State<Body> with CanShowMessages {
                         child: Image.network(
                           widget.selectedProduct.imageUrls[index],
                           alignment: AlignmentDirectional.center,
-                          fit: BoxFit.fill,
+                          fit: BoxFit.contain,
                           height: getProportionateScreenHeight(120),
+
                         ),
                       ),
                     )
