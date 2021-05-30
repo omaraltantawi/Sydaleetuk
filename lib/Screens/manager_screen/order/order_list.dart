@@ -123,6 +123,9 @@ class Body extends StatelessWidget {
           final orders = snapshot.data.docs;
           for (var order in orders) {
             Order _order = Order();
+            _order.status = order.data()['Status'];
+            if ( _order.status == 'Rejected' )
+              continue;
             _order.pharmacy = Pharmacy();
             _order.pharmacy.pharmacyId = order.data()['pharmacyId'];
             _order.pharmacy.name = order.data()['pharmacyName'];
@@ -143,7 +146,6 @@ class Body extends StatelessWidget {
             _order.orderNo = order.data()['OrderNo'];
             _order.noOfProducts = order.data()['NoOfProducts'];
             _order.orderId = order.id;
-            _order.status = order.data()['Status'];
             _order.isRejectFromPrescription = order.data()['isRejectFromPrescription'];
             _order.pharNote = order.data()['PharNote'];
             var _totalPrice = order.data()['totalPrice'];

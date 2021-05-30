@@ -231,7 +231,7 @@ class _AddEmployeeState extends State<AddEmployee> with CanShowMessages {
                               _formKey.currentState.save();
                               var phar = Provider.of<FireBaseAuth>(context,listen: false).pharmacist;
                               await Provider.of<FireBaseAuth>(context,listen: false).addEmployeeUser(employee.email, employee.pass,employee.fName, employee.lName, employee.phone,'',phar.pharmacy.pharmacyId);
-                              // await showMessageDialog(context: context, msgTitle: msgTitle, msgText: msgText, buttonText: '');
+                              await showMessageDialog(context: context, msgTitle: 'Add Employee', msgText: ['Employee added successfully'], buttonText: '');
                             }
                           },
                         ),

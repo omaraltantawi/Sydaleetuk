@@ -1,10 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:graduationproject/Screens/manager_screen/employee/employee_list.dart';
+import 'package:graduationproject/Screens/manager_screen/manager_screen.dart';
+import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/data_models/Pharmacist.dart';
+import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:graduationproject/size_config.dart';
+import 'package:provider/provider.dart';
 
 import 'employee.dart';
 
-class EmployeeScreen extends StatelessWidget {
+class EmployeeScreen extends StatelessWidget with CanShowMessages {
   static const String routeName = 'EmployeeScreen';
   final Employee _employee = Employee(
     fullName: 'Mohammad AlHrout',
@@ -46,8 +52,7 @@ class EmployeeScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        padding:
-            EdgeInsets.all(getProportionateScreenWidth(10)),
+        padding: EdgeInsets.all(getProportionateScreenWidth(10)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -125,10 +130,26 @@ class EmployeeScreen extends StatelessWidget {
               child: ElevatedButton(
                 child: Text(
                   'Delete this User',
-                  style:
-                      TextStyle(fontSize: getProportionateScreenHeight(20)),
+                  style: TextStyle(fontSize: getProportionateScreenHeight(20)),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  await Provider.of<FireBaseAuth>(context, listen: false)
+                      .updateCollectionFieldWithRef(
+                          ref: FirebaseFirestore.instance
+                              .collection('PHARMACIST')
+                              .doc(pharmacist.pharmacistId),
+                          fieldName: 'isDeleted',
+                          fieldValue: true);
+                  await showMessageDialog(
+                      context: context,
+                      msgTitle: 'Delete Employee',
+                      msgText: ['Employee deleted successfully'],
+                      buttonText: 'OK');
+                  Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      EmployeeList.routeName,
+                      ModalRoute.withName(ManagerScreen.routeName),);
+                },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.red),
                 ),

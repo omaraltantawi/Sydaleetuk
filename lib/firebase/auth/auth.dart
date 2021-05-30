@@ -805,11 +805,14 @@ class FireBaseAuth with ChangeNotifier, CanShowMessages {
             pharmacist.lName = user.first.data()['lName'];
             pharmacist.phoneNo = user.first.data()['phoneNo'];
             pharmacist.imageUrl = element.data()['imageUrl'];
+            pharmacist.pharmacistId = element.id;
+            bool isDeleted = element.data()['isDeleted'];
             pharmacist.pharmacy = Pharmacy();
             pharmacist.pharmacy.name = _pharmacist.pharmacy.name;
             pharmacist.pharmacy.phoneNo = _pharmacist.pharmacy.phoneNo;
             pharmacist.pharmacy.pharmacyId = pharmacyId;
-            employees.add(pharmacist);
+            if ( !isDeleted )
+              employees.add(pharmacist);
           }
         });
       } else
