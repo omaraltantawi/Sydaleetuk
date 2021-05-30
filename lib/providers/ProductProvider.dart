@@ -171,17 +171,17 @@ class ProductProvider with ChangeNotifier {
     selectedProduct = prod.clone();
   }
 
-  Future<void> initiate () async {
-    reset();
+  Future<void> initiate ({String text = ''}) async {
+    reset(text: text);
     var querySnapshot = await _fireStore.collection('PHARMACY').get();
     pharmacyDocs = querySnapshot.docs;
     print("initiate");
   }
 
-  void reset (){
+  void reset ({String text = ''}){
     isCompleted = false ;
     selectedProduct = Product();
-    _searchController.text = "" ;
+    _searchController.text = text ;
     // searchResults = [];
     print("reset done");
   }
