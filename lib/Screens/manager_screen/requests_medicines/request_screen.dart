@@ -242,262 +242,42 @@ class RequestScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-            // ListView(
-            //   children: [
-            //     Container(
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Column(
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: [
-            //               Text(
-            //                 'Medicine Name',
-            //                 style: TextStyle(
-            //                     color: Colors.grey.shade800, fontSize: 25),
-            //               ),
-            //               Text(
-            //                 'BarCode: 12345678',
-            //                 style: TextStyle(
-            //                     color: Colors.grey.shade800, fontSize: 15),
-            //               ),
-            //               Text(
-            //                 'Request by: EmployeeName',
-            //                 style: TextStyle(
-            //                     color: Colors.grey.shade800, fontSize: 15),
-            //               ),
-            //             ],
-            //           ),
-            //           TextButton(
-            //             onPressed: () {
-            //
-            //             },
-            //             child:Icon(
-            //               Icons.check_circle,
-            //               color: Colors.white,
-            //             ),
-            //             style: ButtonStyle(
-            //               shape: MaterialStateProperty.all(CircleBorder() ),
-            //               backgroundColor: MaterialStateProperty.all(Colors.green),
-            //             ),
-            //           ),
-            //           TextButton(
-            //             onPressed: () {
-            //
-            //             },
-            //             child:Icon(
-            //               Icons.close,
-            //               color: Colors.white,
-            //             ),
-            //             style: ButtonStyle(
-            //               shape: MaterialStateProperty.all(CircleBorder() ),
-            //               backgroundColor: MaterialStateProperty.all(Colors.red),
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //     SizedBox(height: 15,),
-            //     Container(
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Column(
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: [
-            //               Text(
-            //                 'Medicine Name',
-            //                 style: TextStyle(
-            //                     color: Colors.grey.shade800, fontSize: 25),
-            //               ),
-            //               Text(
-            //                 'BarCode: 12345678',
-            //                 style: TextStyle(
-            //                     color: Colors.grey.shade800, fontSize: 15),
-            //               ),
-            //               Text(
-            //                 'Request by: EmployeeName',
-            //                 style: TextStyle(
-            //                     color: Colors.grey.shade800, fontSize: 15),
-            //               ),
-            //             ],
-            //           ),
-            //           TextButton(
-            //             onPressed: () {
-            //
-            //             },
-            //             child:Icon(
-            //               Icons.check_circle,
-            //               color: Colors.white,
-            //             ),
-            //             style: ButtonStyle(
-            //               shape: MaterialStateProperty.all(CircleBorder() ),
-            //               backgroundColor: MaterialStateProperty.all(Colors.green),
-            //             ),
-            //           ),
-            //           TextButton(
-            //             onPressed: () {
-            //
-            //             },
-            //             child:Icon(
-            //               Icons.close,
-            //               color: Colors.white,
-            //             ),
-            //             style: ButtonStyle(
-            //               shape: MaterialStateProperty.all(CircleBorder() ),
-            //               backgroundColor: MaterialStateProperty.all(Colors.red),
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //     SizedBox(height: 15,),
-            //     Container(
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Column(
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: [
-            //               Text(
-            //                 'Medicine Name',
-            //                 style: TextStyle(
-            //                     color: Colors.grey.shade800, fontSize: 25),
-            //               ),
-            //               Text(
-            //                 'BarCode: 12345678',
-            //                 style: TextStyle(
-            //                     color: Colors.grey.shade800, fontSize: 15),
-            //               ),
-            //               Text(
-            //                 'Request by: EmployeeName',
-            //                 style: TextStyle(
-            //                     color: Colors.grey.shade800, fontSize: 15),
-            //               ),
-            //             ],
-            //           ),
-            //           TextButton(
-            //             onPressed: () {
-            //
-            //             },
-            //             child:Icon(
-            //               Icons.check_circle,
-            //               color: Colors.white,
-            //             ),
-            //             style: ButtonStyle(
-            //               shape: MaterialStateProperty.all(CircleBorder() ),
-            //               backgroundColor: MaterialStateProperty.all(Colors.green),
-            //             ),
-            //           ),
-            //           TextButton(
-            //             onPressed: () {
-            //
-            //             },
-            //             child:Icon(
-            //               Icons.close,
-            //               color: Colors.white,
-            //             ),
-            //             style: ButtonStyle(
-            //               shape: MaterialStateProperty.all(CircleBorder() ),
-            //               backgroundColor: MaterialStateProperty.all(Colors.red),
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //     SizedBox(height: 15,),
-            //     Container(
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           Column(
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: [
-            //               Text(
-            //                 'Medicine Name',
-            //                 style: TextStyle(
-            //                     color: Colors.grey.shade800, fontSize: 25),
-            //               ),
-            //               Text(
-            //                 'BarCode: 12345678',
-            //                 style: TextStyle(
-            //                     color: Colors.grey.shade800, fontSize: 15),
-            //               ),
-            //               Text(
-            //                 'Request by: EmployeeName',
-            //                 style: TextStyle(
-            //                     color: Colors.grey.shade800, fontSize: 15),
-            //               ),
-            //             ],
-            //           ),
-            //           TextButton(
-            //             onPressed: () {
-            //
-            //             },
-            //             child:Icon(
-            //               Icons.check_circle,
-            //               color: Colors.white,
-            //             ),
-            //             style: ButtonStyle(
-            //               shape: MaterialStateProperty.all(CircleBorder() ),
-            //               backgroundColor: MaterialStateProperty.all(Colors.green),
-            //             ),
-            //           ),
-            //           TextButton(
-            //             onPressed: () {
-            //
-            //             },
-            //             child:Icon(
-            //               Icons.close,
-            //               color: Colors.white,
-            //             ),
-            //             style: ButtonStyle(
-            //               shape: MaterialStateProperty.all(CircleBorder() ),
-            //               backgroundColor: MaterialStateProperty.all(Colors.red),
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //     SizedBox(height: 15,),
-            //   ],
-            // ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      style:
-                          ElevatedButton.styleFrom(primary: Color(0xFF42ADAC)),
-                      onPressed: () {},
-                      child: Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text('Cancel all'),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      style:
-                          ElevatedButton.styleFrom(primary: Color(0xFF42ADAC)),
-                      onPressed: () {},
-                      child: Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text('Accept all'),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.bottomCenter,
+          //   child: Padding(
+          //     padding: EdgeInsets.all(10.0),
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: [
+          //         Padding(
+          //           padding: const EdgeInsets.all(8.0),
+          //           child: ElevatedButton(
+          //             style:
+          //                 ElevatedButton.styleFrom(primary: Color(0xFF42ADAC)),
+          //             onPressed: () {},
+          //             child: Container(
+          //               padding: EdgeInsets.all(10.0),
+          //               child: Text('Cancel all'),
+          //             ),
+          //           ),
+          //         ),
+          //         Padding(
+          //           padding: const EdgeInsets.all(8.0),
+          //           child: ElevatedButton(
+          //             style:
+          //                 ElevatedButton.styleFrom(primary: Color(0xFF42ADAC)),
+          //             onPressed: () {},
+          //             child: Container(
+          //               padding: EdgeInsets.all(10.0),
+          //               child: Text('Accept all'),
+          //             ),
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
