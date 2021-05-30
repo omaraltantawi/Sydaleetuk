@@ -105,12 +105,12 @@ class _MedicineListState extends State<EmployeeMedicineList> with CanShowMessage
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xFF099F9D),
-        tooltip: "Click here to add new Medicine",
+        tooltip: "Click here to request add new Medicine",
         child: Icon(Icons.add),
         onPressed: () async{
           await showDialog(
               builder: (context) => AlertDialog(
-                title: Text("Add new medicine"),
+                title: Text("Request add new medicine"),
                 content: Container(
                   height: 120,
                   child: Column(
@@ -128,7 +128,7 @@ class _MedicineListState extends State<EmployeeMedicineList> with CanShowMessage
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(SnackBar(
                               content: Text('Barcode : $barcode'),
-                              duration: Duration(seconds: 15),
+                              duration: Duration(seconds: 5),
                             ));
                             if (!cond) {
                               QuestionMessage answer =
@@ -150,20 +150,20 @@ class _MedicineListState extends State<EmployeeMedicineList> with CanShowMessage
                                   FireBaseAuth>(context, listen: false)
                                   .checkPharmacyMedicineExistenceByBarcode(
                                   barcode: barcode);
-                              print(
-                                  '-*************************** $condPhar');
                               if (!condPhar) {
                                 await Provider.of<FireBaseAuth>(context,
                                     listen: false)
                                     .addMedicineToPharmacyFromOfficialByBarcode(
+                                  isApproved: false,
                                     barCode: barcode);
                                 await showMessageDialog(
                                     context: context,
                                     msgTitle: 'Add Medicine',
                                     msgText: [
-                                      'Medicine added successfully to your pharmacy.'
+                                      'Medicine request send successfully to your pharmacy.'
                                     ],
                                     buttonText: 'OK');
+                                Navigator.of(context).pop();
                               } else {
                                 await showMessageDialog(
                                     context: context,
@@ -172,6 +172,7 @@ class _MedicineListState extends State<EmployeeMedicineList> with CanShowMessage
                                       'Medicine already exists in your pharmacy.'
                                     ],
                                     buttonText: 'OK');
+                                Navigator.of(context).pop();
                               }
                             }
                           }
@@ -317,7 +318,6 @@ class _MedicineListState extends State<EmployeeMedicineList> with CanShowMessage
               product.description = medicine.data()['description'];
               product.pillsUnit = medicine.data()['pillsUnit'];
               var productImageUrl = medicine.data()['imageURLs'];
-              print(productImageUrl.length );
               if ( productImageUrl == null || productImageUrl.length == 0 ){
                 product.imageUrls = [];
               }else {
@@ -401,7 +401,7 @@ class _MedicineListState extends State<EmployeeMedicineList> with CanShowMessage
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
                                           content: Text('Barcode : $barcode'),
-                                          duration: Duration(seconds: 15),
+                                          duration: Duration(seconds: 5),
                                         ));
                                         if (!cond) {
                                           QuestionMessage answer =
