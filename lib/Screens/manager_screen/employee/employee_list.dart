@@ -154,8 +154,8 @@ class _HaveEmployeesState extends State<HaveEmployees> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(100),
-                          child:user.imageUrl == '' || user.imageUrl== null ? Image.network(user.imageUrl) :
-                          Image.asset('assets/images/dimage.png'),
+                          child:user.imageUrl != '' && user.imageUrl != null ? Image.network(user.imageUrl) :
+                          Image.asset('assets/images/dimage.jpg'),
                         ),
                         SizedBox(
                           width: getProportionateScreenWidth(15),

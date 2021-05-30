@@ -610,10 +610,12 @@ class MedicineWidget extends StatelessWidget {
                     ? Image.network(
                   product.imageUrls[0],
                   height: getProportionateScreenHeight(100),
+                  width: SizeConfig.screenWidth *0.25 ,
                 )
                     : Image.asset(
                   "assets/images/syrup.png",
                   height: getProportionateScreenHeight(100),
+                  width: SizeConfig.screenWidth *0.25 ,
                 ),
                 SizedBox(
                   width: getProportionateScreenWidth(10),

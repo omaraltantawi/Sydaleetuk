@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:graduationproject/Screens/manager_screen/medicines/add_medicine.dart';
+import 'package:graduationproject/components/MessageDialog.dart';
 import 'package:graduationproject/components/orderButton.dart';
 import 'package:graduationproject/constants.dart';
 import 'package:graduationproject/data_models/Product.dart';
@@ -34,7 +35,7 @@ class Body extends StatefulWidget {
   State<Body> createState() => _BodyState();
 }
 
-class _BodyState extends State<Body> {
+class _BodyState extends State<Body> with CanShowMessages{
   Medicine medicine = Medicine(
       name: 'Vitamin C man zinc tupedu',
       barCode: '2013546136',
@@ -988,9 +989,14 @@ class _BodyState extends State<Body> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  await auth.removePharmacyMedicine(
-                      medicineId: widget.product.id);
-                  Navigator.of(context).pop();
+                  var answer = await showQuestionDialog(context: context, msgTitle: 'Delete Medicine',
+                      msgText: ['Are your sure you want to delete medicine?'],
+                      buttonText: '');
+                  if ( answer == QuestionMessage.YES) {
+                    await auth.removePharmacyMedicine(
+                        medicineId: widget.product.id);
+                    Navigator.of(context).pop();
+                  }
                 },
                 child: Text('Delete'),
                 style: ButtonStyle(

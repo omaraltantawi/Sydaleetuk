@@ -200,7 +200,7 @@ class _Body extends State<Body> with CanShowMessages {
                                     decoration: new BoxDecoration(
                                       image: new DecorationImage(
                                         image: new FileImage(imagesFiles[index]),
-                                        fit: BoxFit.fill,
+                                        fit: BoxFit.contain,
                                       ),
                                     ),
                                   ),
@@ -534,7 +534,7 @@ class _Body extends State<Body> with CanShowMessages {
                       return Padding(
                         padding: EdgeInsets.all(8.0),
                         child: SizedBox(
-                          width: SizeConfig.screenWidth * 0.55,
+                          width: SizeConfig.screenWidth * 0.60,
                           child: DosagePillsButton(
                             press: (index) {
                               setState(() {

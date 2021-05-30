@@ -7,6 +7,7 @@ import 'package:graduationproject/constants.dart';
 import 'package:graduationproject/firebase/auth/auth.dart';
 import 'package:graduationproject/size_config.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'employee.dart';
 
@@ -18,6 +19,26 @@ class AddEmployee extends StatefulWidget {
 }
 
 Color mainColor = Color(0xFF099F9D);
+
+sendEmail () {
+  final Uri _emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'smith@example.com',
+      queryParameters: {
+        'subject': 'Example Subject & Symbols are allowed!'
+      }
+  );
+
+  launch(_emailLaunchUri.toString());
+}
+
+Future<void> sendSms (String no) async {
+  // Android
+  String uri = 'sms:$no?body=You%20Are%20there';
+  if (await canLaunch(uri)) {
+    await launch(uri);
+  }
+}
 
 final _formKey = GlobalKey<FormState>();
 Employee employee = Employee();
@@ -181,12 +202,12 @@ class _AddEmployeeState extends State<AddEmployee> {
                       Expanded(
                         child: DefaultButton(
                           text: 'Submit',
-                          press: (){
+                          press: () async {
                             if ( _formKey.currentState.validate() ){
                               _formKey.currentState.save();
-                              generatePassword(true,true,true,true,10);
+                              String pass = generatePassword(true,true,true,true,10);
                               var phar = Provider.of<FireBaseAuth>(context,listen: false).pharmacist;
-                              Provider.of<FireBaseAuth>(context,listen: false).addEmployeeUser(employee.email,'',employee.fName, employee.lName, employee.phone,'',phar.pharmacy.pharmacyId);
+                              await Provider.of<FireBaseAuth>(context,listen: false).addEmployeeUser(employee.email, pass,employee.fName, employee.lName, employee.phone,'',phar.pharmacy.pharmacyId);
                             }
                           },
                         ),
